@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/guercheLE/bitbucket-dc-mcp/tree/main/docs
+    about: Read the documentation before opening an issue.
+  - name: Troubleshooting Guide
+    url: https://github.com/guercheLE/bitbucket-dc-mcp/blob/main/docs/troubleshooting.md
+    about: Common problems and solutions.
+  - name: GitHub Discussions
+    url: https://github.com/guercheLE/bitbucket-dc-mcp/discussions
+    about: Ask general questions and share ideas here.

@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          lfs: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.14.0"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify embeddings.db exists (from Git LFS)
+        run: |
+          if [ ! -f data/embeddings.db ]; then
+            echo "ERROR: embeddings.db not found in Git LFS"
+            exit 1
+          fi
+          SIZE=$(stat -f%z data/embeddings.db 2>/dev/null || stat -c%s data/embeddings.db)
+          echo "embeddings.db size: $SIZE bytes"
+          if [ $SIZE -lt 1000000 ]; then
+            echo "ERROR: embeddings.db too small (less than 1MB) - LFS checkout may have failed"
+            exit 1
+          fi
+
+      - name: Run tests
+        run: npm test
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release

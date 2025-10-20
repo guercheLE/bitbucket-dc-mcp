@@ -1,0 +1,39 @@
+# BMAD (local only)
+# BMAD/IDE/agent folders
+.augment/
+.bmad-core/
+.claude/
+.clinerules/
+.crush/
+.cursor/
+.gemini/
+.github/chatmodes/
+.iflow/
+.qwen/
+.trae/
+.vscode/
+.windsurf/
+web-bundles/
+# BMAD/IDE/agent files
+.roomodes
+.kilocodemodes
+AGENTS.md
+opencode.jsonc
+
+# Node.js project artifacts
+node_modules/
+dist/
+coverage/
+
+# Environment & data files
+.env
+data/embeddings.json
+data/embeddings.db-shm
+data/embeddings.db-wal
+tests/benchmarks/results/
+# Note: .npmrc is safe to commit - it uses ${NPM_TOKEN} env variable
+# Note: data/embeddings.db is tracked via Git LFS (see .gitattributes)
+
+# Misc
+*.log
+.DS_Store

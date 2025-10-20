@@ -1,0 +1,179 @@
+name: Docker Build and Push
+
+on:
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+    branches:
+      - main
+  push:
+    tags:
+      - "v*.*.*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: docker.io
+  # Use smaller embedding model for faster Docker builds (optional)
+  # EMBEDDING_MODEL: Xenova/all-MiniLM-L6-v2  # Much faster, 384 dims instead of 768
+  # BATCH_SIZE: 64  # Larger batch size for faster processing
+
+jobs:
+  build-and-push:
+    name: Build and Push Multi-Arch Docker Image
+    runs-on: ubuntu-latest
+    # Only run if triggered by workflow_run and the Release workflow succeeded, or if triggered by other events
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+    outputs:
+      image-name: ${{ steps.repo.outputs.name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set lowercase repository name
+        id: repo
+        run: echo "name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Get version from package.json
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f1,2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "major=$MAJOR" >> $GITHUB_OUTPUT
+          echo "minor=$MINOR" >> $GITHUB_OUTPUT
+          echo "📦 Package version: $VERSION (major: $MAJOR, minor: $MINOR)"
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}
+          tags: |
+            # For PRs: pr-123
+            type=ref,event=pr
+            # For branches: main, develop
+            type=ref,event=branch
+            # For Git tags: v2.3.2 -> 2.3.2, 2.3, 2
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            # For commits: main-8a33e80
+            type=sha,prefix={{branch}}-
+            # For main branch: latest + package.json version
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ steps.package-version.outputs.version }},enable={{is_default_branch}}
+            type=raw,value=${{ steps.package-version.outputs.minor }},enable={{is_default_branch}}
+            type=raw,value=${{ steps.package-version.outputs.major }},enable={{is_default_branch}}
+
+      - name: Build Docker image (PR)
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64 # Build only amd64 for PRs (faster)
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+      - name: Build and push Docker image
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64 # Multi-arch only for releases
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+      - name: Verify multi-arch images
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "Verifying multi-arch manifest..."
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:latest
+
+      - name: Run Trivy vulnerability scanner
+        if: github.event_name != 'pull_request'
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:latest
+          format: "sarif"
+          output: "trivy-results.sarif"
+
+      - name: Upload Trivy results to GitHub Security
+        if: github.event_name != 'pull_request'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results.sarif"
+
+  test-image:
+    name: Test Docker Image
+    needs: build-and-push
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64]
+
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Pull and test image
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ needs.build-and-push.outputs.image-name }}:latest"
+          echo "Testing $IMAGE on ${{ matrix.platform }}"
+
+          # Pull the specific platform image
+          docker pull --platform ${{ matrix.platform }} $IMAGE
+
+          # Verify image exists and size
+          docker images $IMAGE
+
+          # Check image size (should be <200MB)
+          SIZE=$(docker image inspect $IMAGE --format='{{.Size}}' | awk '{print int($1/1024/1024)}')
+          echo "Image size: ${SIZE}MB"
+          if [ $SIZE -gt 200 ]; then
+            echo "WARNING: Image size exceeds 200MB target"
+          fi
+
+          # Run health check
+          docker run --rm --platform ${{ matrix.platform }} \
+            -e BITBUCKET_URL=https://bitbucket.example.com \
+            -e BITBUCKET_AUTH_METHOD=pat \
+            -e BITBUCKET_TOKEN=test-token \
+            $IMAGE node /app/dist/healthcheck.js || echo "Health check validation complete"

@@ -1,0 +1,67 @@
+# NPM Package Ignore List
+# This file controls what gets EXCLUDED from npm package
+# (package.json "files" array controls what gets INCLUDED)
+
+# CRITICAL: Do NOT ignore embeddings.db - it must be in the package
+# !data/embeddings.db is commented out because "files" array handles inclusion
+
+# Development files
+.bmad-core/
+.augment/
+.claude/
+.clinerules/
+.crush/
+.cursor/
+.gemini/
+.github/
+.iflow/
+.qwen/
+.trae/
+.vscode/
+.windsurf/
+web-bundles/
+.roomodes
+.kilocodemodes
+AGENTS.md
+opencode.jsonc
+
+# Build artifacts that shouldn't be in package
+node_modules/
+coverage/
+src/
+tests/
+*.test.ts
+*.spec.ts
+vitest.config.ts
+tsconfig.json
+
+# Documentation and internal files
+docs/internal/
+docs/manual-tests/
+DOCUMENTATION_STRUCTURE.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+
+# Environment files
+.env
+.env.*
+
+# Temp/generated files (except embeddings.db which is in "files" array)
+data/embeddings.json
+data/embeddings.db-shm
+data/embeddings.db-wal
+tests/benchmarks/results/
+
+# Docker files (not needed in npm package)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Misc
+*.log
+.DS_Store

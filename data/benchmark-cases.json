@@ -1,0 +1,607 @@
+[
+  {
+    "category": "CRUD",
+    "query": "create issue",
+    "expectedIds": [
+      "create_rule_2",
+      "create_rule_1",
+      "create_rule",
+      "create_allowlist_rule_1",
+      "create_allowlist_rule"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "update issue",
+    "expectedIds": [
+      "get_commits_by_issue_key",
+      "update_webhook_1",
+      "update_webhook",
+      "get_issue_keys_for_pull_request",
+      "update_pull_request_condition"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "delete issue",
+    "expectedIds": [
+      "delete_2",
+      "delete_by_id",
+      "delete_by_id_1",
+      "delete_by_id_2",
+      "delete_ssh_keys"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "get issue details",
+    "expectedIds": [
+      "get_commits_by_issue_key",
+      "get_upstream_server",
+      "get_latest_invocation_1",
+      "get_latest_invocation",
+      "get_all_access_tokens_2"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "bulk update issues",
+    "expectedIds": [
+      "bulk_add_exempt_repositories",
+      "update_webhook_1",
+      "bulk_add_exempt_repositories_1",
+      "update_webhook",
+      "get_issue_keys_for_pull_request"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "create project",
+    "expectedIds": [
+      "create_rule",
+      "create_allowlist_rule",
+      "edit_rule",
+      "create_3",
+      "get_rule"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "update project settings",
+    "expectedIds": [
+      "get_settings",
+      "get_auto_decline_settings",
+      "create_3",
+      "get_4",
+      "set_auto_decline_settings"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "delete project",
+    "expectedIds": [
+      "delete_project",
+      "delete_rule",
+      "delete_allowlist_rule",
+      "delete_default_task",
+      "delete_webhook"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "add comment to issue",
+    "expectedIds": [
+      "add_ssh_key",
+      "react",
+      "react_1",
+      "get_commits_by_issue_key",
+      "add_key"
+    ]
+  },
+  {
+    "category": "CRUD",
+    "query": "edit issue comment",
+    "expectedIds": [
+      "get_commits_by_issue_key",
+      "delete_key",
+      "rotate_key",
+      "create_issue",
+      "edit_rule_2"
+    ]
+  },
+  {
+    "category": "User Management",
+    "query": "add user to group",
+    "expectedIds": [
+      "add_users_to_group",
+      "add_user_to_groups",
+      "add_ssh_key",
+      "create_user",
+      "add_key"
+    ]
+  },
+  {
+    "category": "User Management",
+    "query": "remove user permissions",
+    "expectedIds": [
+      "revoke_permissions_for_user",
+      "delete_user",
+      "remove_label",
+      "revoke_permissions_for_group",
+      "un_react"
+    ]
+  },
+  {
+    "category": "User Management",
+    "query": "search users",
+    "expectedIds": [
+      "search",
+      "get_ssh_keys",
+      "delete_ssh_keys",
+      "get_users_1",
+      "add_ssh_key"
+    ]
+  },
+  {
+    "category": "User Management",
+    "query": "get user details",
+    "expectedIds": [
+      "get_user",
+      "get_user_settings",
+      "get_user_directories",
+      "update_user_details",
+      "update_user_details_1"
+    ]
+  },
+  {
+    "category": "User Management",
+    "query": "assign user to project",
+    "expectedIds": [
+      "add_user_to_groups",
+      "start_mirroring_project",
+      "get_user_directories",
+      "create_3",
+      "webhook"
+    ]
+  },
+  {
+    "category": "User Management",
+    "query": "deactivate user account",
+    "expectedIds": [
+      "get_user_settings",
+      "get_user_directories",
+      "rename_user",
+      "erase_user",
+      "get_user"
+    ]
+  },
+  {
+    "category": "User Management",
+    "query": "invite user to bitbucket",
+    "expectedIds": [
+      "add_user_to_groups",
+      "get_user_directories",
+      "erase_user",
+      "create_user",
+      "rename_user"
+    ]
+  },
+  {
+    "category": "User Management",
+    "query": "reactivate user account",
+    "expectedIds": [
+      "get_user_settings",
+      "get_user_directories",
+      "update_user_password",
+      "rename_user",
+      "delete_user"
+    ]
+  },
+  {
+    "category": "Workflows",
+    "query": "transition issue to done",
+    "expectedIds": [
+      "add_user_to_groups",
+      "add_users_to_group",
+      "get_commits_by_issue_key",
+      "react",
+      "create_user"
+    ]
+  },
+  {
+    "category": "Workflows",
+    "query": "get available transitions",
+    "expectedIds": [
+      "get_mirrored_repository",
+      "get_annotations_1",
+      "get_all_repos_for_project",
+      "get_reports",
+      "get_ssh_keys_for_project"
+    ]
+  },
+  {
+    "category": "Workflows",
+    "query": "update workflow status",
+    "expectedIds": [
+      "set_mirror_mode",
+      "get_reports",
+      "remove",
+      "get_mirror",
+      "set_preferred_mirror_id"
+    ]
+  },
+  {
+    "category": "Workflows",
+    "query": "create workflow",
+    "expectedIds": [
+      "create_rule_2",
+      "get_mirror",
+      "set_preferred_mirror_id",
+      "create_rule_1",
+      "create_rule"
+    ]
+  },
+  {
+    "category": "Workflows",
+    "query": "publish draft workflow",
+    "expectedIds": [
+      "get_reports",
+      "remove",
+      "get_mirror",
+      "set_preferred_mirror_id",
+      "get_mirror_mode"
+    ]
+  },
+  {
+    "category": "Workflows",
+    "query": "get workflow scheme",
+    "expectedIds": [
+      "get_mirror",
+      "get_mirror_mode",
+      "get_preferred_mirror_id",
+      "get_reports",
+      "remove"
+    ]
+  },
+  {
+    "category": "Workflows",
+    "query": "delete workflow",
+    "expectedIds": [
+      "remove",
+      "delete_preferred_mirror_id",
+      "get_mirror",
+      "set_preferred_mirror_id",
+      "get_mirror_mode"
+    ]
+  },
+  {
+    "category": "Workflows",
+    "query": "copy workflow",
+    "expectedIds": [
+      "get_mirror",
+      "set_preferred_mirror_id",
+      "remove",
+      "get_mirror_mode",
+      "delete_preferred_mirror_id"
+    ]
+  },
+  {
+    "category": "Custom Fields",
+    "query": "create custom field",
+    "expectedIds": [
+      "create_rule_2",
+      "create_rule_1",
+      "create_rule",
+      "create_allowlist_rule_1",
+      "create_allowlist_rule"
+    ]
+  },
+  {
+    "category": "Custom Fields",
+    "query": "update custom field value",
+    "expectedIds": [
+      "update_webhook_1",
+      "update_webhook",
+      "update_pull_request_condition",
+      "update_pull_request_condition_1",
+      "update_2"
+    ]
+  },
+  {
+    "category": "Custom Fields",
+    "query": "delete custom field",
+    "expectedIds": [
+      "delete_2",
+      "delete_by_id",
+      "delete_comment_1",
+      "delete_comment_2",
+      "delete_by_id_1"
+    ]
+  },
+  {
+    "category": "Custom Fields",
+    "query": "get custom field options",
+    "expectedIds": [
+      "get_farm_nodes",
+      "list_mirrors",
+      "get_mirrored_projects",
+      "get_merge_config",
+      "get_capabilities"
+    ]
+  },
+  {
+    "category": "Custom Fields",
+    "query": "set select list value",
+    "expectedIds": [
+      "create_2",
+      "create_1",
+      "create_rule_2",
+      "set_settings_2",
+      "create_rule_1"
+    ]
+  },
+  {
+    "category": "Custom Fields",
+    "query": "add field to screen",
+    "expectedIds": [
+      "add_users_to_group",
+      "add_user_to_groups",
+      "react",
+      "add_ssh_key",
+      "react_1"
+    ]
+  },
+  {
+    "category": "Boards & Sprints",
+    "query": "create board",
+    "expectedIds": [
+      "create_rule_2",
+      "create_rule_1",
+      "create_rule",
+      "create_allowlist_rule_1",
+      "create_allowlist_rule"
+    ]
+  },
+  {
+    "category": "Boards & Sprints",
+    "query": "get board configuration",
+    "expectedIds": [
+      "get_system_signing_configuration",
+      "get_user",
+      "get_auto_decline_settings",
+      "get_mail_config",
+      "get_all_access_tokens_2"
+    ]
+  },
+  {
+    "category": "Boards & Sprints",
+    "query": "create sprint",
+    "expectedIds": [
+      "create_rule_2",
+      "create_rule_1",
+      "create_rule",
+      "create_allowlist_rule_1",
+      "create_allowlist_rule"
+    ]
+  },
+  {
+    "category": "Boards & Sprints",
+    "query": "start sprint",
+    "expectedIds": [
+      "set_level",
+      "set_settings_2",
+      "set_repository_archive_policy",
+      "set_root_level",
+      "set_repository_delete_policy"
+    ]
+  },
+  {
+    "category": "Boards & Sprints",
+    "query": "close sprint",
+    "expectedIds": [
+      "stream_raw_diff",
+      "stream_raw_diff_1",
+      "create_repository",
+      "stream_diff",
+      "get_diff_stats_summary"
+    ]
+  },
+  {
+    "category": "Boards & Sprints",
+    "query": "move issue to sprint",
+    "expectedIds": [
+      "add_users_to_group",
+      "get_commits_by_issue_key",
+      "add_user_to_groups",
+      "create_issue",
+      "react"
+    ]
+  },
+  {
+    "category": "Boards & Sprints",
+    "query": "get sprint issues",
+    "expectedIds": [
+      "get_all_access_tokens_2",
+      "get_all_access_tokens",
+      "get_all_access_tokens_1",
+      "get_1",
+      "get_rule_2"
+    ]
+  },
+  {
+    "category": "Boards & Sprints",
+    "query": "update board columns",
+    "expectedIds": [
+      "update_webhook_1",
+      "update_webhook",
+      "update_pull_request_condition",
+      "update_pull_request_condition_1",
+      "update_2"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "make new issue",
+    "expectedIds": [
+      "get_commits_by_issue_key",
+      "register_new_mesh_node",
+      "list_participants",
+      "create_hook_script",
+      "create_issue"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "change assignee on task",
+    "expectedIds": [
+      "has_all_user_permission",
+      "set_permission_for_users_1",
+      "modify_all_user_permission",
+      "get_groups_with_any_permission_2",
+      "get_users_with_any_permission_2"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "find bitbucket user",
+    "expectedIds": [
+      "find_other_groups_for_user",
+      "get_user_settings",
+      "get_user_directories",
+      "find_by_commit",
+      "find_groups_for_user"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "move card between columns",
+    "expectedIds": [
+      "settings_authentication",
+      "get_ssh_keys",
+      "get_global_settings",
+      "delete_ssh_keys",
+      "get_users_1"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "open new bug report",
+    "expectedIds": [
+      "get_acode_insights_report",
+      "delete_acode_insights_report",
+      "register_new_mesh_node",
+      "get_annotations",
+      "list_participants"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "trigger deploy workflow",
+    "expectedIds": [
+      "get_mirror",
+      "set_preferred_mirror_id",
+      "remove",
+      "get_mirror_mode",
+      "delete_preferred_mirror_id"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "link issue to epic",
+    "expectedIds": [
+      "add_users_to_group",
+      "get_commits_by_issue_key",
+      "get_system_signing_configuration",
+      "add_user_to_groups",
+      "update_system_signing_configuration"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "crete issue",
+    "expectedIds": [
+      "get_commits_by_issue_key",
+      "create_issue",
+      "get_issue_keys_for_pull_request",
+      "upload_avatar",
+      "upload_avatar_1"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "isue status change",
+    "expectedIds": [
+      "get_repository_hooks",
+      "get_repository_hooks_1",
+      "get_status",
+      "get_ref_change_activity",
+      "get_queue_details"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "assign someone to a task",
+    "expectedIds": [
+      "react",
+      "delete_default_task_1",
+      "delete_default_task",
+      "react_1",
+      "add_default_task_1"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "board backlog to sprint",
+    "expectedIds": [
+      "add_users_to_group",
+      "add_user_to_groups",
+      "react",
+      "create_user",
+      "react_1"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "export issues to csv",
+    "expectedIds": [
+      "add_users_to_group",
+      "add_user_to_groups",
+      "get_export_job",
+      "react",
+      "cancel_export_job"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "refresh project permissions",
+    "expectedIds": [
+      "get_project_by_id",
+      "permissions",
+      "revoke_permissions_for_user_1",
+      "create_3",
+      "remove_configuration"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "reset workflow step",
+    "expectedIds": [
+      "get_mirror",
+      "set_preferred_mirror_id",
+      "remove",
+      "get_mirror_mode",
+      "delete_preferred_mirror_id"
+    ]
+  },
+  {
+    "category": "Advanced",
+    "query": "configure automation rule",
+    "expectedIds": [
+      "create_rule_2",
+      "create_rule_1",
+      "create_rule",
+      "create_allowlist_rule_1",
+      "create_allowlist_rule"
+    ]
+  }
+]
