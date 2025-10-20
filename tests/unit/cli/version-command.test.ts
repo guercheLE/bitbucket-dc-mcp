@@ -51,7 +51,7 @@ describe('versionCommand', () => {
       // Mock successful npm registry response with same version
       fetchSpy.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ version: '0.1.0' }),
+        json: async () => ({ version: '1.0.0' }),
       } as Response);
 
       await versionCommand({ checkUpdates: true });
