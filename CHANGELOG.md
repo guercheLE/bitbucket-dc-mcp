@@ -1,3 +1,14 @@
+## 1.0.0 (2025-10-20)
+
+### Features
+
+* add comprehensive test suite and project configuration ([eecb067](https://github.com/guercheLE/bitbucket-dc-mcp/commit/eecb06700a307fd1316bcaf421f95a17abfda721))
+
+### Bug Fixes
+
+* set default auth_method to 'pat' in DEFAULT_CONFIG ([501ed12](https://github.com/guercheLE/bitbucket-dc-mcp/commit/501ed120545bc84e417b9dcd9291c1dcd505d56f))
+* update API version handling and improve URL construction in tests ([302b85e](https://github.com/guercheLE/bitbucket-dc-mcp/commit/302b85ea385ca913ec79b742561bf26b44c98f56))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
