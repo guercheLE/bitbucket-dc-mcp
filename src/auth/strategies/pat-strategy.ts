@@ -426,7 +426,11 @@ export class PATStrategy implements AuthStrategy {
    * @remarks
    * This method provides user-friendly error messages with actionable guidance.
    */
-  private handleValidationError(statusCode: number, errorBody: string, bitbucketUrl: string): never {
+  private handleValidationError(
+    statusCode: number,
+    errorBody: string,
+    bitbucketUrl: string,
+  ): never {
     const sanitizedError = this.sanitizeError(errorBody);
 
     this.logger.error(

@@ -39,7 +39,7 @@ describe('Search Command', () => {
     if (!existsSync(EMBEDDINGS_DB_PATH)) {
       console.warn(
         '\n⚠️  Skipping search command tests: embeddings.db not found.\n' +
-        '   Run `npm run populate-db` to generate the embeddings database.\n',
+          '   Run `npm run populate-db` to generate the embeddings database.\n',
       );
     }
   });

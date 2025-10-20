@@ -140,7 +140,8 @@ export class OAuth2Strategy implements AuthStrategy {
 
   // OAuth2-specific configuration constants
   private static readonly DEFAULT_CALLBACK_PORT = 8080;
-  private static readonly DEFAULT_SCOPE = 'read:bitbucket-user read:bitbucket-work write:bitbucket-work';
+  private static readonly DEFAULT_SCOPE =
+    'read:bitbucket-user read:bitbucket-work write:bitbucket-work';
   private static readonly DEFAULT_TIMEOUT_MINUTES = 5;
   private static readonly CODE_VERIFIER_LENGTH = 128;
   private static readonly STATE_LENGTH = 32;

@@ -115,7 +115,9 @@ describe('OAuth2Strategy', () => {
       expect(authUrl).toContain('response_type=code');
       expect(authUrl).toContain('client_id=test-client-id');
       expect(authUrl).toContain('redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback');
-      expect(authUrl).toContain('scope=read%3Abitbucket-user+read%3Abitbucket-work+write%3Abitbucket-work');
+      expect(authUrl).toContain(
+        'scope=read%3Abitbucket-user+read%3Abitbucket-work+write%3Abitbucket-work',
+      );
       expect(authUrl).toContain('state=test-state');
       expect(authUrl).toContain('code_challenge=test-challenge');
       expect(authUrl).toContain('code_challenge_method=S256');

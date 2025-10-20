@@ -165,9 +165,7 @@ export async function testConnectionCommand(options: TestConnectionOptions): Pro
 
         // If we get a 404 with 'latest', try with '1.0'
         if (response.status === 404 && testUrl.includes('/rest/api/latest/')) {
-          console.log(
-            chalk.yellow(`   API latest not found, trying 1.0...`),
-          );
+          console.log(chalk.yellow(`   API latest not found, trying 1.0...`));
 
           const alternateUrl = `${config.bitbucket_url}/rest/api/1.0/profile/recent/repos?limit=1`;
           const alternateResponse = await fetch(alternateUrl, {
@@ -181,9 +179,7 @@ export async function testConnectionCommand(options: TestConnectionOptions): Pro
             console.log(chalk.green('✅ Authentication verified (using API 1.0)\n'));
 
             console.log(chalk.yellow('💡 Recommendation:'));
-            console.log(
-              chalk.gray(`   Update your config file to use api_version: "1.0"`),
-            );
+            console.log(chalk.gray(`   Update your config file to use api_version: "1.0"`));
             console.log(chalk.gray(`   Or run: bitbucket-dc-mcp setup\n`));
 
             process.exit(0);
@@ -214,13 +210,11 @@ export async function testConnectionCommand(options: TestConnectionOptions): Pro
           console.log(chalk.yellow('\n💡 Troubleshooting tips:'));
           console.log(chalk.gray('   • Verify Bitbucket URL is correct'));
           console.log(
-            chalk.gray("   • Ensure you're connecting to Bitbucket Data Center (not Bitbucket Cloud)"),
-          );
-          console.log(
             chalk.gray(
-              `   • Check that /rest/api/latest is available on your instance`,
+              "   • Ensure you're connecting to Bitbucket Data Center (not Bitbucket Cloud)",
             ),
           );
+          console.log(chalk.gray(`   • Check that /rest/api/latest is available on your instance`));
           console.log(
             chalk.gray('   • Try running: bitbucket-dc-mcp setup (to auto-detect API version)\n'),
           );

@@ -47,7 +47,7 @@ describe('generated schemas runtime validation', () => {
       // RestAccessTokenRequest has array uniqueness constraint
       RestAccessTokenRequestSchema.parse({
         name: 'test',
-        permissions: ['REPO_READ', 'REPO_READ'] // duplicate
+        permissions: ['REPO_READ', 'REPO_READ'], // duplicate
       });
       throw new Error('Expected validation to fail');
     } catch (error) {

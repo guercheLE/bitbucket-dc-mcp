@@ -233,7 +233,12 @@ describeIfIntegration('Logging Integration Tests', () => {
 
   describe('Correlation ID Propagation', () => {
     it('should generate correlation ID and propagate through all log entries', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'getRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'getRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -256,7 +261,12 @@ describeIfIntegration('Logging Integration Tests', () => {
     });
 
     it('should include correlation ID in request, response, and error logs', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'createRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'createRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -287,7 +297,12 @@ describeIfIntegration('Logging Integration Tests', () => {
 
   describe('Sensitive Data Sanitization', () => {
     it('should mask sensitive fields (password, token, credentials) in logs', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'createRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'createRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -324,7 +339,12 @@ describeIfIntegration('Logging Integration Tests', () => {
     });
 
     it('should mask nested sensitive fields in complex objects', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'createRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'createRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -355,7 +375,12 @@ describeIfIntegration('Logging Integration Tests', () => {
 
   describe('Audit Trail for Mutations', () => {
     it('should generate audit log for POST (create) operations', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'createRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'createRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -385,7 +410,12 @@ describeIfIntegration('Logging Integration Tests', () => {
     });
 
     it('should generate audit log for PUT (update) operations', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'updateRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'updateRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -410,7 +440,12 @@ describeIfIntegration('Logging Integration Tests', () => {
     });
 
     it('should generate audit log for DELETE operations', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'deleteRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'deleteRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -432,7 +467,12 @@ describeIfIntegration('Logging Integration Tests', () => {
     });
 
     it('should NOT generate audit log for GET (read) operations', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'getRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'getRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -451,7 +491,12 @@ describeIfIntegration('Logging Integration Tests', () => {
 
   describe('Log Structure and JSON Parseability', () => {
     it('should generate valid JSON logs that can be parsed', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'getRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'getRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -475,7 +520,12 @@ describeIfIntegration('Logging Integration Tests', () => {
     });
 
     it('should include required base fields in all logs', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'getRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'getRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -508,7 +558,12 @@ describeIfIntegration('Logging Integration Tests', () => {
     });
 
     it('should include request-specific fields in request logs', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'createRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'createRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -531,7 +586,12 @@ describeIfIntegration('Logging Integration Tests', () => {
     });
 
     it('should include latency_ms in response logs', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'getRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'getRepository',
+      );
 
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
@@ -553,7 +613,12 @@ describeIfIntegration('Logging Integration Tests', () => {
 
   describe('Error Logging with Context', () => {
     it('should log errors with correlation context and stack trace', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'getRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'getRepository',
+      );
 
       // Test with non-existent operation to trigger error
       await runWithCorrelationContext(context, async () => {
@@ -579,7 +644,12 @@ describeIfIntegration('Logging Integration Tests', () => {
 
   describe('Full Request Lifecycle Logging', () => {
     it('should log complete request lifecycle: start -> API call -> success', async () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'createRepository');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'createRepository',
+      );
       await runWithCorrelationContext(context, async () => {
         await callTool.execute({
           operation_id: 'createRepository',
@@ -601,7 +671,8 @@ describeIfIntegration('Logging Integration Tests', () => {
       // Should have API request logs
       const apiLogs = logs.filter(
         (log) =>
-          log.event === 'bitbucket_client.api_request' || log.event === 'bitbucket_client.api_response',
+          log.event === 'bitbucket_client.api_request' ||
+          log.event === 'bitbucket_client.api_response',
       );
       expect(apiLogs.length).toBeGreaterThan(0);
 

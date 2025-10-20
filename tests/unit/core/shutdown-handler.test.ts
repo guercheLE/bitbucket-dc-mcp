@@ -37,7 +37,7 @@ describe('ShutdownHandler', () => {
     handler = new ShutdownHandler(mockLogger, { timeout: 1000 });
 
     // Mock process.exit to prevent actual exit during tests
-    processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => { }) as () => never);
+    processExitSpy = vi.spyOn(process, 'exit').mockImplementation((() => {}) as () => never);
   });
 
   afterEach(() => {
@@ -46,7 +46,7 @@ describe('ShutdownHandler', () => {
 
   describe('registerHook', () => {
     it('should register shutdown hook', () => {
-      const hook: ShutdownHook = vi.fn(async () => { });
+      const hook: ShutdownHook = vi.fn(async () => {});
 
       handler.registerHook(hook);
 
@@ -55,9 +55,9 @@ describe('ShutdownHandler', () => {
     });
 
     it('should register multiple hooks', () => {
-      const hook1: ShutdownHook = vi.fn(async () => { });
-      const hook2: ShutdownHook = vi.fn(async () => { });
-      const hook3: ShutdownHook = vi.fn(async () => { });
+      const hook1: ShutdownHook = vi.fn(async () => {});
+      const hook2: ShutdownHook = vi.fn(async () => {});
+      const hook3: ShutdownHook = vi.fn(async () => {});
 
       handler.registerHook(hook1);
       handler.registerHook(hook2);
@@ -92,7 +92,7 @@ describe('ShutdownHandler', () => {
     });
 
     it('should log shutdown initiation', async () => {
-      const hook = vi.fn(async () => { });
+      const hook = vi.fn(async () => {});
       handler.registerHook(hook);
 
       await handler.shutdown('SIGINT');
@@ -272,11 +272,11 @@ describe('ShutdownHandler', () => {
     it('should return correct hook count', () => {
       expect(handler.getHookCount()).toBe(0);
 
-      handler.registerHook(vi.fn(async () => { }));
+      handler.registerHook(vi.fn(async () => {}));
       expect(handler.getHookCount()).toBe(1);
 
-      handler.registerHook(vi.fn(async () => { }));
-      handler.registerHook(vi.fn(async () => { }));
+      handler.registerHook(vi.fn(async () => {}));
+      handler.registerHook(vi.fn(async () => {}));
       expect(handler.getHookCount()).toBe(3);
     });
   });

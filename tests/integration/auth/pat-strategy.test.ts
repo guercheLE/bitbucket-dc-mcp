@@ -234,7 +234,9 @@ describe('PATStrategy Integration Tests', () => {
       await expect(strategy.validateTokenWithBitbucket(credentials, 100)).rejects.toThrow(
         AuthenticationError,
       );
-      await expect(strategy.validateTokenWithBitbucket(credentials, 100)).rejects.toThrow(/timed out/);
+      await expect(strategy.validateTokenWithBitbucket(credentials, 100)).rejects.toThrow(
+        /timed out/,
+      );
     }, 10000); // Increase test timeout to 10s
 
     it('should handle invalid Bitbucket URL (404)', async () => {
@@ -248,7 +250,9 @@ describe('PATStrategy Integration Tests', () => {
       credentials.bitbucket_url = `${BASE_URL}/wrong-path`; // Override for this test
 
       // Validate with wrong endpoint - should throw ConfigurationError
-      await expect(strategy.validateTokenWithBitbucket(credentials)).rejects.toThrow(ConfigurationError);
+      await expect(strategy.validateTokenWithBitbucket(credentials)).rejects.toThrow(
+        ConfigurationError,
+      );
     });
   });
 

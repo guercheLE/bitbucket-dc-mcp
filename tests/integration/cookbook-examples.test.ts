@@ -265,7 +265,13 @@ describe('Cookbook Examples', () => {
     );
 
     // Initialize call_id tool
-    callIdTool = new CallIdTool(bitbucketClient, authManager, mockOperationsRepository, logger, config);
+    callIdTool = new CallIdTool(
+      bitbucketClient,
+      authManager,
+      mockOperationsRepository,
+      logger,
+      config,
+    );
   });
 
   afterAll(async () => {

@@ -42,7 +42,7 @@ class PassThroughTransport implements Transport {
   public constructor(
     private readonly input: PassThrough,
     private readonly output: PassThrough,
-  ) { }
+  ) {}
 
   private readonly handleData = (chunk: Buffer): void => {
     this.readBuffer.append(chunk);

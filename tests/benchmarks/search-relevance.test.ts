@@ -133,7 +133,7 @@ function cosineSimilarity(a: Float32Array, b: Float32Array): number {
 }
 
 class BenchmarkEmbeddingsRepository implements EmbeddingsRepository {
-  constructor(private readonly operations: readonly OperationEmbedding[]) { }
+  constructor(private readonly operations: readonly OperationEmbedding[]) {}
 
   public async search(queryEmbedding: Float32Array, limit: number): Promise<SearchResult[]> {
     const scored = this.operations

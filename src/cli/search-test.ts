@@ -112,7 +112,7 @@ class SqliteEmbeddingsRepository implements EmbeddingsRepository {
   constructor(
     private readonly db: Database,
     private readonly hasVecExtension: boolean,
-  ) { }
+  ) {}
 
   public async search(queryEmbedding: Float32Array, limit: number): Promise<SearchResult[]> {
     try {
@@ -132,11 +132,11 @@ class SqliteEmbeddingsRepository implements EmbeddingsRepository {
             `,
           )
           .all(Buffer.from(queryEmbedding.buffer), limit) as Array<{
-            operationId: string;
-            summary: string;
-            description: string;
-            similarityScore: number;
-          }>;
+          operationId: string;
+          summary: string;
+          description: string;
+          similarityScore: number;
+        }>;
 
         return rows.map((row) => ({ ...row }));
       }
@@ -154,11 +154,11 @@ class SqliteEmbeddingsRepository implements EmbeddingsRepository {
           `,
         )
         .all() as Array<{
-          operationId: string;
-          summary: string;
-          description: string;
-          vector: unknown;
-        }>;
+        operationId: string;
+        summary: string;
+        description: string;
+        vector: unknown;
+      }>;
 
       const results = rows.map((row) => {
         const storedVector = toFloat32Array(row.vector);

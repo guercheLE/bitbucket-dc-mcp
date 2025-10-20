@@ -29,7 +29,7 @@ describe('versionCommand', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     fetchSpy = vi.fn();
     global.fetch = fetchSpy as typeof fetch;
   });
@@ -42,9 +42,7 @@ describe('versionCommand', () => {
     it('should display current version from package.json', async () => {
       await versionCommand({});
 
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        expect.stringContaining('bitbucket-dc-mcp v'),
-      );
+      expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('bitbucket-dc-mcp v'));
     });
   });
 
@@ -58,12 +56,8 @@ describe('versionCommand', () => {
 
       await versionCommand({ checkUpdates: true });
 
-      expect(fetchSpy).toHaveBeenCalledWith(
-        'https://registry.npmjs.org/bitbucket-dc-mcp/latest',
-      );
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Current version'),
-      );
+      expect(fetchSpy).toHaveBeenCalledWith('https://registry.npmjs.org/bitbucket-dc-mcp/latest');
+      expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Current version'));
       expect(consoleLogSpy).toHaveBeenCalledWith(
         expect.stringContaining('You are using the latest version'),
       );

@@ -432,9 +432,9 @@ describe('PATStrategy', () => {
       abortError.name = 'AbortError';
       mockFetch.mockRejectedValue(abortError);
 
-      await expect(strategy.validateTokenWithBitbucket(mockCredentials, customTimeout)).rejects.toThrow(
-        `PAT validation timed out after ${customTimeout}ms`,
-      );
+      await expect(
+        strategy.validateTokenWithBitbucket(mockCredentials, customTimeout),
+      ).rejects.toThrow(`PAT validation timed out after ${customTimeout}ms`);
     });
   });
 

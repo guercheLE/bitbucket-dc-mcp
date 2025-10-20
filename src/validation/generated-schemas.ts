@@ -1,7 +1,7 @@
 // AUTO-GENERATED - DO NOT EDIT
 // Generated at 2025-10-20T20:04:06.040Z
 
-import { z } from "zod";
+import { z } from 'zod';
 
 export const ApplicationUserSchema = z.object({
   active: z.boolean().optional(),
@@ -10,7 +10,7 @@ export const ApplicationUserSchema = z.object({
   id: z.number().int().optional(),
   name: z.string().optional(),
   slug: z.string().optional(),
-  type: z.enum(["NORMAL", "SERVICE"]).optional(),
+  type: z.enum(['NORMAL', 'SERVICE']).optional(),
 });
 
 export type ApplicationUser = z.infer<typeof ApplicationUserSchema>;
@@ -35,17 +35,12 @@ export const RestAccessTokenRequestSchema = z.object({
   name: z.string().optional(),
   permissions: z
     .array(z.string())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
 });
 
-export type RestAccessTokenRequest = z.infer<
-  typeof RestAccessTokenRequestSchema
->;
+export type RestAccessTokenRequest = z.infer<typeof RestAccessTokenRequestSchema>;
 
 export const RestErrorMessageSchema = z.object({
   context: z.string().optional(),
@@ -80,7 +75,7 @@ export type RestRawAccessToken = z.infer<typeof RestRawAccessTokenSchema>;
 
 export const ScopeSchema = z.object({
   resourceId: z.number().int(),
-  type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+  type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
 });
 
 export type Scope = z.infer<typeof ScopeSchema>;
@@ -91,7 +86,7 @@ export const ProjectSchema = z.object({
   key: z.string().optional(),
   name: z.string().optional(),
   public: z.boolean().optional(),
-  type: z.enum(["NORMAL", "PERSONAL"]),
+  type: z.enum(['NORMAL', 'PERSONAL']),
 });
 
 export type Project = z.infer<typeof ProjectSchema>;
@@ -131,12 +126,7 @@ const RepositorySchemaDefinition: z.ZodTypeAny = z.object({
       remote: z.boolean().optional(),
       scmId: z.string(),
       slug: z.string(),
-      state: z.enum([
-        "AVAILABLE",
-        "INITIALISATION_FAILED",
-        "INITIALISING",
-        "OFFLINE",
-      ]),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']),
       statusMessage: z.string(),
     })
     .optional(),
@@ -147,19 +137,14 @@ const RepositorySchemaDefinition: z.ZodTypeAny = z.object({
     key: z.string().optional(),
     name: z.string().optional(),
     public: z.boolean().optional(),
-    type: z.enum(["NORMAL", "PERSONAL"]),
+    type: z.enum(['NORMAL', 'PERSONAL']),
   }),
   public: z.boolean().optional(),
   readOnly: z.boolean().optional(),
   remote: z.boolean().optional(),
   scmId: z.string(),
   slug: z.string(),
-  state: z.enum([
-    "AVAILABLE",
-    "INITIALISATION_FAILED",
-    "INITIALISING",
-    "OFFLINE",
-  ]),
+  state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']),
   statusMessage: z.string(),
 });
 
@@ -181,9 +166,7 @@ export const RestBranchCreateRequestSchema = z.object({
   startPoint: z.string().max(40).optional(),
 });
 
-export type RestBranchCreateRequest = z.infer<
-  typeof RestBranchCreateRequestSchema
->;
+export type RestBranchCreateRequest = z.infer<typeof RestBranchCreateRequestSchema>;
 
 export const RestBranchDeleteRequestSchema = z.object({
   dryRun: z.boolean().optional(),
@@ -191,14 +174,12 @@ export const RestBranchDeleteRequestSchema = z.object({
   name: z.string().optional(),
 });
 
-export type RestBranchDeleteRequest = z.infer<
-  typeof RestBranchDeleteRequestSchema
->;
+export type RestBranchDeleteRequest = z.infer<typeof RestBranchDeleteRequestSchema>;
 
 export const RestMinimalRefSchema = z.object({
   displayId: z.string().optional(),
   id: z.string().optional(),
-  type: z.enum(["BRANCH", "TAG"]).optional(),
+  type: z.enum(['BRANCH', 'TAG']).optional(),
 });
 
 export type RestMinimalRef = z.infer<typeof RestMinimalRefSchema>;
@@ -212,11 +193,8 @@ export const RestBulkAddInsightAnnotationRequestSchema = z.object({
         link: z.string().optional(),
         message: z.string().min(0).max(2000),
         path: z.string().min(0).max(50000).optional(),
-        severity: z.string().regex(new RegExp("LOW|MEDIUM|HIGH")),
-        type: z
-          .string()
-          .regex(new RegExp("VULNERABILITY|CODE_SMELL|BUG"))
-          .optional(),
+        severity: z.string().regex(new RegExp('LOW|MEDIUM|HIGH')),
+        type: z.string().regex(new RegExp('VULNERABILITY|CODE_SMELL|BUG')).optional(),
       }),
     )
     .min(1)
@@ -258,9 +236,7 @@ export const RestInsightAnnotationsResponseSchema = z.object({
     .optional(),
 });
 
-export type RestInsightAnnotationsResponse = z.infer<
-  typeof RestInsightAnnotationsResponseSchema
->;
+export type RestInsightAnnotationsResponse = z.infer<typeof RestInsightAnnotationsResponseSchema>;
 
 export const RestInsightReportSchema = z.object({
   createdDate: z.number().optional(),
@@ -270,9 +246,7 @@ export const RestInsightReportSchema = z.object({
         title: z.string().min(1).optional(),
         type: z
           .string()
-          .regex(
-            new RegExp("BOOLEAN|DATE|DURATION|LINK|NUMBER|PERCENTAGE|TEXT"),
-          )
+          .regex(new RegExp('BOOLEAN|DATE|DURATION|LINK|NUMBER|PERCENTAGE|TEXT'))
           .optional(),
         value: z.object({}).optional(),
       }),
@@ -283,7 +257,7 @@ export const RestInsightReportSchema = z.object({
   link: z.string().url().optional(),
   logoUrl: z.string().url().optional(),
   reporter: z.string().optional(),
-  result: z.enum(["FAIL", "PASS"]).optional(),
+  result: z.enum(['FAIL', 'PASS']).optional(),
   title: z.string().optional(),
 });
 
@@ -293,7 +267,7 @@ export const RestInsightReportDataSchema = z.object({
   title: z.string().min(1).optional(),
   type: z
     .string()
-    .regex(new RegExp("BOOLEAN|DATE|DURATION|LINK|NUMBER|PERCENTAGE|TEXT"))
+    .regex(new RegExp('BOOLEAN|DATE|DURATION|LINK|NUMBER|PERCENTAGE|TEXT'))
     .optional(),
   value: z.object({}).optional(),
 });
@@ -309,9 +283,7 @@ export const RestSetInsightReportRequestSchema = z.object({
         title: z.string().min(1).optional(),
         type: z
           .string()
-          .regex(
-            new RegExp("BOOLEAN|DATE|DURATION|LINK|NUMBER|PERCENTAGE|TEXT"),
-          )
+          .regex(new RegExp('BOOLEAN|DATE|DURATION|LINK|NUMBER|PERCENTAGE|TEXT'))
           .optional(),
         value: z.object({}).optional(),
       }),
@@ -322,13 +294,11 @@ export const RestSetInsightReportRequestSchema = z.object({
   link: z.string().optional(),
   logoUrl: z.string().optional(),
   reporter: z.string().min(0).max(450).optional(),
-  result: z.string().regex(new RegExp("FAIL|PASS")).optional(),
+  result: z.string().regex(new RegExp('FAIL|PASS')).optional(),
   title: z.string().min(0).max(450),
 });
 
-export type RestSetInsightReportRequest = z.infer<
-  typeof RestSetInsightReportRequestSchema
->;
+export type RestSetInsightReportRequest = z.infer<typeof RestSetInsightReportRequestSchema>;
 
 export const RestSingleAddInsightAnnotationRequestSchema = z.object({
   externalId: z.string().min(0).max(450).optional(),
@@ -336,8 +306,8 @@ export const RestSingleAddInsightAnnotationRequestSchema = z.object({
   link: z.string().optional(),
   message: z.string().min(0).max(2000),
   path: z.string().min(0).max(50000).optional(),
-  severity: z.string().regex(new RegExp("LOW|MEDIUM|HIGH")),
-  type: z.string().regex(new RegExp("VULNERABILITY|CODE_SMELL|BUG")).optional(),
+  severity: z.string().regex(new RegExp('LOW|MEDIUM|HIGH')),
+  type: z.string().regex(new RegExp('VULNERABILITY|CODE_SMELL|BUG')).optional(),
 });
 
 export type RestSingleAddInsightAnnotationRequest = z.infer<
@@ -365,9 +335,7 @@ export const RestBuildStatusSchema = z.object({
   projectKey: z.string().optional(),
   ref: z.string().optional(),
   repositorySlug: z.string().optional(),
-  state: z
-    .enum(["CANCELLED", "FAILED", "INPROGRESS", "SUCCESSFUL", "UNKNOWN"])
-    .optional(),
+  state: z.enum(['CANCELLED', 'FAILED', 'INPROGRESS', 'SUCCESSFUL', 'UNKNOWN']).optional(),
   testResults: z
     .object({
       failed: z.number().int().optional(),
@@ -383,22 +351,14 @@ export type RestBuildStatus = z.infer<typeof RestBuildStatusSchema>;
 
 export const RestMultipleBuildStatsSchema = z.object({});
 
-export type RestMultipleBuildStats = z.infer<
-  typeof RestMultipleBuildStatsSchema
->;
+export type RestMultipleBuildStats = z.infer<typeof RestMultipleBuildStatsSchema>;
 
 export const RestRefMatcherSchema = z.object({
   displayId: z.string().optional(),
   id: z.string().optional(),
   type: z
     .object({
-      id: z.enum([
-        "ANY_REF",
-        "BRANCH",
-        "PATTERN",
-        "MODEL_CATEGORY",
-        "MODEL_BRANCH",
-      ]),
+      id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
       name: z.string(),
     })
     .optional(),
@@ -407,9 +367,7 @@ export const RestRefMatcherSchema = z.object({
 export type RestRefMatcher = z.infer<typeof RestRefMatcherSchema>;
 
 export const RestRefMatcherTypeSchema = z.object({
-  id: z
-    .enum(["ANY_REF", "BRANCH", "PATTERN", "MODEL_CATEGORY", "MODEL_BRANCH"])
-    .optional(),
+  id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']).optional(),
   name: z.string().optional(),
 });
 
@@ -423,13 +381,7 @@ export const RestRequiredBuildConditionSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -442,13 +394,7 @@ export const RestRequiredBuildConditionSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -456,9 +402,7 @@ export const RestRequiredBuildConditionSchema = z.object({
     .optional(),
 });
 
-export type RestRequiredBuildCondition = z.infer<
-  typeof RestRequiredBuildConditionSchema
->;
+export type RestRequiredBuildCondition = z.infer<typeof RestRequiredBuildConditionSchema>;
 
 export const RestRequiredBuildConditionSetRequestSchema = z.object({
   buildParentKeys: z.array(z.string()).min(0).max(100),
@@ -468,13 +412,7 @@ export const RestRequiredBuildConditionSetRequestSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -485,13 +423,7 @@ export const RestRequiredBuildConditionSetRequestSchema = z.object({
     id: z.string().optional(),
     type: z
       .object({
-        id: z.enum([
-          "ANY_REF",
-          "BRANCH",
-          "PATTERN",
-          "MODEL_CATEGORY",
-          "MODEL_BRANCH",
-        ]),
+        id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
         name: z.string(),
       })
       .optional(),
@@ -503,7 +435,7 @@ export type RestRequiredBuildConditionSetRequest = z.infer<
 >;
 
 export const RestCspSettingsSchema = z.object({
-  strictness: z.enum(["STRICT", "REPORT_ONLY", "DEFAULT"]).optional(),
+  strictness: z.enum(['STRICT', 'REPORT_ONLY', 'DEFAULT']).optional(),
 });
 
 export type RestCspSettings = z.infer<typeof RestCspSettingsSchema>;
@@ -517,7 +449,7 @@ export const RestApplicationUserSchema = z.object({
   links: z.object({}).optional(),
   name: z.string().optional(),
   slug: z.string().optional(),
-  type: z.enum(["NORMAL", "SERVICE"]).optional(),
+  type: z.enum(['NORMAL', 'SERVICE']).optional(),
 });
 
 export type RestApplicationUser = z.infer<typeof RestApplicationUserSchema>;
@@ -534,7 +466,7 @@ export const RestDefaultReviewersRequestSchema = z.object({
         scope: z
           .object({
             resourceId: z.number().int(),
-            type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+            type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
           })
           .optional(),
         users: z.array(ApplicationUserSchema).optional(),
@@ -552,7 +484,7 @@ export const RestDefaultReviewersRequestSchema = z.object({
         links: z.object({}).optional(),
         name: z.string().optional(),
         slug: z.string().optional(),
-        type: z.enum(["NORMAL", "SERVICE"]).optional(),
+        type: z.enum(['NORMAL', 'SERVICE']).optional(),
       }),
     )
     .optional(),
@@ -562,13 +494,7 @@ export const RestDefaultReviewersRequestSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -580,13 +506,7 @@ export const RestDefaultReviewersRequestSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -594,9 +514,7 @@ export const RestDefaultReviewersRequestSchema = z.object({
     .optional(),
 });
 
-export type RestDefaultReviewersRequest = z.infer<
-  typeof RestDefaultReviewersRequestSchema
->;
+export type RestDefaultReviewersRequest = z.infer<typeof RestDefaultReviewersRequestSchema>;
 
 export const RestPullRequestConditionSchema = z.object({
   id: z.number().int().optional(),
@@ -611,7 +529,7 @@ export const RestPullRequestConditionSchema = z.object({
         scope: z
           .object({
             resourceId: z.number().int(),
-            type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+            type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
           })
           .optional(),
         users: z.array(ApplicationUserSchema).optional(),
@@ -628,7 +546,7 @@ export const RestPullRequestConditionSchema = z.object({
         scope: z
           .object({
             resourceId: z.number().int(),
-            type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+            type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
           })
           .optional(),
         users: z.array(ApplicationUserSchema).optional(),
@@ -638,7 +556,7 @@ export const RestPullRequestConditionSchema = z.object({
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
   sourceRefMatcher: z
@@ -647,13 +565,7 @@ export const RestPullRequestConditionSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -665,13 +577,7 @@ export const RestPullRequestConditionSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -679,9 +585,7 @@ export const RestPullRequestConditionSchema = z.object({
     .optional(),
 });
 
-export type RestPullRequestCondition = z.infer<
-  typeof RestPullRequestConditionSchema
->;
+export type RestPullRequestCondition = z.infer<typeof RestPullRequestConditionSchema>;
 
 export const RestRelatedLinksSchema = z.object({});
 
@@ -695,7 +599,7 @@ export const RestReviewerGroupSchema = z.object({
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
   users: z
@@ -707,7 +611,7 @@ export const RestReviewerGroupSchema = z.object({
         id: z.number().int().optional(),
         name: z.string().optional(),
         slug: z.string().optional(),
-        type: z.enum(["NORMAL", "SERVICE"]).optional(),
+        type: z.enum(['NORMAL', 'SERVICE']).optional(),
       }),
     )
     .optional(),
@@ -717,7 +621,7 @@ export type RestReviewerGroup = z.infer<typeof RestReviewerGroupSchema>;
 
 export const RestScopeSchema = z.object({
   resourceId: z.number().int().optional(),
-  type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]).optional(),
+  type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']).optional(),
 });
 
 export type RestScope = z.infer<typeof RestScopeSchema>;
@@ -731,13 +635,13 @@ export const LineNumberRangeSchema = z.object({
 export type LineNumberRange = z.infer<typeof LineNumberRangeSchema>;
 
 export const CommentThreadDiffAnchorSchema = z.object({
-  diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]),
+  diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']),
   fileAnchor: z.boolean().optional(),
-  fileType: z.enum(["FROM", "TO"]),
+  fileType: z.enum(['FROM', 'TO']),
   fromHash: z.string(),
   line: z.number().int().optional(),
   lineAnchor: z.boolean().optional(),
-  lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+  lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
   multilineAnchor: z.boolean().optional(),
   multilineDestinationRange: z.object({
     maximum: z.number().int().optional(),
@@ -750,16 +654,14 @@ export const CommentThreadDiffAnchorSchema = z.object({
     singleLine: z.boolean().optional(),
   }),
   multilineStartLine: z.number().int(),
-  multilineStartLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+  multilineStartLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
   orphaned: z.boolean().optional(),
   path: z.string(),
   srcPath: z.string(),
   toHash: z.string(),
 });
 
-export type CommentThreadDiffAnchor = z.infer<
-  typeof CommentThreadDiffAnchorSchema
->;
+export type CommentThreadDiffAnchor = z.infer<typeof CommentThreadDiffAnchorSchema>;
 
 export const CommentOperationsSchema = z.object({
   deletable: z.boolean().optional(),
@@ -773,18 +675,18 @@ export const CommentThreadSchema = z.lazy(() => CommentThreadSchemaDefinition);
 
 const CommentThreadSchemaDefinition: z.ZodTypeAny = z.object({
   anchor: z.object({
-    diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]),
+    diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']),
     fileAnchor: z.boolean().optional(),
-    fileType: z.enum(["FROM", "TO"]),
+    fileType: z.enum(['FROM', 'TO']),
     fromHash: z.string(),
     line: z.number().int().optional(),
     lineAnchor: z.boolean().optional(),
-    lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+    lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
     multilineAnchor: z.boolean().optional(),
     multilineDestinationRange: LineNumberRangeSchema,
     multilineSourceRange: LineNumberRangeSchema,
     multilineStartLine: z.number().int(),
-    multilineStartLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+    multilineStartLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
     orphaned: z.boolean().optional(),
     path: z.string(),
     srcPath: z.string(),
@@ -804,7 +706,7 @@ const CommentThreadSchemaDefinition: z.ZodTypeAny = z.object({
       id: z.number().int().optional(),
       name: z.string().optional(),
       slug: z.string().optional(),
-      type: z.enum(["NORMAL", "SERVICE"]).optional(),
+      type: z.enum(['NORMAL', 'SERVICE']).optional(),
     })
     .optional(),
   rootComment: z.object({
@@ -817,8 +719,8 @@ const CommentThreadSchemaDefinition: z.ZodTypeAny = z.object({
     properties: z.object({}),
     resolvedDate: z.string().datetime().optional(),
     resolver: ApplicationUserSchema.optional(),
-    severity: z.enum(["NORMAL", "BLOCKER"]),
-    state: z.enum(["OPEN", "PENDING", "RESOLVED"]),
+    severity: z.enum(['NORMAL', 'BLOCKER']),
+    state: z.enum(['OPEN', 'PENDING', 'RESOLVED']),
     text: z.string(),
     thread: z.lazy(() => CommentThreadSchema),
     updatedDate: z.string().datetime(),
@@ -837,18 +739,18 @@ export const CommentSchema = z.lazy(() => CommentSchemaDefinition);
 
 const CommentSchemaDefinition: z.ZodTypeAny = z.object({
   anchor: z.object({
-    diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]),
+    diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']),
     fileAnchor: z.boolean().optional(),
-    fileType: z.enum(["FROM", "TO"]),
+    fileType: z.enum(['FROM', 'TO']),
     fromHash: z.string(),
     line: z.number().int().optional(),
     lineAnchor: z.boolean().optional(),
-    lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+    lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
     multilineAnchor: z.boolean().optional(),
     multilineDestinationRange: LineNumberRangeSchema,
     multilineSourceRange: LineNumberRangeSchema,
     multilineStartLine: z.number().int(),
-    multilineStartLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+    multilineStartLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
     orphaned: z.boolean().optional(),
     path: z.string(),
     srcPath: z.string(),
@@ -861,7 +763,7 @@ const CommentSchemaDefinition: z.ZodTypeAny = z.object({
     id: z.number().int().optional(),
     name: z.string().optional(),
     slug: z.string().optional(),
-    type: z.enum(["NORMAL", "SERVICE"]).optional(),
+    type: z.enum(['NORMAL', 'SERVICE']).optional(),
   }),
   comments: z.array(
     z.object({
@@ -874,8 +776,8 @@ const CommentSchemaDefinition: z.ZodTypeAny = z.object({
       properties: z.object({}),
       resolvedDate: z.string().datetime().optional(),
       resolver: ApplicationUserSchema.optional(),
-      severity: z.enum(["NORMAL", "BLOCKER"]),
-      state: z.enum(["OPEN", "PENDING", "RESOLVED"]),
+      severity: z.enum(['NORMAL', 'BLOCKER']),
+      state: z.enum(['OPEN', 'PENDING', 'RESOLVED']),
       text: z.string(),
       thread: CommentThreadSchema,
       updatedDate: z.string().datetime(),
@@ -899,11 +801,11 @@ const CommentSchemaDefinition: z.ZodTypeAny = z.object({
       id: z.number().int().optional(),
       name: z.string().optional(),
       slug: z.string().optional(),
-      type: z.enum(["NORMAL", "SERVICE"]).optional(),
+      type: z.enum(['NORMAL', 'SERVICE']).optional(),
     })
     .optional(),
-  severity: z.enum(["NORMAL", "BLOCKER"]),
-  state: z.enum(["OPEN", "PENDING", "RESOLVED"]),
+  severity: z.enum(['NORMAL', 'BLOCKER']),
+  state: z.enum(['OPEN', 'PENDING', 'RESOLVED']),
   text: z.string(),
   thread: z.object({
     anchor: CommentThreadDiffAnchorSchema,
@@ -934,8 +836,8 @@ const PullRequestSchemaDefinition: z.ZodTypeAny = z.object({
     approved: z.boolean().optional(),
     lastReviewedCommit: z.string().optional(),
     pullRequest: z.lazy(() => PullRequestSchema),
-    role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]),
-    status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]),
+    role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']),
+    status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']),
     user: ApplicationUserSchema,
   }),
   closed: z.boolean().optional(),
@@ -960,17 +862,14 @@ const PullRequestSchemaDefinition: z.ZodTypeAny = z.object({
         approved: z.boolean().optional(),
         lastReviewedCommit: z.string().optional(),
         pullRequest: z.lazy(() => PullRequestSchema),
-        role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]),
-        status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]),
+        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']),
+        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']),
         user: ApplicationUserSchema,
       }),
     )
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
   properties: z.object({}),
   reviewers: z
     .array(
@@ -978,18 +877,15 @@ const PullRequestSchemaDefinition: z.ZodTypeAny = z.object({
         approved: z.boolean().optional(),
         lastReviewedCommit: z.string().optional(),
         pullRequest: z.lazy(() => PullRequestSchema),
-        role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]),
-        status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]),
+        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']),
+        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']),
         user: ApplicationUserSchema,
       }),
     )
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
-  state: z.enum(["DECLINED", "MERGED", "OPEN"]),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
+  state: z.enum(['DECLINED', 'MERGED', 'OPEN']),
   title: z.string(),
   toRef: z.object({
     displayId: z.string(),
@@ -1026,12 +922,7 @@ export const PullRequestRefSchema = z.object({
     remote: z.boolean().optional(),
     scmId: z.string(),
     slug: z.string(),
-    state: z.enum([
-      "AVAILABLE",
-      "INITIALISATION_FAILED",
-      "INITIALISING",
-      "OFFLINE",
-    ]),
+    state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']),
     statusMessage: z.string(),
   }),
   type: z.object({}),
@@ -1039,9 +930,7 @@ export const PullRequestRefSchema = z.object({
 
 export type PullRequestRef = z.infer<typeof PullRequestRefSchema>;
 
-export const PullRequestParticipantSchema = z.lazy(
-  () => PullRequestParticipantSchemaDefinition,
-);
+export const PullRequestParticipantSchema = z.lazy(() => PullRequestParticipantSchemaDefinition);
 
 const PullRequestParticipantSchemaDefinition: z.ZodTypeAny = z.object({
   approved: z.boolean().optional(),
@@ -1060,29 +949,23 @@ const PullRequestParticipantSchemaDefinition: z.ZodTypeAny = z.object({
     open: z.boolean().optional(),
     participants: z
       .array(z.lazy(() => PullRequestParticipantSchema))
-      .refine(
-        (value) =>
-          value.length ===
-          new Set(value.map((item) => JSON.stringify(item))).size,
-        { message: "Array items must be unique" },
-      ),
+      .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+        message: 'Array items must be unique',
+      }),
     properties: z.object({}),
     reviewers: z
       .array(z.lazy(() => PullRequestParticipantSchema))
-      .refine(
-        (value) =>
-          value.length ===
-          new Set(value.map((item) => JSON.stringify(item))).size,
-        { message: "Array items must be unique" },
-      ),
-    state: z.enum(["DECLINED", "MERGED", "OPEN"]),
+      .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+        message: 'Array items must be unique',
+      }),
+    state: z.enum(['DECLINED', 'MERGED', 'OPEN']),
     title: z.string(),
     toRef: PullRequestRefSchema,
     updatedDate: z.string().datetime(),
     version: z.number().int().optional(),
   }),
-  role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]),
-  status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]),
+  role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']),
+  status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']),
   user: z.object({
     active: z.boolean().optional(),
     displayName: z.string().optional(),
@@ -1090,19 +973,17 @@ const PullRequestParticipantSchemaDefinition: z.ZodTypeAny = z.object({
     id: z.number().int().optional(),
     name: z.string().optional(),
     slug: z.string().optional(),
-    type: z.enum(["NORMAL", "SERVICE"]).optional(),
+    type: z.enum(['NORMAL', 'SERVICE']).optional(),
   }),
 });
 
-export type PullRequestParticipant = z.infer<
-  typeof PullRequestParticipantSchema
->;
+export type PullRequestParticipant = z.infer<typeof PullRequestParticipantSchema>;
 
 export const RestPullRequestParticipantSchema = z.object({
   approved: z.boolean().optional(),
   lastReviewedCommit: z.string().optional(),
-  role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-  status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+  role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+  status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
   user: z
     .object({
       active: z.boolean().optional(),
@@ -1113,29 +994,27 @@ export const RestPullRequestParticipantSchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
 });
 
-export type RestPullRequestParticipant = z.infer<
-  typeof RestPullRequestParticipantSchema
->;
+export type RestPullRequestParticipant = z.infer<typeof RestPullRequestParticipantSchema>;
 
 export const RestCommentSchema = z.lazy(() => RestCommentSchemaDefinition);
 
 const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
   anchor: z
     .object({
-      diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-      fileType: z.enum(["FROM", "TO"]).optional(),
+      diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+      fileType: z.enum(['FROM', 'TO']).optional(),
       fromHash: z.string().optional(),
       line: z.number().int().optional(),
-      lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+      lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
       multilineMarker: z
         .object({
           startLine: z.number().int().optional(),
-          startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+          startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
         })
         .optional(),
       multilineSpan: z
@@ -1160,10 +1039,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
             .object({
               approved: z.boolean().optional(),
               lastReviewedCommit: z.string().optional(),
-              role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-              status: z
-                .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                .optional(),
+              role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+              status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
               user: z
                 .object({
                   active: z.boolean().optional(),
@@ -1174,7 +1051,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                   links: z.object({}).optional(),
                   name: z.string(),
                   slug: z.string(),
-                  type: z.enum(["NORMAL", "SERVICE"]),
+                  type: z.enum(['NORMAL', 'SERVICE']),
                 })
                 .optional(),
             })
@@ -1222,7 +1099,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                           name: z.string(),
                           public: z.boolean().optional(),
                           scope: z.string().optional(),
-                          type: z.enum(["NORMAL", "PERSONAL"]),
+                          type: z.enum(['NORMAL', 'PERSONAL']),
                         })
                         .optional(),
                       public: z.boolean().optional(),
@@ -1231,12 +1108,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       scope: z.string().optional(),
                       slug: z.string().optional(),
                       state: z
-                        .enum([
-                          "AVAILABLE",
-                          "INITIALISATION_FAILED",
-                          "INITIALISING",
-                          "OFFLINE",
-                        ])
+                        .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                         .optional(),
                       statusMessage: z.string().optional(),
                     })
@@ -1253,7 +1125,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       name: z.string(),
                       public: z.boolean().optional(),
                       scope: z.string().optional(),
-                      type: z.enum(["NORMAL", "PERSONAL"]),
+                      type: z.enum(['NORMAL', 'PERSONAL']),
                     })
                     .optional(),
                   public: z.boolean().optional(),
@@ -1262,17 +1134,12 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                   scope: z.string().optional(),
                   slug: z.string().optional(),
                   state: z
-                    .enum([
-                      "AVAILABLE",
-                      "INITIALISATION_FAILED",
-                      "INITIALISING",
-                      "OFFLINE",
-                    ])
+                    .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                     .optional(),
                   statusMessage: z.string().optional(),
                 })
                 .optional(),
-              type: z.enum(["BRANCH", "TAG"]).optional(),
+              type: z.enum(['BRANCH', 'TAG']).optional(),
             })
             .optional(),
           htmlDescription: z.string().optional(),
@@ -1285,10 +1152,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
               z.object({
                 approved: z.boolean().optional(),
                 lastReviewedCommit: z.string().optional(),
-                role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-                status: z
-                  .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                  .optional(),
+                role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                 user: z
                   .object({
                     active: z.boolean().optional(),
@@ -1299,7 +1164,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
               }),
@@ -1310,10 +1175,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
               z.object({
                 approved: z.boolean().optional(),
                 lastReviewedCommit: z.string().optional(),
-                role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-                status: z
-                  .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                  .optional(),
+                role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                 user: z
                   .object({
                     active: z.boolean().optional(),
@@ -1324,13 +1187,13 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
               }),
             )
             .optional(),
-          state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+          state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
           title: z.string().optional(),
           toRef: z
             .object({
@@ -1369,7 +1232,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                           name: z.string(),
                           public: z.boolean().optional(),
                           scope: z.string().optional(),
-                          type: z.enum(["NORMAL", "PERSONAL"]),
+                          type: z.enum(['NORMAL', 'PERSONAL']),
                         })
                         .optional(),
                       public: z.boolean().optional(),
@@ -1378,12 +1241,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       scope: z.string().optional(),
                       slug: z.string().optional(),
                       state: z
-                        .enum([
-                          "AVAILABLE",
-                          "INITIALISATION_FAILED",
-                          "INITIALISING",
-                          "OFFLINE",
-                        ])
+                        .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                         .optional(),
                       statusMessage: z.string().optional(),
                     })
@@ -1400,7 +1258,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       name: z.string(),
                       public: z.boolean().optional(),
                       scope: z.string().optional(),
-                      type: z.enum(["NORMAL", "PERSONAL"]),
+                      type: z.enum(['NORMAL', 'PERSONAL']),
                     })
                     .optional(),
                   public: z.boolean().optional(),
@@ -1409,17 +1267,12 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                   scope: z.string().optional(),
                   slug: z.string().optional(),
                   state: z
-                    .enum([
-                      "AVAILABLE",
-                      "INITIALISATION_FAILED",
-                      "INITIALISING",
-                      "OFFLINE",
-                    ])
+                    .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                     .optional(),
                   statusMessage: z.string().optional(),
                 })
                 .optional(),
-              type: z.enum(["BRANCH", "TAG"]).optional(),
+              type: z.enum(['BRANCH', 'TAG']).optional(),
             })
             .optional(),
           updatedDate: z.number().int().optional(),
@@ -1448,7 +1301,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
   comments: z
@@ -1456,15 +1309,15 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
       z.object({
         anchor: z
           .object({
-            diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-            fileType: z.enum(["FROM", "TO"]).optional(),
+            diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+            fileType: z.enum(['FROM', 'TO']).optional(),
             fromHash: z.string().optional(),
             line: z.number().int().optional(),
-            lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+            lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
             multilineMarker: z
               .object({
                 startLine: z.number().int().optional(),
-                startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
               })
               .optional(),
             multilineSpan: z
@@ -1489,12 +1342,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                   .object({
                     approved: z.boolean().optional(),
                     lastReviewedCommit: z.string().optional(),
-                    role: z
-                      .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                      .optional(),
-                    status: z
-                      .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                      .optional(),
+                    role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                    status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                     user: z
                       .object({
                         active: z.boolean().optional(),
@@ -1505,7 +1354,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                   })
@@ -1553,7 +1402,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -1563,10 +1412,10 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
@@ -1584,7 +1433,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             name: z.string(),
                             public: z.boolean().optional(),
                             scope: z.string().optional(),
-                            type: z.enum(["NORMAL", "PERSONAL"]),
+                            type: z.enum(['NORMAL', 'PERSONAL']),
                           })
                           .optional(),
                         public: z.boolean().optional(),
@@ -1593,17 +1442,12 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                         scope: z.string().optional(),
                         slug: z.string().optional(),
                         state: z
-                          .enum([
-                            "AVAILABLE",
-                            "INITIALISATION_FAILED",
-                            "INITIALISING",
-                            "OFFLINE",
-                          ])
+                          .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                           .optional(),
                         statusMessage: z.string().optional(),
                       })
                       .optional(),
-                    type: z.enum(["BRANCH", "TAG"]).optional(),
+                    type: z.enum(['BRANCH', 'TAG']).optional(),
                   })
                   .optional(),
                 htmlDescription: z.string().optional(),
@@ -1611,11 +1455,9 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                 links: z.object({}).optional(),
                 locked: z.boolean().optional(),
                 open: z.boolean().optional(),
-                participants: z
-                  .array(RestPullRequestParticipantSchema)
-                  .optional(),
+                participants: z.array(RestPullRequestParticipantSchema).optional(),
                 reviewers: z.array(RestPullRequestParticipantSchema).optional(),
-                state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+                state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                 title: z.string().optional(),
                 toRef: z
                   .object({
@@ -1654,7 +1496,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -1664,10 +1506,10 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
@@ -1685,7 +1527,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             name: z.string(),
                             public: z.boolean().optional(),
                             scope: z.string().optional(),
-                            type: z.enum(["NORMAL", "PERSONAL"]),
+                            type: z.enum(['NORMAL', 'PERSONAL']),
                           })
                           .optional(),
                         public: z.boolean().optional(),
@@ -1694,17 +1536,12 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                         scope: z.string().optional(),
                         slug: z.string().optional(),
                         state: z
-                          .enum([
-                            "AVAILABLE",
-                            "INITIALISATION_FAILED",
-                            "INITIALISING",
-                            "OFFLINE",
-                          ])
+                          .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                           .optional(),
                         statusMessage: z.string().optional(),
                       })
                       .optional(),
-                    type: z.enum(["BRANCH", "TAG"]).optional(),
+                    type: z.enum(['BRANCH', 'TAG']).optional(),
                   })
                   .optional(),
                 updatedDate: z.number().int().optional(),
@@ -1733,7 +1570,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
             links: z.object({}).optional(),
             name: z.string(),
             slug: z.string(),
-            type: z.enum(["NORMAL", "SERVICE"]),
+            type: z.enum(['NORMAL', 'SERVICE']),
           })
           .optional(),
         comments: z.array(z.lazy(() => RestCommentSchema)).optional(),
@@ -1744,15 +1581,15 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
           .object({
             anchor: z
               .object({
-                diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-                fileType: z.enum(["FROM", "TO"]).optional(),
+                diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+                fileType: z.enum(['FROM', 'TO']).optional(),
                 fromHash: z.string().optional(),
                 line: z.number().int().optional(),
-                lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+                lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
                 multilineMarker: z
                   .object({
                     startLine: z.number().int().optional(),
-                    startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                    startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                   })
                   .optional(),
                 multilineSpan: z
@@ -1777,12 +1614,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       .object({
                         approved: z.boolean().optional(),
                         lastReviewedCommit: z.string().optional(),
-                        role: z
-                          .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                          .optional(),
-                        status: z
-                          .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                          .optional(),
+                        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                         user: z
                           .object({
                             active: z.boolean().optional(),
@@ -1793,7 +1626,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             links: z.object({}).optional(),
                             name: z.string(),
                             slug: z.string(),
-                            type: z.enum(["NORMAL", "SERVICE"]),
+                            type: z.enum(['NORMAL', 'SERVICE']),
                           })
                           .optional(),
                       })
@@ -1841,7 +1674,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -1851,10 +1684,10 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
@@ -1872,7 +1705,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -1882,16 +1715,16 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
                           })
                           .optional(),
-                        type: z.enum(["BRANCH", "TAG"]).optional(),
+                        type: z.enum(['BRANCH', 'TAG']).optional(),
                       })
                       .optional(),
                     htmlDescription: z.string().optional(),
@@ -1899,13 +1732,9 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                     links: z.object({}).optional(),
                     locked: z.boolean().optional(),
                     open: z.boolean().optional(),
-                    participants: z
-                      .array(RestPullRequestParticipantSchema)
-                      .optional(),
-                    reviewers: z
-                      .array(RestPullRequestParticipantSchema)
-                      .optional(),
-                    state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+                    participants: z.array(RestPullRequestParticipantSchema).optional(),
+                    reviewers: z.array(RestPullRequestParticipantSchema).optional(),
+                    state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                     title: z.string().optional(),
                     toRef: z
                       .object({
@@ -1944,7 +1773,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -1954,10 +1783,10 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
@@ -1975,7 +1804,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -1985,16 +1814,16 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
                           })
                           .optional(),
-                        type: z.enum(["BRANCH", "TAG"]).optional(),
+                        type: z.enum(['BRANCH', 'TAG']).optional(),
                       })
                       .optional(),
                     updatedDate: z.number().int().optional(),
@@ -2023,7 +1852,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             comments: z.array(z.lazy(() => RestCommentSchema)).optional(),
@@ -2044,7 +1873,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             severity: z.string().optional(),
@@ -2062,7 +1891,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             updatedDate: z.number().int().optional(),
@@ -2083,7 +1912,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
             links: z.object({}).optional(),
             name: z.string(),
             slug: z.string(),
-            type: z.enum(["NORMAL", "SERVICE"]),
+            type: z.enum(['NORMAL', 'SERVICE']),
           })
           .optional(),
         severity: z.string().optional(),
@@ -2101,7 +1930,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
             links: z.object({}).optional(),
             name: z.string(),
             slug: z.string(),
-            type: z.enum(["NORMAL", "SERVICE"]),
+            type: z.enum(['NORMAL', 'SERVICE']),
           })
           .optional(),
         updatedDate: z.number().int().optional(),
@@ -2116,15 +1945,15 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
     .object({
       anchor: z
         .object({
-          diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-          fileType: z.enum(["FROM", "TO"]).optional(),
+          diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+          fileType: z.enum(['FROM', 'TO']).optional(),
           fromHash: z.string().optional(),
           line: z.number().int().optional(),
-          lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+          lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
           multilineMarker: z
             .object({
               startLine: z.number().int().optional(),
-              startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+              startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
             })
             .optional(),
           multilineSpan: z
@@ -2149,12 +1978,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                 .object({
                   approved: z.boolean().optional(),
                   lastReviewedCommit: z.string().optional(),
-                  role: z
-                    .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                    .optional(),
-                  status: z
-                    .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                    .optional(),
+                  role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                  status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                   user: z
                     .object({
                       active: z.boolean().optional(),
@@ -2165,7 +1990,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       links: z.object({}).optional(),
                       name: z.string(),
                       slug: z.string(),
-                      type: z.enum(["NORMAL", "SERVICE"]),
+                      type: z.enum(['NORMAL', 'SERVICE']),
                     })
                     .optional(),
                 })
@@ -2213,7 +2038,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                               name: z.string(),
                               public: z.boolean().optional(),
                               scope: z.string().optional(),
-                              type: z.enum(["NORMAL", "PERSONAL"]),
+                              type: z.enum(['NORMAL', 'PERSONAL']),
                             })
                             .optional(),
                           public: z.boolean().optional(),
@@ -2222,12 +2047,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                           scope: z.string().optional(),
                           slug: z.string().optional(),
                           state: z
-                            .enum([
-                              "AVAILABLE",
-                              "INITIALISATION_FAILED",
-                              "INITIALISING",
-                              "OFFLINE",
-                            ])
+                            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                             .optional(),
                           statusMessage: z.string().optional(),
                         })
@@ -2244,7 +2064,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                           name: z.string(),
                           public: z.boolean().optional(),
                           scope: z.string().optional(),
-                          type: z.enum(["NORMAL", "PERSONAL"]),
+                          type: z.enum(['NORMAL', 'PERSONAL']),
                         })
                         .optional(),
                       public: z.boolean().optional(),
@@ -2253,17 +2073,12 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       scope: z.string().optional(),
                       slug: z.string().optional(),
                       state: z
-                        .enum([
-                          "AVAILABLE",
-                          "INITIALISATION_FAILED",
-                          "INITIALISING",
-                          "OFFLINE",
-                        ])
+                        .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                         .optional(),
                       statusMessage: z.string().optional(),
                     })
                     .optional(),
-                  type: z.enum(["BRANCH", "TAG"]).optional(),
+                  type: z.enum(['BRANCH', 'TAG']).optional(),
                 })
                 .optional(),
               htmlDescription: z.string().optional(),
@@ -2276,12 +2091,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                   z.object({
                     approved: z.boolean().optional(),
                     lastReviewedCommit: z.string().optional(),
-                    role: z
-                      .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                      .optional(),
-                    status: z
-                      .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                      .optional(),
+                    role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                    status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                     user: z
                       .object({
                         active: z.boolean().optional(),
@@ -2292,7 +2103,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                   }),
@@ -2303,12 +2114,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                   z.object({
                     approved: z.boolean().optional(),
                     lastReviewedCommit: z.string().optional(),
-                    role: z
-                      .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                      .optional(),
-                    status: z
-                      .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                      .optional(),
+                    role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                    status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                     user: z
                       .object({
                         active: z.boolean().optional(),
@@ -2319,13 +2126,13 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                   }),
                 )
                 .optional(),
-              state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+              state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
               title: z.string().optional(),
               toRef: z
                 .object({
@@ -2364,7 +2171,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                               name: z.string(),
                               public: z.boolean().optional(),
                               scope: z.string().optional(),
-                              type: z.enum(["NORMAL", "PERSONAL"]),
+                              type: z.enum(['NORMAL', 'PERSONAL']),
                             })
                             .optional(),
                           public: z.boolean().optional(),
@@ -2373,12 +2180,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                           scope: z.string().optional(),
                           slug: z.string().optional(),
                           state: z
-                            .enum([
-                              "AVAILABLE",
-                              "INITIALISATION_FAILED",
-                              "INITIALISING",
-                              "OFFLINE",
-                            ])
+                            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                             .optional(),
                           statusMessage: z.string().optional(),
                         })
@@ -2395,7 +2197,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                           name: z.string(),
                           public: z.boolean().optional(),
                           scope: z.string().optional(),
-                          type: z.enum(["NORMAL", "PERSONAL"]),
+                          type: z.enum(['NORMAL', 'PERSONAL']),
                         })
                         .optional(),
                       public: z.boolean().optional(),
@@ -2404,17 +2206,12 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       scope: z.string().optional(),
                       slug: z.string().optional(),
                       state: z
-                        .enum([
-                          "AVAILABLE",
-                          "INITIALISATION_FAILED",
-                          "INITIALISING",
-                          "OFFLINE",
-                        ])
+                        .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                         .optional(),
                       statusMessage: z.string().optional(),
                     })
                     .optional(),
-                  type: z.enum(["BRANCH", "TAG"]).optional(),
+                  type: z.enum(['BRANCH', 'TAG']).optional(),
                 })
                 .optional(),
               updatedDate: z.number().int().optional(),
@@ -2443,7 +2240,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
           links: z.object({}).optional(),
           name: z.string(),
           slug: z.string(),
-          type: z.enum(["NORMAL", "SERVICE"]),
+          type: z.enum(['NORMAL', 'SERVICE']),
         })
         .optional(),
       comments: z
@@ -2451,15 +2248,15 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
           z.object({
             anchor: z
               .object({
-                diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-                fileType: z.enum(["FROM", "TO"]).optional(),
+                diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+                fileType: z.enum(['FROM', 'TO']).optional(),
                 fromHash: z.string().optional(),
                 line: z.number().int().optional(),
-                lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+                lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
                 multilineMarker: z
                   .object({
                     startLine: z.number().int().optional(),
-                    startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                    startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                   })
                   .optional(),
                 multilineSpan: z
@@ -2484,12 +2281,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                       .object({
                         approved: z.boolean().optional(),
                         lastReviewedCommit: z.string().optional(),
-                        role: z
-                          .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                          .optional(),
-                        status: z
-                          .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                          .optional(),
+                        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                         user: z
                           .object({
                             active: z.boolean().optional(),
@@ -2500,7 +2293,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             links: z.object({}).optional(),
                             name: z.string(),
                             slug: z.string(),
-                            type: z.enum(["NORMAL", "SERVICE"]),
+                            type: z.enum(['NORMAL', 'SERVICE']),
                           })
                           .optional(),
                       })
@@ -2548,7 +2341,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -2558,10 +2351,10 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
@@ -2579,7 +2372,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -2589,16 +2382,16 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
                           })
                           .optional(),
-                        type: z.enum(["BRANCH", "TAG"]).optional(),
+                        type: z.enum(['BRANCH', 'TAG']).optional(),
                       })
                       .optional(),
                     htmlDescription: z.string().optional(),
@@ -2606,13 +2399,9 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                     links: z.object({}).optional(),
                     locked: z.boolean().optional(),
                     open: z.boolean().optional(),
-                    participants: z
-                      .array(RestPullRequestParticipantSchema)
-                      .optional(),
-                    reviewers: z
-                      .array(RestPullRequestParticipantSchema)
-                      .optional(),
-                    state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+                    participants: z.array(RestPullRequestParticipantSchema).optional(),
+                    reviewers: z.array(RestPullRequestParticipantSchema).optional(),
+                    state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                     title: z.string().optional(),
                     toRef: z
                       .object({
@@ -2651,7 +2440,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -2661,10 +2450,10 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
@@ -2682,7 +2471,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -2692,16 +2481,16 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
                           })
                           .optional(),
-                        type: z.enum(["BRANCH", "TAG"]).optional(),
+                        type: z.enum(['BRANCH', 'TAG']).optional(),
                       })
                       .optional(),
                     updatedDate: z.number().int().optional(),
@@ -2730,7 +2519,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             comments: z.array(z.lazy(() => RestCommentSchema)).optional(),
@@ -2741,19 +2530,15 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
               .object({
                 anchor: z
                   .object({
-                    diffType: z
-                      .enum(["COMMIT", "EFFECTIVE", "RANGE"])
-                      .optional(),
-                    fileType: z.enum(["FROM", "TO"]).optional(),
+                    diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+                    fileType: z.enum(['FROM', 'TO']).optional(),
                     fromHash: z.string().optional(),
                     line: z.number().int().optional(),
-                    lineType: z
-                      .enum(["ADDED", "CONTEXT", "REMOVED"])
-                      .optional(),
+                    lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
                     multilineMarker: z
                       .object({
                         startLine: z.number().int().optional(),
-                        startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                        startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                       })
                       .optional(),
                     multilineSpan: z
@@ -2778,12 +2563,8 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                           .object({
                             approved: z.boolean().optional(),
                             lastReviewedCommit: z.string().optional(),
-                            role: z
-                              .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                              .optional(),
-                            status: z
-                              .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                              .optional(),
+                            role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                            status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                             user: z
                               .object({
                                 active: z.boolean().optional(),
@@ -2794,7 +2575,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 links: z.object({}).optional(),
                                 name: z.string(),
                                 slug: z.string(),
-                                type: z.enum(["NORMAL", "SERVICE"]),
+                                type: z.enum(['NORMAL', 'SERVICE']),
                               })
                               .optional(),
                           })
@@ -2842,7 +2623,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                         name: z.string(),
                                         public: z.boolean().optional(),
                                         scope: z.string().optional(),
-                                        type: z.enum(["NORMAL", "PERSONAL"]),
+                                        type: z.enum(['NORMAL', 'PERSONAL']),
                                       })
                                       .optional(),
                                     public: z.boolean().optional(),
@@ -2852,10 +2633,10 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                     slug: z.string().optional(),
                                     state: z
                                       .enum([
-                                        "AVAILABLE",
-                                        "INITIALISATION_FAILED",
-                                        "INITIALISING",
-                                        "OFFLINE",
+                                        'AVAILABLE',
+                                        'INITIALISATION_FAILED',
+                                        'INITIALISING',
+                                        'OFFLINE',
                                       ])
                                       .optional(),
                                     statusMessage: z.string().optional(),
@@ -2873,7 +2654,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -2883,16 +2664,16 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
                               })
                               .optional(),
-                            type: z.enum(["BRANCH", "TAG"]).optional(),
+                            type: z.enum(['BRANCH', 'TAG']).optional(),
                           })
                           .optional(),
                         htmlDescription: z.string().optional(),
@@ -2900,15 +2681,9 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                         links: z.object({}).optional(),
                         locked: z.boolean().optional(),
                         open: z.boolean().optional(),
-                        participants: z
-                          .array(RestPullRequestParticipantSchema)
-                          .optional(),
-                        reviewers: z
-                          .array(RestPullRequestParticipantSchema)
-                          .optional(),
-                        state: z
-                          .enum(["DECLINED", "MERGED", "OPEN"])
-                          .optional(),
+                        participants: z.array(RestPullRequestParticipantSchema).optional(),
+                        reviewers: z.array(RestPullRequestParticipantSchema).optional(),
+                        state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                         title: z.string().optional(),
                         toRef: z
                           .object({
@@ -2947,7 +2722,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                         name: z.string(),
                                         public: z.boolean().optional(),
                                         scope: z.string().optional(),
-                                        type: z.enum(["NORMAL", "PERSONAL"]),
+                                        type: z.enum(['NORMAL', 'PERSONAL']),
                                       })
                                       .optional(),
                                     public: z.boolean().optional(),
@@ -2957,10 +2732,10 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                     slug: z.string().optional(),
                                     state: z
                                       .enum([
-                                        "AVAILABLE",
-                                        "INITIALISATION_FAILED",
-                                        "INITIALISING",
-                                        "OFFLINE",
+                                        'AVAILABLE',
+                                        'INITIALISATION_FAILED',
+                                        'INITIALISING',
+                                        'OFFLINE',
                                       ])
                                       .optional(),
                                     statusMessage: z.string().optional(),
@@ -2978,7 +2753,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -2988,16 +2763,16 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
                               })
                               .optional(),
-                            type: z.enum(["BRANCH", "TAG"]).optional(),
+                            type: z.enum(['BRANCH', 'TAG']).optional(),
                           })
                           .optional(),
                         updatedDate: z.number().int().optional(),
@@ -3026,7 +2801,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 comments: z.array(z.lazy(() => RestCommentSchema)).optional(),
@@ -3047,7 +2822,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 severity: z.string().optional(),
@@ -3065,7 +2840,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 updatedDate: z.number().int().optional(),
@@ -3086,7 +2861,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             severity: z.string().optional(),
@@ -3104,7 +2879,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             updatedDate: z.number().int().optional(),
@@ -3129,7 +2904,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
           links: z.object({}).optional(),
           name: z.string(),
           slug: z.string(),
-          type: z.enum(["NORMAL", "SERVICE"]),
+          type: z.enum(['NORMAL', 'SERVICE']),
         })
         .optional(),
       severity: z.string().optional(),
@@ -3147,7 +2922,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
           links: z.object({}).optional(),
           name: z.string(),
           slug: z.string(),
-          type: z.enum(["NORMAL", "SERVICE"]),
+          type: z.enum(['NORMAL', 'SERVICE']),
         })
         .optional(),
       updatedDate: z.number().int().optional(),
@@ -3168,7 +2943,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
   severity: z.string().optional(),
@@ -3186,7 +2961,7 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
   updatedDate: z.number().int().optional(),
@@ -3196,15 +2971,15 @@ const RestCommentSchemaDefinition: z.ZodTypeAny = z.object({
 export type RestComment = z.infer<typeof RestCommentSchema>;
 
 export const RestCommentThreadDiffAnchorSchema = z.object({
-  diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-  fileType: z.enum(["FROM", "TO"]).optional(),
+  diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+  fileType: z.enum(['FROM', 'TO']).optional(),
   fromHash: z.string().optional(),
   line: z.number().int().optional(),
-  lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+  lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
   multilineMarker: z
     .object({
       startLine: z.number().int().optional(),
-      startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+      startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
     })
     .optional(),
   multilineSpan: z
@@ -3229,8 +3004,8 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
         .object({
           approved: z.boolean().optional(),
           lastReviewedCommit: z.string().optional(),
-          role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-          status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+          role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+          status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
           user: z
             .object({
               active: z.boolean().optional(),
@@ -3241,7 +3016,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
               links: z.object({}).optional(),
               name: z.string(),
               slug: z.string(),
-              type: z.enum(["NORMAL", "SERVICE"]),
+              type: z.enum(['NORMAL', 'SERVICE']),
             })
             .optional(),
         })
@@ -3289,7 +3064,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
                       name: z.string(),
                       public: z.boolean().optional(),
                       scope: z.string().optional(),
-                      type: z.enum(["NORMAL", "PERSONAL"]),
+                      type: z.enum(['NORMAL', 'PERSONAL']),
                     })
                     .optional(),
                   public: z.boolean().optional(),
@@ -3298,12 +3073,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
                   scope: z.string().optional(),
                   slug: z.string().optional(),
                   state: z
-                    .enum([
-                      "AVAILABLE",
-                      "INITIALISATION_FAILED",
-                      "INITIALISING",
-                      "OFFLINE",
-                    ])
+                    .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                     .optional(),
                   statusMessage: z.string().optional(),
                 })
@@ -3320,7 +3090,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
                   name: z.string(),
                   public: z.boolean().optional(),
                   scope: z.string().optional(),
-                  type: z.enum(["NORMAL", "PERSONAL"]),
+                  type: z.enum(['NORMAL', 'PERSONAL']),
                 })
                 .optional(),
               public: z.boolean().optional(),
@@ -3329,17 +3099,12 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
               scope: z.string().optional(),
               slug: z.string().optional(),
               state: z
-                .enum([
-                  "AVAILABLE",
-                  "INITIALISATION_FAILED",
-                  "INITIALISING",
-                  "OFFLINE",
-                ])
+                .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                 .optional(),
               statusMessage: z.string().optional(),
             })
             .optional(),
-          type: z.enum(["BRANCH", "TAG"]).optional(),
+          type: z.enum(['BRANCH', 'TAG']).optional(),
         })
         .optional(),
       htmlDescription: z.string().optional(),
@@ -3352,8 +3117,8 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
           z.object({
             approved: z.boolean().optional(),
             lastReviewedCommit: z.string().optional(),
-            role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-            status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+            role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+            status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
             user: z
               .object({
                 active: z.boolean().optional(),
@@ -3364,7 +3129,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
           }),
@@ -3375,8 +3140,8 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
           z.object({
             approved: z.boolean().optional(),
             lastReviewedCommit: z.string().optional(),
-            role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-            status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+            role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+            status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
             user: z
               .object({
                 active: z.boolean().optional(),
@@ -3387,13 +3152,13 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
           }),
         )
         .optional(),
-      state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+      state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
       title: z.string().optional(),
       toRef: z
         .object({
@@ -3432,7 +3197,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
                       name: z.string(),
                       public: z.boolean().optional(),
                       scope: z.string().optional(),
-                      type: z.enum(["NORMAL", "PERSONAL"]),
+                      type: z.enum(['NORMAL', 'PERSONAL']),
                     })
                     .optional(),
                   public: z.boolean().optional(),
@@ -3441,12 +3206,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
                   scope: z.string().optional(),
                   slug: z.string().optional(),
                   state: z
-                    .enum([
-                      "AVAILABLE",
-                      "INITIALISATION_FAILED",
-                      "INITIALISING",
-                      "OFFLINE",
-                    ])
+                    .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                     .optional(),
                   statusMessage: z.string().optional(),
                 })
@@ -3463,7 +3223,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
                   name: z.string(),
                   public: z.boolean().optional(),
                   scope: z.string().optional(),
-                  type: z.enum(["NORMAL", "PERSONAL"]),
+                  type: z.enum(['NORMAL', 'PERSONAL']),
                 })
                 .optional(),
               public: z.boolean().optional(),
@@ -3472,17 +3232,12 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
               scope: z.string().optional(),
               slug: z.string().optional(),
               state: z
-                .enum([
-                  "AVAILABLE",
-                  "INITIALISATION_FAILED",
-                  "INITIALISING",
-                  "OFFLINE",
-                ])
+                .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                 .optional(),
               statusMessage: z.string().optional(),
             })
             .optional(),
-          type: z.enum(["BRANCH", "TAG"]).optional(),
+          type: z.enum(['BRANCH', 'TAG']).optional(),
         })
         .optional(),
       updatedDate: z.number().int().optional(),
@@ -3500,9 +3255,7 @@ export const RestCommentThreadDiffAnchorSchema = z.object({
   toHash: z.string().optional(),
 });
 
-export type RestCommentThreadDiffAnchor = z.infer<
-  typeof RestCommentThreadDiffAnchorSchema
->;
+export type RestCommentThreadDiffAnchor = z.infer<typeof RestCommentThreadDiffAnchorSchema>;
 
 export const RestEmoticonSchema = z.object({
   shortcut: z.string().optional(),
@@ -3514,12 +3267,10 @@ export type RestEmoticon = z.infer<typeof RestEmoticonSchema>;
 
 export const RestMultilineCommentMarkerSchema = z.object({
   startLine: z.number().int().optional(),
-  startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+  startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
 });
 
-export type RestMultilineCommentMarker = z.infer<
-  typeof RestMultilineCommentMarkerSchema
->;
+export type RestMultilineCommentMarker = z.infer<typeof RestMultilineCommentMarkerSchema>;
 
 export const RestMultilineCommentSpanSchema = z.object({
   dstSpanEnd: z.number().int().optional(),
@@ -3528,9 +3279,7 @@ export const RestMultilineCommentSpanSchema = z.object({
   srcSpanStart: z.number().int().optional(),
 });
 
-export type RestMultilineCommentSpan = z.infer<
-  typeof RestMultilineCommentSpanSchema
->;
+export type RestMultilineCommentSpan = z.infer<typeof RestMultilineCommentSpanSchema>;
 
 export const RestPathSchema = z.object({
   components: z.array(z.string()).optional(),
@@ -3551,7 +3300,7 @@ export const RestProjectSchema = z.object({
   name: z.string().optional(),
   public: z.boolean().optional(),
   scope: z.string().optional(),
-  type: z.enum(["NORMAL", "PERSONAL"]).optional(),
+  type: z.enum(['NORMAL', 'PERSONAL']).optional(),
 });
 
 export type RestProject = z.infer<typeof RestProjectSchema>;
@@ -3561,8 +3310,8 @@ export const RestPullRequestSchema = z.object({
     .object({
       approved: z.boolean().optional(),
       lastReviewedCommit: z.string().optional(),
-      role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-      status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+      role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+      status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
       user: z
         .object({
           active: z.boolean().optional(),
@@ -3573,7 +3322,7 @@ export const RestPullRequestSchema = z.object({
           links: z.object({}).optional(),
           name: z.string(),
           slug: z.string(),
-          type: z.enum(["NORMAL", "SERVICE"]),
+          type: z.enum(['NORMAL', 'SERVICE']),
         })
         .optional(),
     })
@@ -3621,7 +3370,7 @@ export const RestPullRequestSchema = z.object({
                   name: z.string(),
                   public: z.boolean().optional(),
                   scope: z.string().optional(),
-                  type: z.enum(["NORMAL", "PERSONAL"]),
+                  type: z.enum(['NORMAL', 'PERSONAL']),
                 })
                 .optional(),
               public: z.boolean().optional(),
@@ -3630,12 +3379,7 @@ export const RestPullRequestSchema = z.object({
               scope: z.string().optional(),
               slug: z.string().optional(),
               state: z
-                .enum([
-                  "AVAILABLE",
-                  "INITIALISATION_FAILED",
-                  "INITIALISING",
-                  "OFFLINE",
-                ])
+                .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                 .optional(),
               statusMessage: z.string().optional(),
             })
@@ -3652,7 +3396,7 @@ export const RestPullRequestSchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -3661,17 +3405,12 @@ export const RestPullRequestSchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
         .optional(),
-      type: z.enum(["BRANCH", "TAG"]).optional(),
+      type: z.enum(['BRANCH', 'TAG']).optional(),
     })
     .optional(),
   htmlDescription: z.string().optional(),
@@ -3684,8 +3423,8 @@ export const RestPullRequestSchema = z.object({
       z.object({
         approved: z.boolean().optional(),
         lastReviewedCommit: z.string().optional(),
-        role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-        status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
         user: z
           .object({
             active: z.boolean().optional(),
@@ -3696,7 +3435,7 @@ export const RestPullRequestSchema = z.object({
             links: z.object({}).optional(),
             name: z.string(),
             slug: z.string(),
-            type: z.enum(["NORMAL", "SERVICE"]),
+            type: z.enum(['NORMAL', 'SERVICE']),
           })
           .optional(),
       }),
@@ -3707,8 +3446,8 @@ export const RestPullRequestSchema = z.object({
       z.object({
         approved: z.boolean().optional(),
         lastReviewedCommit: z.string().optional(),
-        role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-        status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
         user: z
           .object({
             active: z.boolean().optional(),
@@ -3719,13 +3458,13 @@ export const RestPullRequestSchema = z.object({
             links: z.object({}).optional(),
             name: z.string(),
             slug: z.string(),
-            type: z.enum(["NORMAL", "SERVICE"]),
+            type: z.enum(['NORMAL', 'SERVICE']),
           })
           .optional(),
       }),
     )
     .optional(),
-  state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+  state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
   title: z.string().optional(),
   toRef: z
     .object({
@@ -3764,7 +3503,7 @@ export const RestPullRequestSchema = z.object({
                   name: z.string(),
                   public: z.boolean().optional(),
                   scope: z.string().optional(),
-                  type: z.enum(["NORMAL", "PERSONAL"]),
+                  type: z.enum(['NORMAL', 'PERSONAL']),
                 })
                 .optional(),
               public: z.boolean().optional(),
@@ -3773,12 +3512,7 @@ export const RestPullRequestSchema = z.object({
               scope: z.string().optional(),
               slug: z.string().optional(),
               state: z
-                .enum([
-                  "AVAILABLE",
-                  "INITIALISATION_FAILED",
-                  "INITIALISING",
-                  "OFFLINE",
-                ])
+                .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                 .optional(),
               statusMessage: z.string().optional(),
             })
@@ -3795,7 +3529,7 @@ export const RestPullRequestSchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -3804,17 +3538,12 @@ export const RestPullRequestSchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
         .optional(),
-      type: z.enum(["BRANCH", "TAG"]).optional(),
+      type: z.enum(['BRANCH', 'TAG']).optional(),
     })
     .optional(),
   updatedDate: z.number().int().optional(),
@@ -3859,7 +3588,7 @@ export const RestPullRequestRefSchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -3868,12 +3597,7 @@ export const RestPullRequestRefSchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -3890,7 +3614,7 @@ export const RestPullRequestRefSchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -3898,13 +3622,11 @@ export const RestPullRequestRefSchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
-  type: z.enum(["BRANCH", "TAG"]).optional(),
+  type: z.enum(['BRANCH', 'TAG']).optional(),
 });
 
 export type RestPullRequestRef = z.infer<typeof RestPullRequestRefSchema>;
@@ -3940,7 +3662,7 @@ export const RestRepositorySchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -3948,9 +3670,7 @@ export const RestRepositorySchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
@@ -3966,7 +3686,7 @@ export const RestRepositorySchema = z.object({
       name: z.string(),
       public: z.boolean().optional(),
       scope: z.string().optional(),
-      type: z.enum(["NORMAL", "PERSONAL"]),
+      type: z.enum(['NORMAL', 'PERSONAL']),
     })
     .optional(),
   public: z.boolean().optional(),
@@ -3974,9 +3694,7 @@ export const RestRepositorySchema = z.object({
   scmId: z.string().optional(),
   scope: z.string().optional(),
   slug: z.string().optional(),
-  state: z
-    .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-    .optional(),
+  state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
   statusMessage: z.string().optional(),
 });
 
@@ -3987,15 +3705,15 @@ export const RestUserReactionSchema = z.object({
     .object({
       anchor: z
         .object({
-          diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-          fileType: z.enum(["FROM", "TO"]).optional(),
+          diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+          fileType: z.enum(['FROM', 'TO']).optional(),
           fromHash: z.string().optional(),
           line: z.number().int().optional(),
-          lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+          lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
           multilineMarker: z
             .object({
               startLine: z.number().int().optional(),
-              startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+              startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
             })
             .optional(),
           multilineSpan: z
@@ -4020,12 +3738,8 @@ export const RestUserReactionSchema = z.object({
                 .object({
                   approved: z.boolean().optional(),
                   lastReviewedCommit: z.string().optional(),
-                  role: z
-                    .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                    .optional(),
-                  status: z
-                    .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                    .optional(),
+                  role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                  status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                   user: z
                     .object({
                       active: z.boolean().optional(),
@@ -4036,7 +3750,7 @@ export const RestUserReactionSchema = z.object({
                       links: z.object({}).optional(),
                       name: z.string(),
                       slug: z.string(),
-                      type: z.enum(["NORMAL", "SERVICE"]),
+                      type: z.enum(['NORMAL', 'SERVICE']),
                     })
                     .optional(),
                 })
@@ -4084,7 +3798,7 @@ export const RestUserReactionSchema = z.object({
                               name: z.string(),
                               public: z.boolean().optional(),
                               scope: z.string().optional(),
-                              type: z.enum(["NORMAL", "PERSONAL"]),
+                              type: z.enum(['NORMAL', 'PERSONAL']),
                             })
                             .optional(),
                           public: z.boolean().optional(),
@@ -4093,12 +3807,7 @@ export const RestUserReactionSchema = z.object({
                           scope: z.string().optional(),
                           slug: z.string().optional(),
                           state: z
-                            .enum([
-                              "AVAILABLE",
-                              "INITIALISATION_FAILED",
-                              "INITIALISING",
-                              "OFFLINE",
-                            ])
+                            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                             .optional(),
                           statusMessage: z.string().optional(),
                         })
@@ -4115,7 +3824,7 @@ export const RestUserReactionSchema = z.object({
                           name: z.string(),
                           public: z.boolean().optional(),
                           scope: z.string().optional(),
-                          type: z.enum(["NORMAL", "PERSONAL"]),
+                          type: z.enum(['NORMAL', 'PERSONAL']),
                         })
                         .optional(),
                       public: z.boolean().optional(),
@@ -4124,17 +3833,12 @@ export const RestUserReactionSchema = z.object({
                       scope: z.string().optional(),
                       slug: z.string().optional(),
                       state: z
-                        .enum([
-                          "AVAILABLE",
-                          "INITIALISATION_FAILED",
-                          "INITIALISING",
-                          "OFFLINE",
-                        ])
+                        .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                         .optional(),
                       statusMessage: z.string().optional(),
                     })
                     .optional(),
-                  type: z.enum(["BRANCH", "TAG"]).optional(),
+                  type: z.enum(['BRANCH', 'TAG']).optional(),
                 })
                 .optional(),
               htmlDescription: z.string().optional(),
@@ -4147,12 +3851,8 @@ export const RestUserReactionSchema = z.object({
                   z.object({
                     approved: z.boolean().optional(),
                     lastReviewedCommit: z.string().optional(),
-                    role: z
-                      .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                      .optional(),
-                    status: z
-                      .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                      .optional(),
+                    role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                    status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                     user: z
                       .object({
                         active: z.boolean().optional(),
@@ -4163,7 +3863,7 @@ export const RestUserReactionSchema = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                   }),
@@ -4174,12 +3874,8 @@ export const RestUserReactionSchema = z.object({
                   z.object({
                     approved: z.boolean().optional(),
                     lastReviewedCommit: z.string().optional(),
-                    role: z
-                      .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                      .optional(),
-                    status: z
-                      .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                      .optional(),
+                    role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                    status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                     user: z
                       .object({
                         active: z.boolean().optional(),
@@ -4190,13 +3886,13 @@ export const RestUserReactionSchema = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                   }),
                 )
                 .optional(),
-              state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+              state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
               title: z.string().optional(),
               toRef: z
                 .object({
@@ -4235,7 +3931,7 @@ export const RestUserReactionSchema = z.object({
                               name: z.string(),
                               public: z.boolean().optional(),
                               scope: z.string().optional(),
-                              type: z.enum(["NORMAL", "PERSONAL"]),
+                              type: z.enum(['NORMAL', 'PERSONAL']),
                             })
                             .optional(),
                           public: z.boolean().optional(),
@@ -4244,12 +3940,7 @@ export const RestUserReactionSchema = z.object({
                           scope: z.string().optional(),
                           slug: z.string().optional(),
                           state: z
-                            .enum([
-                              "AVAILABLE",
-                              "INITIALISATION_FAILED",
-                              "INITIALISING",
-                              "OFFLINE",
-                            ])
+                            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                             .optional(),
                           statusMessage: z.string().optional(),
                         })
@@ -4266,7 +3957,7 @@ export const RestUserReactionSchema = z.object({
                           name: z.string(),
                           public: z.boolean().optional(),
                           scope: z.string().optional(),
-                          type: z.enum(["NORMAL", "PERSONAL"]),
+                          type: z.enum(['NORMAL', 'PERSONAL']),
                         })
                         .optional(),
                       public: z.boolean().optional(),
@@ -4275,17 +3966,12 @@ export const RestUserReactionSchema = z.object({
                       scope: z.string().optional(),
                       slug: z.string().optional(),
                       state: z
-                        .enum([
-                          "AVAILABLE",
-                          "INITIALISATION_FAILED",
-                          "INITIALISING",
-                          "OFFLINE",
-                        ])
+                        .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                         .optional(),
                       statusMessage: z.string().optional(),
                     })
                     .optional(),
-                  type: z.enum(["BRANCH", "TAG"]).optional(),
+                  type: z.enum(['BRANCH', 'TAG']).optional(),
                 })
                 .optional(),
               updatedDate: z.number().int().optional(),
@@ -4314,7 +4000,7 @@ export const RestUserReactionSchema = z.object({
           links: z.object({}).optional(),
           name: z.string(),
           slug: z.string(),
-          type: z.enum(["NORMAL", "SERVICE"]),
+          type: z.enum(['NORMAL', 'SERVICE']),
         })
         .optional(),
       comments: z
@@ -4322,15 +4008,15 @@ export const RestUserReactionSchema = z.object({
           z.object({
             anchor: z
               .object({
-                diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-                fileType: z.enum(["FROM", "TO"]).optional(),
+                diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+                fileType: z.enum(['FROM', 'TO']).optional(),
                 fromHash: z.string().optional(),
                 line: z.number().int().optional(),
-                lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+                lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
                 multilineMarker: z
                   .object({
                     startLine: z.number().int().optional(),
-                    startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                    startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                   })
                   .optional(),
                 multilineSpan: z
@@ -4355,12 +4041,8 @@ export const RestUserReactionSchema = z.object({
                       .object({
                         approved: z.boolean().optional(),
                         lastReviewedCommit: z.string().optional(),
-                        role: z
-                          .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                          .optional(),
-                        status: z
-                          .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                          .optional(),
+                        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                         user: z
                           .object({
                             active: z.boolean().optional(),
@@ -4371,7 +4053,7 @@ export const RestUserReactionSchema = z.object({
                             links: z.object({}).optional(),
                             name: z.string(),
                             slug: z.string(),
-                            type: z.enum(["NORMAL", "SERVICE"]),
+                            type: z.enum(['NORMAL', 'SERVICE']),
                           })
                           .optional(),
                       })
@@ -4419,7 +4101,7 @@ export const RestUserReactionSchema = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -4429,10 +4111,10 @@ export const RestUserReactionSchema = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
@@ -4450,7 +4132,7 @@ export const RestUserReactionSchema = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -4460,16 +4142,16 @@ export const RestUserReactionSchema = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
                           })
                           .optional(),
-                        type: z.enum(["BRANCH", "TAG"]).optional(),
+                        type: z.enum(['BRANCH', 'TAG']).optional(),
                       })
                       .optional(),
                     htmlDescription: z.string().optional(),
@@ -4477,13 +4159,9 @@ export const RestUserReactionSchema = z.object({
                     links: z.object({}).optional(),
                     locked: z.boolean().optional(),
                     open: z.boolean().optional(),
-                    participants: z
-                      .array(RestPullRequestParticipantSchema)
-                      .optional(),
-                    reviewers: z
-                      .array(RestPullRequestParticipantSchema)
-                      .optional(),
-                    state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+                    participants: z.array(RestPullRequestParticipantSchema).optional(),
+                    reviewers: z.array(RestPullRequestParticipantSchema).optional(),
+                    state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                     title: z.string().optional(),
                     toRef: z
                       .object({
@@ -4522,7 +4200,7 @@ export const RestUserReactionSchema = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -4532,10 +4210,10 @@ export const RestUserReactionSchema = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
@@ -4553,7 +4231,7 @@ export const RestUserReactionSchema = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -4563,16 +4241,16 @@ export const RestUserReactionSchema = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
                           })
                           .optional(),
-                        type: z.enum(["BRANCH", "TAG"]).optional(),
+                        type: z.enum(['BRANCH', 'TAG']).optional(),
                       })
                       .optional(),
                     updatedDate: z.number().int().optional(),
@@ -4601,7 +4279,7 @@ export const RestUserReactionSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             comments: z.array(RestCommentSchema).optional(),
@@ -4612,19 +4290,15 @@ export const RestUserReactionSchema = z.object({
               .object({
                 anchor: z
                   .object({
-                    diffType: z
-                      .enum(["COMMIT", "EFFECTIVE", "RANGE"])
-                      .optional(),
-                    fileType: z.enum(["FROM", "TO"]).optional(),
+                    diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+                    fileType: z.enum(['FROM', 'TO']).optional(),
                     fromHash: z.string().optional(),
                     line: z.number().int().optional(),
-                    lineType: z
-                      .enum(["ADDED", "CONTEXT", "REMOVED"])
-                      .optional(),
+                    lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
                     multilineMarker: z
                       .object({
                         startLine: z.number().int().optional(),
-                        startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                        startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                       })
                       .optional(),
                     multilineSpan: z
@@ -4649,12 +4323,8 @@ export const RestUserReactionSchema = z.object({
                           .object({
                             approved: z.boolean().optional(),
                             lastReviewedCommit: z.string().optional(),
-                            role: z
-                              .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                              .optional(),
-                            status: z
-                              .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                              .optional(),
+                            role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                            status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                             user: z
                               .object({
                                 active: z.boolean().optional(),
@@ -4665,7 +4335,7 @@ export const RestUserReactionSchema = z.object({
                                 links: z.object({}).optional(),
                                 name: z.string(),
                                 slug: z.string(),
-                                type: z.enum(["NORMAL", "SERVICE"]),
+                                type: z.enum(['NORMAL', 'SERVICE']),
                               })
                               .optional(),
                           })
@@ -4713,7 +4383,7 @@ export const RestUserReactionSchema = z.object({
                                         name: z.string(),
                                         public: z.boolean().optional(),
                                         scope: z.string().optional(),
-                                        type: z.enum(["NORMAL", "PERSONAL"]),
+                                        type: z.enum(['NORMAL', 'PERSONAL']),
                                       })
                                       .optional(),
                                     public: z.boolean().optional(),
@@ -4723,10 +4393,10 @@ export const RestUserReactionSchema = z.object({
                                     slug: z.string().optional(),
                                     state: z
                                       .enum([
-                                        "AVAILABLE",
-                                        "INITIALISATION_FAILED",
-                                        "INITIALISING",
-                                        "OFFLINE",
+                                        'AVAILABLE',
+                                        'INITIALISATION_FAILED',
+                                        'INITIALISING',
+                                        'OFFLINE',
                                       ])
                                       .optional(),
                                     statusMessage: z.string().optional(),
@@ -4744,7 +4414,7 @@ export const RestUserReactionSchema = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -4754,16 +4424,16 @@ export const RestUserReactionSchema = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
                               })
                               .optional(),
-                            type: z.enum(["BRANCH", "TAG"]).optional(),
+                            type: z.enum(['BRANCH', 'TAG']).optional(),
                           })
                           .optional(),
                         htmlDescription: z.string().optional(),
@@ -4771,15 +4441,9 @@ export const RestUserReactionSchema = z.object({
                         links: z.object({}).optional(),
                         locked: z.boolean().optional(),
                         open: z.boolean().optional(),
-                        participants: z
-                          .array(RestPullRequestParticipantSchema)
-                          .optional(),
-                        reviewers: z
-                          .array(RestPullRequestParticipantSchema)
-                          .optional(),
-                        state: z
-                          .enum(["DECLINED", "MERGED", "OPEN"])
-                          .optional(),
+                        participants: z.array(RestPullRequestParticipantSchema).optional(),
+                        reviewers: z.array(RestPullRequestParticipantSchema).optional(),
+                        state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                         title: z.string().optional(),
                         toRef: z
                           .object({
@@ -4818,7 +4482,7 @@ export const RestUserReactionSchema = z.object({
                                         name: z.string(),
                                         public: z.boolean().optional(),
                                         scope: z.string().optional(),
-                                        type: z.enum(["NORMAL", "PERSONAL"]),
+                                        type: z.enum(['NORMAL', 'PERSONAL']),
                                       })
                                       .optional(),
                                     public: z.boolean().optional(),
@@ -4828,10 +4492,10 @@ export const RestUserReactionSchema = z.object({
                                     slug: z.string().optional(),
                                     state: z
                                       .enum([
-                                        "AVAILABLE",
-                                        "INITIALISATION_FAILED",
-                                        "INITIALISING",
-                                        "OFFLINE",
+                                        'AVAILABLE',
+                                        'INITIALISATION_FAILED',
+                                        'INITIALISING',
+                                        'OFFLINE',
                                       ])
                                       .optional(),
                                     statusMessage: z.string().optional(),
@@ -4849,7 +4513,7 @@ export const RestUserReactionSchema = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -4859,16 +4523,16 @@ export const RestUserReactionSchema = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
                               })
                               .optional(),
-                            type: z.enum(["BRANCH", "TAG"]).optional(),
+                            type: z.enum(['BRANCH', 'TAG']).optional(),
                           })
                           .optional(),
                         updatedDate: z.number().int().optional(),
@@ -4897,7 +4561,7 @@ export const RestUserReactionSchema = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 comments: z.array(RestCommentSchema).optional(),
@@ -4918,7 +4582,7 @@ export const RestUserReactionSchema = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 severity: z.string().optional(),
@@ -4936,7 +4600,7 @@ export const RestUserReactionSchema = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 updatedDate: z.number().int().optional(),
@@ -4957,7 +4621,7 @@ export const RestUserReactionSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             severity: z.string().optional(),
@@ -4975,7 +4639,7 @@ export const RestUserReactionSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             updatedDate: z.number().int().optional(),
@@ -4990,15 +4654,15 @@ export const RestUserReactionSchema = z.object({
         .object({
           anchor: z
             .object({
-              diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-              fileType: z.enum(["FROM", "TO"]).optional(),
+              diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+              fileType: z.enum(['FROM', 'TO']).optional(),
               fromHash: z.string().optional(),
               line: z.number().int().optional(),
-              lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+              lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
               multilineMarker: z
                 .object({
                   startLine: z.number().int().optional(),
-                  startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                  startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                 })
                 .optional(),
               multilineSpan: z
@@ -5023,12 +4687,8 @@ export const RestUserReactionSchema = z.object({
                     .object({
                       approved: z.boolean().optional(),
                       lastReviewedCommit: z.string().optional(),
-                      role: z
-                        .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                        .optional(),
-                      status: z
-                        .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                        .optional(),
+                      role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                      status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                       user: z
                         .object({
                           active: z.boolean().optional(),
@@ -5039,7 +4699,7 @@ export const RestUserReactionSchema = z.object({
                           links: z.object({}).optional(),
                           name: z.string(),
                           slug: z.string(),
-                          type: z.enum(["NORMAL", "SERVICE"]),
+                          type: z.enum(['NORMAL', 'SERVICE']),
                         })
                         .optional(),
                     })
@@ -5087,7 +4747,7 @@ export const RestUserReactionSchema = z.object({
                                   name: z.string(),
                                   public: z.boolean().optional(),
                                   scope: z.string().optional(),
-                                  type: z.enum(["NORMAL", "PERSONAL"]),
+                                  type: z.enum(['NORMAL', 'PERSONAL']),
                                 })
                                 .optional(),
                               public: z.boolean().optional(),
@@ -5097,10 +4757,10 @@ export const RestUserReactionSchema = z.object({
                               slug: z.string().optional(),
                               state: z
                                 .enum([
-                                  "AVAILABLE",
-                                  "INITIALISATION_FAILED",
-                                  "INITIALISING",
-                                  "OFFLINE",
+                                  'AVAILABLE',
+                                  'INITIALISATION_FAILED',
+                                  'INITIALISING',
+                                  'OFFLINE',
                                 ])
                                 .optional(),
                               statusMessage: z.string().optional(),
@@ -5118,7 +4778,7 @@ export const RestUserReactionSchema = z.object({
                               name: z.string(),
                               public: z.boolean().optional(),
                               scope: z.string().optional(),
-                              type: z.enum(["NORMAL", "PERSONAL"]),
+                              type: z.enum(['NORMAL', 'PERSONAL']),
                             })
                             .optional(),
                           public: z.boolean().optional(),
@@ -5127,17 +4787,12 @@ export const RestUserReactionSchema = z.object({
                           scope: z.string().optional(),
                           slug: z.string().optional(),
                           state: z
-                            .enum([
-                              "AVAILABLE",
-                              "INITIALISATION_FAILED",
-                              "INITIALISING",
-                              "OFFLINE",
-                            ])
+                            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                             .optional(),
                           statusMessage: z.string().optional(),
                         })
                         .optional(),
-                      type: z.enum(["BRANCH", "TAG"]).optional(),
+                      type: z.enum(['BRANCH', 'TAG']).optional(),
                     })
                     .optional(),
                   htmlDescription: z.string().optional(),
@@ -5150,12 +4805,8 @@ export const RestUserReactionSchema = z.object({
                       z.object({
                         approved: z.boolean().optional(),
                         lastReviewedCommit: z.string().optional(),
-                        role: z
-                          .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                          .optional(),
-                        status: z
-                          .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                          .optional(),
+                        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                         user: z
                           .object({
                             active: z.boolean().optional(),
@@ -5166,7 +4817,7 @@ export const RestUserReactionSchema = z.object({
                             links: z.object({}).optional(),
                             name: z.string(),
                             slug: z.string(),
-                            type: z.enum(["NORMAL", "SERVICE"]),
+                            type: z.enum(['NORMAL', 'SERVICE']),
                           })
                           .optional(),
                       }),
@@ -5177,12 +4828,8 @@ export const RestUserReactionSchema = z.object({
                       z.object({
                         approved: z.boolean().optional(),
                         lastReviewedCommit: z.string().optional(),
-                        role: z
-                          .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                          .optional(),
-                        status: z
-                          .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                          .optional(),
+                        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                         user: z
                           .object({
                             active: z.boolean().optional(),
@@ -5193,13 +4840,13 @@ export const RestUserReactionSchema = z.object({
                             links: z.object({}).optional(),
                             name: z.string(),
                             slug: z.string(),
-                            type: z.enum(["NORMAL", "SERVICE"]),
+                            type: z.enum(['NORMAL', 'SERVICE']),
                           })
                           .optional(),
                       }),
                     )
                     .optional(),
-                  state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+                  state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                   title: z.string().optional(),
                   toRef: z
                     .object({
@@ -5238,7 +4885,7 @@ export const RestUserReactionSchema = z.object({
                                   name: z.string(),
                                   public: z.boolean().optional(),
                                   scope: z.string().optional(),
-                                  type: z.enum(["NORMAL", "PERSONAL"]),
+                                  type: z.enum(['NORMAL', 'PERSONAL']),
                                 })
                                 .optional(),
                               public: z.boolean().optional(),
@@ -5248,10 +4895,10 @@ export const RestUserReactionSchema = z.object({
                               slug: z.string().optional(),
                               state: z
                                 .enum([
-                                  "AVAILABLE",
-                                  "INITIALISATION_FAILED",
-                                  "INITIALISING",
-                                  "OFFLINE",
+                                  'AVAILABLE',
+                                  'INITIALISATION_FAILED',
+                                  'INITIALISING',
+                                  'OFFLINE',
                                 ])
                                 .optional(),
                               statusMessage: z.string().optional(),
@@ -5269,7 +4916,7 @@ export const RestUserReactionSchema = z.object({
                               name: z.string(),
                               public: z.boolean().optional(),
                               scope: z.string().optional(),
-                              type: z.enum(["NORMAL", "PERSONAL"]),
+                              type: z.enum(['NORMAL', 'PERSONAL']),
                             })
                             .optional(),
                           public: z.boolean().optional(),
@@ -5278,17 +4925,12 @@ export const RestUserReactionSchema = z.object({
                           scope: z.string().optional(),
                           slug: z.string().optional(),
                           state: z
-                            .enum([
-                              "AVAILABLE",
-                              "INITIALISATION_FAILED",
-                              "INITIALISING",
-                              "OFFLINE",
-                            ])
+                            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                             .optional(),
                           statusMessage: z.string().optional(),
                         })
                         .optional(),
-                      type: z.enum(["BRANCH", "TAG"]).optional(),
+                      type: z.enum(['BRANCH', 'TAG']).optional(),
                     })
                     .optional(),
                   updatedDate: z.number().int().optional(),
@@ -5317,7 +4959,7 @@ export const RestUserReactionSchema = z.object({
               links: z.object({}).optional(),
               name: z.string(),
               slug: z.string(),
-              type: z.enum(["NORMAL", "SERVICE"]),
+              type: z.enum(['NORMAL', 'SERVICE']),
             })
             .optional(),
           comments: z
@@ -5325,19 +4967,15 @@ export const RestUserReactionSchema = z.object({
               z.object({
                 anchor: z
                   .object({
-                    diffType: z
-                      .enum(["COMMIT", "EFFECTIVE", "RANGE"])
-                      .optional(),
-                    fileType: z.enum(["FROM", "TO"]).optional(),
+                    diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+                    fileType: z.enum(['FROM', 'TO']).optional(),
                     fromHash: z.string().optional(),
                     line: z.number().int().optional(),
-                    lineType: z
-                      .enum(["ADDED", "CONTEXT", "REMOVED"])
-                      .optional(),
+                    lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
                     multilineMarker: z
                       .object({
                         startLine: z.number().int().optional(),
-                        startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                        startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                       })
                       .optional(),
                     multilineSpan: z
@@ -5362,12 +5000,8 @@ export const RestUserReactionSchema = z.object({
                           .object({
                             approved: z.boolean().optional(),
                             lastReviewedCommit: z.string().optional(),
-                            role: z
-                              .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                              .optional(),
-                            status: z
-                              .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                              .optional(),
+                            role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                            status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                             user: z
                               .object({
                                 active: z.boolean().optional(),
@@ -5378,7 +5012,7 @@ export const RestUserReactionSchema = z.object({
                                 links: z.object({}).optional(),
                                 name: z.string(),
                                 slug: z.string(),
-                                type: z.enum(["NORMAL", "SERVICE"]),
+                                type: z.enum(['NORMAL', 'SERVICE']),
                               })
                               .optional(),
                           })
@@ -5426,7 +5060,7 @@ export const RestUserReactionSchema = z.object({
                                         name: z.string(),
                                         public: z.boolean().optional(),
                                         scope: z.string().optional(),
-                                        type: z.enum(["NORMAL", "PERSONAL"]),
+                                        type: z.enum(['NORMAL', 'PERSONAL']),
                                       })
                                       .optional(),
                                     public: z.boolean().optional(),
@@ -5436,10 +5070,10 @@ export const RestUserReactionSchema = z.object({
                                     slug: z.string().optional(),
                                     state: z
                                       .enum([
-                                        "AVAILABLE",
-                                        "INITIALISATION_FAILED",
-                                        "INITIALISING",
-                                        "OFFLINE",
+                                        'AVAILABLE',
+                                        'INITIALISATION_FAILED',
+                                        'INITIALISING',
+                                        'OFFLINE',
                                       ])
                                       .optional(),
                                     statusMessage: z.string().optional(),
@@ -5457,7 +5091,7 @@ export const RestUserReactionSchema = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -5467,16 +5101,16 @@ export const RestUserReactionSchema = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
                               })
                               .optional(),
-                            type: z.enum(["BRANCH", "TAG"]).optional(),
+                            type: z.enum(['BRANCH', 'TAG']).optional(),
                           })
                           .optional(),
                         htmlDescription: z.string().optional(),
@@ -5484,15 +5118,9 @@ export const RestUserReactionSchema = z.object({
                         links: z.object({}).optional(),
                         locked: z.boolean().optional(),
                         open: z.boolean().optional(),
-                        participants: z
-                          .array(RestPullRequestParticipantSchema)
-                          .optional(),
-                        reviewers: z
-                          .array(RestPullRequestParticipantSchema)
-                          .optional(),
-                        state: z
-                          .enum(["DECLINED", "MERGED", "OPEN"])
-                          .optional(),
+                        participants: z.array(RestPullRequestParticipantSchema).optional(),
+                        reviewers: z.array(RestPullRequestParticipantSchema).optional(),
+                        state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                         title: z.string().optional(),
                         toRef: z
                           .object({
@@ -5531,7 +5159,7 @@ export const RestUserReactionSchema = z.object({
                                         name: z.string(),
                                         public: z.boolean().optional(),
                                         scope: z.string().optional(),
-                                        type: z.enum(["NORMAL", "PERSONAL"]),
+                                        type: z.enum(['NORMAL', 'PERSONAL']),
                                       })
                                       .optional(),
                                     public: z.boolean().optional(),
@@ -5541,10 +5169,10 @@ export const RestUserReactionSchema = z.object({
                                     slug: z.string().optional(),
                                     state: z
                                       .enum([
-                                        "AVAILABLE",
-                                        "INITIALISATION_FAILED",
-                                        "INITIALISING",
-                                        "OFFLINE",
+                                        'AVAILABLE',
+                                        'INITIALISATION_FAILED',
+                                        'INITIALISING',
+                                        'OFFLINE',
                                       ])
                                       .optional(),
                                     statusMessage: z.string().optional(),
@@ -5562,7 +5190,7 @@ export const RestUserReactionSchema = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -5572,16 +5200,16 @@ export const RestUserReactionSchema = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
                               })
                               .optional(),
-                            type: z.enum(["BRANCH", "TAG"]).optional(),
+                            type: z.enum(['BRANCH', 'TAG']).optional(),
                           })
                           .optional(),
                         updatedDate: z.number().int().optional(),
@@ -5610,7 +5238,7 @@ export const RestUserReactionSchema = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 comments: z.array(RestCommentSchema).optional(),
@@ -5621,23 +5249,15 @@ export const RestUserReactionSchema = z.object({
                   .object({
                     anchor: z
                       .object({
-                        diffType: z
-                          .enum(["COMMIT", "EFFECTIVE", "RANGE"])
-                          .optional(),
-                        fileType: z.enum(["FROM", "TO"]).optional(),
+                        diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+                        fileType: z.enum(['FROM', 'TO']).optional(),
                         fromHash: z.string().optional(),
                         line: z.number().int().optional(),
-                        lineType: z
-                          .enum(["ADDED", "CONTEXT", "REMOVED"])
-                          .optional(),
+                        lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
                         multilineMarker: z
                           .object({
                             startLine: z.number().int().optional(),
-                            startLineType: z.enum([
-                              "ADDED",
-                              "CONTEXT",
-                              "REMOVED",
-                            ]),
+                            startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                           })
                           .optional(),
                         multilineSpan: z
@@ -5662,16 +5282,8 @@ export const RestUserReactionSchema = z.object({
                               .object({
                                 approved: z.boolean().optional(),
                                 lastReviewedCommit: z.string().optional(),
-                                role: z
-                                  .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                                  .optional(),
-                                status: z
-                                  .enum([
-                                    "UNAPPROVED",
-                                    "NEEDS_WORK",
-                                    "APPROVED",
-                                  ])
-                                  .optional(),
+                                role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                                status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                                 user: z
                                   .object({
                                     active: z.boolean().optional(),
@@ -5682,7 +5294,7 @@ export const RestUserReactionSchema = z.object({
                                     links: z.object({}).optional(),
                                     name: z.string(),
                                     slug: z.string(),
-                                    type: z.enum(["NORMAL", "SERVICE"]),
+                                    type: z.enum(['NORMAL', 'SERVICE']),
                                   })
                                   .optional(),
                               })
@@ -5730,10 +5342,7 @@ export const RestUserReactionSchema = z.object({
                                             name: z.string(),
                                             public: z.boolean().optional(),
                                             scope: z.string().optional(),
-                                            type: z.enum([
-                                              "NORMAL",
-                                              "PERSONAL",
-                                            ]),
+                                            type: z.enum(['NORMAL', 'PERSONAL']),
                                           })
                                           .optional(),
                                         public: z.boolean().optional(),
@@ -5743,10 +5352,10 @@ export const RestUserReactionSchema = z.object({
                                         slug: z.string().optional(),
                                         state: z
                                           .enum([
-                                            "AVAILABLE",
-                                            "INITIALISATION_FAILED",
-                                            "INITIALISING",
-                                            "OFFLINE",
+                                            'AVAILABLE',
+                                            'INITIALISATION_FAILED',
+                                            'INITIALISING',
+                                            'OFFLINE',
                                           ])
                                           .optional(),
                                         statusMessage: z.string().optional(),
@@ -5764,7 +5373,7 @@ export const RestUserReactionSchema = z.object({
                                         name: z.string(),
                                         public: z.boolean().optional(),
                                         scope: z.string().optional(),
-                                        type: z.enum(["NORMAL", "PERSONAL"]),
+                                        type: z.enum(['NORMAL', 'PERSONAL']),
                                       })
                                       .optional(),
                                     public: z.boolean().optional(),
@@ -5774,16 +5383,16 @@ export const RestUserReactionSchema = z.object({
                                     slug: z.string().optional(),
                                     state: z
                                       .enum([
-                                        "AVAILABLE",
-                                        "INITIALISATION_FAILED",
-                                        "INITIALISING",
-                                        "OFFLINE",
+                                        'AVAILABLE',
+                                        'INITIALISATION_FAILED',
+                                        'INITIALISING',
+                                        'OFFLINE',
                                       ])
                                       .optional(),
                                     statusMessage: z.string().optional(),
                                   })
                                   .optional(),
-                                type: z.enum(["BRANCH", "TAG"]).optional(),
+                                type: z.enum(['BRANCH', 'TAG']).optional(),
                               })
                               .optional(),
                             htmlDescription: z.string().optional(),
@@ -5791,15 +5400,9 @@ export const RestUserReactionSchema = z.object({
                             links: z.object({}).optional(),
                             locked: z.boolean().optional(),
                             open: z.boolean().optional(),
-                            participants: z
-                              .array(RestPullRequestParticipantSchema)
-                              .optional(),
-                            reviewers: z
-                              .array(RestPullRequestParticipantSchema)
-                              .optional(),
-                            state: z
-                              .enum(["DECLINED", "MERGED", "OPEN"])
-                              .optional(),
+                            participants: z.array(RestPullRequestParticipantSchema).optional(),
+                            reviewers: z.array(RestPullRequestParticipantSchema).optional(),
+                            state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                             title: z.string().optional(),
                             toRef: z
                               .object({
@@ -5838,10 +5441,7 @@ export const RestUserReactionSchema = z.object({
                                             name: z.string(),
                                             public: z.boolean().optional(),
                                             scope: z.string().optional(),
-                                            type: z.enum([
-                                              "NORMAL",
-                                              "PERSONAL",
-                                            ]),
+                                            type: z.enum(['NORMAL', 'PERSONAL']),
                                           })
                                           .optional(),
                                         public: z.boolean().optional(),
@@ -5851,10 +5451,10 @@ export const RestUserReactionSchema = z.object({
                                         slug: z.string().optional(),
                                         state: z
                                           .enum([
-                                            "AVAILABLE",
-                                            "INITIALISATION_FAILED",
-                                            "INITIALISING",
-                                            "OFFLINE",
+                                            'AVAILABLE',
+                                            'INITIALISATION_FAILED',
+                                            'INITIALISING',
+                                            'OFFLINE',
                                           ])
                                           .optional(),
                                         statusMessage: z.string().optional(),
@@ -5872,7 +5472,7 @@ export const RestUserReactionSchema = z.object({
                                         name: z.string(),
                                         public: z.boolean().optional(),
                                         scope: z.string().optional(),
-                                        type: z.enum(["NORMAL", "PERSONAL"]),
+                                        type: z.enum(['NORMAL', 'PERSONAL']),
                                       })
                                       .optional(),
                                     public: z.boolean().optional(),
@@ -5882,16 +5482,16 @@ export const RestUserReactionSchema = z.object({
                                     slug: z.string().optional(),
                                     state: z
                                       .enum([
-                                        "AVAILABLE",
-                                        "INITIALISATION_FAILED",
-                                        "INITIALISING",
-                                        "OFFLINE",
+                                        'AVAILABLE',
+                                        'INITIALISATION_FAILED',
+                                        'INITIALISING',
+                                        'OFFLINE',
                                       ])
                                       .optional(),
                                     statusMessage: z.string().optional(),
                                   })
                                   .optional(),
-                                type: z.enum(["BRANCH", "TAG"]).optional(),
+                                type: z.enum(['BRANCH', 'TAG']).optional(),
                               })
                               .optional(),
                             updatedDate: z.number().int().optional(),
@@ -5920,7 +5520,7 @@ export const RestUserReactionSchema = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                     comments: z.array(RestCommentSchema).optional(),
@@ -5941,7 +5541,7 @@ export const RestUserReactionSchema = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                     severity: z.string().optional(),
@@ -5959,7 +5559,7 @@ export const RestUserReactionSchema = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                     updatedDate: z.number().int().optional(),
@@ -5980,7 +5580,7 @@ export const RestUserReactionSchema = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 severity: z.string().optional(),
@@ -5998,7 +5598,7 @@ export const RestUserReactionSchema = z.object({
                     links: z.object({}).optional(),
                     name: z.string(),
                     slug: z.string(),
-                    type: z.enum(["NORMAL", "SERVICE"]),
+                    type: z.enum(['NORMAL', 'SERVICE']),
                   })
                   .optional(),
                 updatedDate: z.number().int().optional(),
@@ -6023,7 +5623,7 @@ export const RestUserReactionSchema = z.object({
               links: z.object({}).optional(),
               name: z.string(),
               slug: z.string(),
-              type: z.enum(["NORMAL", "SERVICE"]),
+              type: z.enum(['NORMAL', 'SERVICE']),
             })
             .optional(),
           severity: z.string().optional(),
@@ -6041,7 +5641,7 @@ export const RestUserReactionSchema = z.object({
               links: z.object({}).optional(),
               name: z.string(),
               slug: z.string(),
-              type: z.enum(["NORMAL", "SERVICE"]),
+              type: z.enum(['NORMAL', 'SERVICE']),
             })
             .optional(),
           updatedDate: z.number().int().optional(),
@@ -6062,7 +5662,7 @@ export const RestUserReactionSchema = z.object({
           links: z.object({}).optional(),
           name: z.string(),
           slug: z.string(),
-          type: z.enum(["NORMAL", "SERVICE"]),
+          type: z.enum(['NORMAL', 'SERVICE']),
         })
         .optional(),
       severity: z.string().optional(),
@@ -6080,7 +5680,7 @@ export const RestUserReactionSchema = z.object({
           links: z.object({}).optional(),
           name: z.string(),
           slug: z.string(),
-          type: z.enum(["NORMAL", "SERVICE"]),
+          type: z.enum(['NORMAL', 'SERVICE']),
         })
         .optional(),
       updatedDate: z.number().int().optional(),
@@ -6104,7 +5704,7 @@ export const RestUserReactionSchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
 });
@@ -6127,13 +5727,7 @@ export const RestDefaultTaskRequestSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -6145,13 +5739,7 @@ export const RestDefaultTaskRequestSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -6159,29 +5747,23 @@ export const RestDefaultTaskRequestSchema = z.object({
     .optional(),
 });
 
-export type RestDefaultTaskRequest = z.infer<
-  typeof RestDefaultTaskRequestSchema
->;
+export type RestDefaultTaskRequest = z.infer<typeof RestDefaultTaskRequestSchema>;
 
 export const RestGitTagCreateRequestSchema = z.object({
   force: z.boolean().optional(),
   message: z.string().optional(),
   name: z.string().optional(),
   startPoint: z.string().optional(),
-  type: z.enum(["ANNOTATED", "LIGHTWEIGHT"]).optional(),
+  type: z.enum(['ANNOTATED', 'LIGHTWEIGHT']).optional(),
 });
 
-export type RestGitTagCreateRequest = z.infer<
-  typeof RestGitTagCreateRequestSchema
->;
+export type RestGitTagCreateRequest = z.infer<typeof RestGitTagCreateRequestSchema>;
 
 export const RestPullRequestRebaseRequestSchema = z.object({
   version: z.number().int().optional(),
 });
 
-export type RestPullRequestRebaseRequest = z.infer<
-  typeof RestPullRequestRebaseRequestSchema
->;
+export type RestPullRequestRebaseRequest = z.infer<typeof RestPullRequestRebaseRequestSchema>;
 
 export const RestPullRequestRebaseResultSchema = z.object({
   refChange: z
@@ -6191,19 +5773,17 @@ export const RestPullRequestRebaseResultSchema = z.object({
         .object({
           displayId: z.string(),
           id: z.string(),
-          type: z.enum(["BRANCH", "TAG"]),
+          type: z.enum(['BRANCH', 'TAG']),
         })
         .optional(),
       refId: z.string().optional(),
       toHash: z.string().optional(),
-      type: z.enum(["ADD", "DELETE", "UPDATE"]).optional(),
+      type: z.enum(['ADD', 'DELETE', 'UPDATE']).optional(),
     })
     .optional(),
 });
 
-export type RestPullRequestRebaseResult = z.infer<
-  typeof RestPullRequestRebaseResultSchema
->;
+export type RestPullRequestRebaseResult = z.infer<typeof RestPullRequestRebaseResultSchema>;
 
 export const RestPullRequestRebaseabilitySchema = z.object({
   vetoes: z
@@ -6216,9 +5796,7 @@ export const RestPullRequestRebaseabilitySchema = z.object({
     .optional(),
 });
 
-export type RestPullRequestRebaseability = z.infer<
-  typeof RestPullRequestRebaseabilitySchema
->;
+export type RestPullRequestRebaseability = z.infer<typeof RestPullRequestRebaseabilitySchema>;
 
 export const RestRefChangeSchema = z.object({
   fromHash: z.string().optional(),
@@ -6226,12 +5804,12 @@ export const RestRefChangeSchema = z.object({
     .object({
       displayId: z.string(),
       id: z.string(),
-      type: z.enum(["BRANCH", "TAG"]),
+      type: z.enum(['BRANCH', 'TAG']),
     })
     .optional(),
   refId: z.string().optional(),
   toHash: z.string().optional(),
-  type: z.enum(["ADD", "DELETE", "UPDATE"]).optional(),
+  type: z.enum(['ADD', 'DELETE', 'UPDATE']).optional(),
 });
 
 export type RestRefChange = z.infer<typeof RestRefChangeSchema>;
@@ -6241,9 +5819,7 @@ export const RestRepositoryHookVetoSchema = z.object({
   summaryMessage: z.string().optional(),
 });
 
-export type RestRepositoryHookVeto = z.infer<
-  typeof RestRepositoryHookVetoSchema
->;
+export type RestRepositoryHookVeto = z.infer<typeof RestRepositoryHookVetoSchema>;
 
 export const RestTagSchema = z.object({
   displayId: z.string().optional(),
@@ -6251,7 +5827,7 @@ export const RestTagSchema = z.object({
   id: z.string().optional(),
   latestChangeset: z.string().optional(),
   latestCommit: z.string().optional(),
-  type: z.enum(["BRANCH", "TAG"]).optional(),
+  type: z.enum(['BRANCH', 'TAG']).optional(),
 });
 
 export type RestTag = z.infer<typeof RestTagSchema>;
@@ -6335,7 +5911,7 @@ export const RestChangesetSchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -6344,12 +5920,7 @@ export const RestChangesetSchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -6366,7 +5937,7 @@ export const RestChangesetSchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -6374,9 +5945,7 @@ export const RestChangesetSchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
@@ -6462,9 +6031,7 @@ export const RestEnhancedEntityLinkSchema = z.object({
   projectName: z.string().optional(),
 });
 
-export type RestEnhancedEntityLink = z.infer<
-  typeof RestEnhancedEntityLinkSchema
->;
+export type RestEnhancedEntityLink = z.infer<typeof RestEnhancedEntityLinkSchema>;
 
 export const RestJiraIssueSchema = z.object({
   key: z.string().optional(),
@@ -6520,20 +6087,16 @@ export const RestDelayedSyncRepositorySchema = z.object({
   repositorySlug: z.string(),
 });
 
-export type RestDelayedSyncRepository = z.infer<
-  typeof RestDelayedSyncRepositorySchema
->;
+export type RestDelayedSyncRepository = z.infer<typeof RestDelayedSyncRepositorySchema>;
 
 export const RestFarmSynchronizationRequestSchema = z.object({
   attempt: z.number().int().optional(),
   createdAt: z.string().optional(),
   externalRepoId: z.string().optional(),
-  type: z.enum(["incremental", "snapshot"]).optional(),
+  type: z.enum(['incremental', 'snapshot']).optional(),
 });
 
-export type RestFarmSynchronizationRequest = z.infer<
-  typeof RestFarmSynchronizationRequestSchema
->;
+export type RestFarmSynchronizationRequest = z.infer<typeof RestFarmSynchronizationRequestSchema>;
 
 export const RestMirrorHashesSchema = z.object({
   content: z.string().optional(),
@@ -6584,19 +6147,11 @@ export const RestMirroredRepositorySchema = z.object({
     .optional(),
   repositoryId: z.string().optional(),
   status: z
-    .enum([
-      "NOT_MIRRORED",
-      "INITIALIZING",
-      "AVAILABLE",
-      "ERROR_INITIALIZING",
-      "ERROR_AVAILABLE",
-    ])
+    .enum(['NOT_MIRRORED', 'INITIALIZING', 'AVAILABLE', 'ERROR_INITIALIZING', 'ERROR_AVAILABLE'])
     .optional(),
 });
 
-export type RestMirroredRepository = z.infer<
-  typeof RestMirroredRepositorySchema
->;
+export type RestMirroredRepository = z.infer<typeof RestMirroredRepositorySchema>;
 
 export const RestNamedLinkSchema = z.object({
   href: z.string().optional(),
@@ -6611,7 +6166,7 @@ export const RestRefSyncQueueSchema = z.object({
       attempt: z.number().int().optional(),
       createdAt: z.string().optional(),
       externalRepoId: z.string().optional(),
-      type: z.enum(["incremental", "snapshot"]).optional(),
+      type: z.enum(['incremental', 'snapshot']).optional(),
     }),
   ),
 });
@@ -6626,18 +6181,14 @@ export const RestRepositoryLockOwnerSchema = z.object({
   threadName: z.string().optional(),
 });
 
-export type RestRepositoryLockOwner = z.infer<
-  typeof RestRepositoryLockOwnerSchema
->;
+export type RestRepositoryLockOwner = z.infer<typeof RestRepositoryLockOwnerSchema>;
 
 export const RestRollingUpgradeStateSchema = z.object({
   rollingUpgradeEnabled: z.boolean().optional(),
   version: z.string().optional(),
 });
 
-export type RestRollingUpgradeState = z.infer<
-  typeof RestRollingUpgradeStateSchema
->;
+export type RestRollingUpgradeState = z.infer<typeof RestRollingUpgradeStateSchema>;
 
 export const RestSyncProgressSchema = z.object({
   discovering: z.boolean().optional(),
@@ -6650,23 +6201,18 @@ export type RestSyncProgress = z.infer<typeof RestSyncProgressSchema>;
 export const RestUpstreamServerSchema = z.object({
   baseUrl: z.string().optional(),
   id: z.string().optional(),
-  state: z
-    .enum(["INITIALIZING", "PENDING", "INSTALLED", "UNKNOWN", "REMOVED"])
-    .optional(),
+  state: z.enum(['INITIALIZING', 'PENDING', 'INSTALLED', 'UNKNOWN', 'REMOVED']).optional(),
 });
 
 export type RestUpstreamServer = z.infer<typeof RestUpstreamServerSchema>;
 
 export const RestUpstreamSettingsSchema = z.object({
-  mode: z.enum(["ALL_PROJECTS", "SELECTED_PROJECTS"]).optional(),
+  mode: z.enum(['ALL_PROJECTS', 'SELECTED_PROJECTS']).optional(),
   projectIds: z
     .array(z.string())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    )
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    })
     .optional(),
 });
 
@@ -6720,7 +6266,7 @@ export const EnrichedRepositorySchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -6728,9 +6274,7 @@ export const EnrichedRepositorySchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
@@ -6746,7 +6290,7 @@ export const EnrichedRepositorySchema = z.object({
       name: z.string(),
       public: z.boolean().optional(),
       scope: z.string().optional(),
-      type: z.enum(["NORMAL", "PERSONAL"]),
+      type: z.enum(['NORMAL', 'PERSONAL']),
     })
     .optional(),
   properties: z
@@ -6761,9 +6305,7 @@ export const EnrichedRepositorySchema = z.object({
   scmId: z.string().optional(),
   scope: z.string().optional(),
   slug: z.string().optional(),
-  state: z
-    .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-    .optional(),
+  state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
   statusMessage: z.string().optional(),
 });
 
@@ -6787,7 +6329,7 @@ export const RestApplicationUserWithPermissionsSchema = z.object({
   links: z.object({}).optional(),
   name: z.string().optional(),
   slug: z.string().optional(),
-  type: z.enum(["NORMAL", "SERVICE"]).optional(),
+  type: z.enum(['NORMAL', 'SERVICE']).optional(),
 });
 
 export type RestApplicationUserWithPermissions = z.infer<
@@ -6799,17 +6341,13 @@ export const RestUsernamePasswordCredentialsSchema = z.object({
   username: z.string(),
 });
 
-export type RestUsernamePasswordCredentials = z.infer<
-  typeof RestUsernamePasswordCredentialsSchema
->;
+export type RestUsernamePasswordCredentials = z.infer<typeof RestUsernamePasswordCredentialsSchema>;
 
 export const RestBearerTokenCredentialsSchema = z.object({
   token: z.string(),
 });
 
-export type RestBearerTokenCredentials = z.infer<
-  typeof RestBearerTokenCredentialsSchema
->;
+export type RestBearerTokenCredentials = z.infer<typeof RestBearerTokenCredentialsSchema>;
 
 export const RestSshCredentialsSchema = z.object({
   algorithm: z.string().optional(),
@@ -6828,16 +6366,14 @@ export const RestAuthenticationRequestSchema = z.object({
   repositoryId: z.number().int().optional(),
 });
 
-export type RestAuthenticationRequest = z.infer<
-  typeof RestAuthenticationRequestSchema
->;
+export type RestAuthenticationRequest = z.infer<typeof RestAuthenticationRequestSchema>;
 
 export const RestMirrorServerSchema = z.object({
   baseUrl: z.string().optional(),
   enabled: z.boolean().optional(),
   id: z.string().optional(),
   lastSeenDate: z.string().datetime().optional(),
-  mirrorType: z.enum(["SINGLE", "FARM"]).optional(),
+  mirrorType: z.enum(['SINGLE', 'FARM']).optional(),
   name: z.string().optional(),
   productVersion: z.string().optional(),
 });
@@ -6849,9 +6385,7 @@ export const RestMirrorUpgradeRequestSchema = z.object({
   productVersion: z.string().optional(),
 });
 
-export type RestMirrorUpgradeRequest = z.infer<
-  typeof RestMirrorUpgradeRequestSchema
->;
+export type RestMirrorUpgradeRequest = z.infer<typeof RestMirrorUpgradeRequestSchema>;
 
 export const RestMirroredRepositoryDescriptorSchema = z.object({
   links: z.object({}).optional(),
@@ -6861,7 +6395,7 @@ export const RestMirroredRepositoryDescriptorSchema = z.object({
       enabled: z.boolean().optional(),
       id: z.string(),
       lastSeenDate: z.string().datetime(),
-      mirrorType: z.enum(["SINGLE", "FARM"]),
+      mirrorType: z.enum(['SINGLE', 'FARM']),
       name: z.string(),
       productVersion: z.string(),
     })
@@ -6877,9 +6411,9 @@ export const RestMirroringRequestSchema = z.object({
   mirrorBaseUrl: z.string().optional(),
   mirrorId: z.string().optional(),
   mirrorName: z.string().optional(),
-  mirrorType: z.enum(["SINGLE", "FARM"]).optional(),
+  mirrorType: z.enum(['SINGLE', 'FARM']).optional(),
   productVersion: z.string().optional(),
-  state: z.enum(["PENDING", "ACCEPTED", "REJECTED"]).optional(),
+  state: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']).optional(),
 });
 
 export type RestMirroringRequest = z.infer<typeof RestMirroringRequestSchema>;
@@ -6894,13 +6428,11 @@ export type RestProperties = z.infer<typeof RestPropertiesSchema>;
 
 export const RestRepositoryMirrorEventSchema = z.object({
   mirrorRepoId: z.number().int().optional(),
-  type: z.enum(["SYNCHRONIZED", "SYNCHRONIZATION_FAILED"]),
+  type: z.enum(['SYNCHRONIZED', 'SYNCHRONIZATION_FAILED']),
   upstreamRepoId: z.string(),
 });
 
-export type RestRepositoryMirrorEvent = z.infer<
-  typeof RestRepositoryMirrorEventSchema
->;
+export type RestRepositoryMirrorEvent = z.infer<typeof RestRepositoryMirrorEventSchema>;
 
 export const RestRefRestrictionSchema = z.object({
   accessKeys: z
@@ -6922,19 +6454,19 @@ export const RestRefRestrictionSchema = z.object({
           .optional(),
         permission: z
           .enum([
-            "USER_ADMIN",
-            "PROJECT_VIEW",
-            "REPO_READ",
-            "REPO_WRITE",
-            "REPO_ADMIN",
-            "PROJECT_READ",
-            "PROJECT_WRITE",
-            "REPO_CREATE",
-            "PROJECT_ADMIN",
-            "LICENSED_USER",
-            "PROJECT_CREATE",
-            "ADMIN",
-            "SYS_ADMIN",
+            'USER_ADMIN',
+            'PROJECT_VIEW',
+            'REPO_READ',
+            'REPO_WRITE',
+            'REPO_ADMIN',
+            'PROJECT_READ',
+            'PROJECT_WRITE',
+            'REPO_CREATE',
+            'PROJECT_ADMIN',
+            'LICENSED_USER',
+            'PROJECT_CREATE',
+            'ADMIN',
+            'SYS_ADMIN',
           ])
           .optional(),
         project: z
@@ -6948,7 +6480,7 @@ export const RestRefRestrictionSchema = z.object({
             name: z.string(),
             public: z.boolean().optional(),
             scope: z.string().optional(),
-            type: z.enum(["NORMAL", "PERSONAL"]),
+            type: z.enum(['NORMAL', 'PERSONAL']),
           })
           .optional(),
         repository: z
@@ -6983,7 +6515,7 @@ export const RestRefRestrictionSchema = z.object({
                     name: z.string(),
                     public: z.boolean().optional(),
                     scope: z.string().optional(),
-                    type: z.enum(["NORMAL", "PERSONAL"]),
+                    type: z.enum(['NORMAL', 'PERSONAL']),
                   })
                   .optional(),
                 public: z.boolean().optional(),
@@ -6992,12 +6524,7 @@ export const RestRefRestrictionSchema = z.object({
                 scope: z.string().optional(),
                 slug: z.string().optional(),
                 state: z
-                  .enum([
-                    "AVAILABLE",
-                    "INITIALISATION_FAILED",
-                    "INITIALISING",
-                    "OFFLINE",
-                  ])
+                  .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                   .optional(),
                 statusMessage: z.string().optional(),
               })
@@ -7014,7 +6541,7 @@ export const RestRefRestrictionSchema = z.object({
                 name: z.string(),
                 public: z.boolean().optional(),
                 scope: z.string().optional(),
-                type: z.enum(["NORMAL", "PERSONAL"]),
+                type: z.enum(['NORMAL', 'PERSONAL']),
               })
               .optional(),
             public: z.boolean().optional(),
@@ -7023,12 +6550,7 @@ export const RestRefRestrictionSchema = z.object({
             scope: z.string().optional(),
             slug: z.string().optional(),
             state: z
-              .enum([
-                "AVAILABLE",
-                "INITIALISATION_FAILED",
-                "INITIALISING",
-                "OFFLINE",
-              ])
+              .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
               .optional(),
             statusMessage: z.string().optional(),
           })
@@ -7044,13 +6566,7 @@ export const RestRefRestrictionSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -7059,7 +6575,7 @@ export const RestRefRestrictionSchema = z.object({
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
   type: z.string().optional(),
@@ -7074,7 +6590,7 @@ export const RestRefRestrictionSchema = z.object({
         links: z.object({}).optional(),
         name: z.string().optional(),
         slug: z.string().optional(),
-        type: z.enum(["NORMAL", "SERVICE"]).optional(),
+        type: z.enum(['NORMAL', 'SERVICE']).optional(),
       }),
     )
     .optional(),
@@ -7103,19 +6619,19 @@ export const RestRestrictionRequestSchema = z.object({
           .optional(),
         permission: z
           .enum([
-            "USER_ADMIN",
-            "PROJECT_VIEW",
-            "REPO_READ",
-            "REPO_WRITE",
-            "REPO_ADMIN",
-            "PROJECT_READ",
-            "PROJECT_WRITE",
-            "REPO_CREATE",
-            "PROJECT_ADMIN",
-            "LICENSED_USER",
-            "PROJECT_CREATE",
-            "ADMIN",
-            "SYS_ADMIN",
+            'USER_ADMIN',
+            'PROJECT_VIEW',
+            'REPO_READ',
+            'REPO_WRITE',
+            'REPO_ADMIN',
+            'PROJECT_READ',
+            'PROJECT_WRITE',
+            'REPO_CREATE',
+            'PROJECT_ADMIN',
+            'LICENSED_USER',
+            'PROJECT_CREATE',
+            'ADMIN',
+            'SYS_ADMIN',
           ])
           .optional(),
         project: z
@@ -7129,7 +6645,7 @@ export const RestRestrictionRequestSchema = z.object({
             name: z.string(),
             public: z.boolean().optional(),
             scope: z.string().optional(),
-            type: z.enum(["NORMAL", "PERSONAL"]),
+            type: z.enum(['NORMAL', 'PERSONAL']),
           })
           .optional(),
         repository: z
@@ -7164,7 +6680,7 @@ export const RestRestrictionRequestSchema = z.object({
                     name: z.string(),
                     public: z.boolean().optional(),
                     scope: z.string().optional(),
-                    type: z.enum(["NORMAL", "PERSONAL"]),
+                    type: z.enum(['NORMAL', 'PERSONAL']),
                   })
                   .optional(),
                 public: z.boolean().optional(),
@@ -7173,12 +6689,7 @@ export const RestRestrictionRequestSchema = z.object({
                 scope: z.string().optional(),
                 slug: z.string().optional(),
                 state: z
-                  .enum([
-                    "AVAILABLE",
-                    "INITIALISATION_FAILED",
-                    "INITIALISING",
-                    "OFFLINE",
-                  ])
+                  .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                   .optional(),
                 statusMessage: z.string().optional(),
               })
@@ -7195,7 +6706,7 @@ export const RestRestrictionRequestSchema = z.object({
                 name: z.string(),
                 public: z.boolean().optional(),
                 scope: z.string().optional(),
-                type: z.enum(["NORMAL", "PERSONAL"]),
+                type: z.enum(['NORMAL', 'PERSONAL']),
               })
               .optional(),
             public: z.boolean().optional(),
@@ -7204,12 +6715,7 @@ export const RestRestrictionRequestSchema = z.object({
             scope: z.string().optional(),
             slug: z.string().optional(),
             state: z
-              .enum([
-                "AVAILABLE",
-                "INITIALISATION_FAILED",
-                "INITIALISING",
-                "OFFLINE",
-              ])
+              .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
               .optional(),
             statusMessage: z.string().optional(),
           })
@@ -7226,13 +6732,7 @@ export const RestRestrictionRequestSchema = z.object({
       id: z.string().optional(),
       type: z
         .object({
-          id: z.enum([
-            "ANY_REF",
-            "BRANCH",
-            "PATTERN",
-            "MODEL_CATEGORY",
-            "MODEL_BRANCH",
-          ]),
+          id: z.enum(['ANY_REF', 'BRANCH', 'PATTERN', 'MODEL_CATEGORY', 'MODEL_BRANCH']),
           name: z.string(),
         })
         .optional(),
@@ -7241,7 +6741,7 @@ export const RestRestrictionRequestSchema = z.object({
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
   type: z.string().optional(),
@@ -7257,15 +6757,13 @@ export const RestRestrictionRequestSchema = z.object({
         links: z.object({}).optional(),
         name: z.string().optional(),
         slug: z.string().optional(),
-        type: z.enum(["NORMAL", "SERVICE"]).optional(),
+        type: z.enum(['NORMAL', 'SERVICE']).optional(),
       }),
     )
     .optional(),
 });
 
-export type RestRestrictionRequest = z.infer<
-  typeof RestRestrictionRequestSchema
->;
+export type RestRestrictionRequest = z.infer<typeof RestRestrictionRequestSchema>;
 
 export const RestSshAccessKeySchema = z.object({
   key: z
@@ -7284,19 +6782,19 @@ export const RestSshAccessKeySchema = z.object({
     .optional(),
   permission: z
     .enum([
-      "USER_ADMIN",
-      "PROJECT_VIEW",
-      "REPO_READ",
-      "REPO_WRITE",
-      "REPO_ADMIN",
-      "PROJECT_READ",
-      "PROJECT_WRITE",
-      "REPO_CREATE",
-      "PROJECT_ADMIN",
-      "LICENSED_USER",
-      "PROJECT_CREATE",
-      "ADMIN",
-      "SYS_ADMIN",
+      'USER_ADMIN',
+      'PROJECT_VIEW',
+      'REPO_READ',
+      'REPO_WRITE',
+      'REPO_ADMIN',
+      'PROJECT_READ',
+      'PROJECT_WRITE',
+      'REPO_CREATE',
+      'PROJECT_ADMIN',
+      'LICENSED_USER',
+      'PROJECT_CREATE',
+      'ADMIN',
+      'SYS_ADMIN',
     ])
     .optional(),
   project: z
@@ -7310,7 +6808,7 @@ export const RestSshAccessKeySchema = z.object({
       name: z.string(),
       public: z.boolean().optional(),
       scope: z.string().optional(),
-      type: z.enum(["NORMAL", "PERSONAL"]),
+      type: z.enum(['NORMAL', 'PERSONAL']),
     })
     .optional(),
   repository: z
@@ -7345,7 +6843,7 @@ export const RestSshAccessKeySchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -7354,12 +6852,7 @@ export const RestSshAccessKeySchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -7376,7 +6869,7 @@ export const RestSshAccessKeySchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -7384,9 +6877,7 @@ export const RestSshAccessKeySchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
@@ -7416,7 +6907,7 @@ export const ContextSchema = z.object({
 export type Context = z.infer<typeof ContextSchema>;
 
 export const RestRefSyncRequestSchema = z.object({
-  action: z.enum(["DISCARD", "MERGE", "REBASE"]).optional(),
+  action: z.enum(['DISCARD', 'MERGE', 'REBASE']).optional(),
   context: z
     .object({
       commitMessage: z.string().optional(),
@@ -7432,9 +6923,9 @@ export const RestRefSyncStatusSchema = z.object({
     .object({
       displayId: z.string(),
       id: z.string(),
-      state: z.enum(["AHEAD", "DIVERGED", "ORPHANED"]).optional(),
+      state: z.enum(['AHEAD', 'DIVERGED', 'ORPHANED']).optional(),
       tag: z.boolean().optional(),
-      type: z.enum(["BRANCH", "TAG"]),
+      type: z.enum(['BRANCH', 'TAG']),
     })
     .optional(),
   available: z.boolean().optional(),
@@ -7442,9 +6933,9 @@ export const RestRefSyncStatusSchema = z.object({
     .object({
       displayId: z.string(),
       id: z.string(),
-      state: z.enum(["AHEAD", "DIVERGED", "ORPHANED"]).optional(),
+      state: z.enum(['AHEAD', 'DIVERGED', 'ORPHANED']).optional(),
       tag: z.boolean().optional(),
-      type: z.enum(["BRANCH", "TAG"]),
+      type: z.enum(['BRANCH', 'TAG']),
     })
     .optional(),
   enabled: z.boolean().optional(),
@@ -7453,9 +6944,9 @@ export const RestRefSyncStatusSchema = z.object({
     .object({
       displayId: z.string(),
       id: z.string(),
-      state: z.enum(["AHEAD", "DIVERGED", "ORPHANED"]).optional(),
+      state: z.enum(['AHEAD', 'DIVERGED', 'ORPHANED']).optional(),
       tag: z.boolean().optional(),
-      type: z.enum(["BRANCH", "TAG"]),
+      type: z.enum(['BRANCH', 'TAG']),
     })
     .optional(),
 });
@@ -7465,17 +6956,15 @@ export type RestRefSyncStatus = z.infer<typeof RestRefSyncStatusSchema>;
 export const RestRejectedRefSchema = z.object({
   displayId: z.string().optional(),
   id: z.string().optional(),
-  state: z.enum(["AHEAD", "DIVERGED", "ORPHANED"]).optional(),
+  state: z.enum(['AHEAD', 'DIVERGED', 'ORPHANED']).optional(),
   tag: z.boolean().optional(),
-  type: z.enum(["BRANCH", "TAG"]).optional(),
+  type: z.enum(['BRANCH', 'TAG']).optional(),
 });
 
 export type RestRejectedRef = z.infer<typeof RestRejectedRefSchema>;
 
 export const RestRepositoryPolicySchema = z.object({
-  permission: z
-    .enum(["SYS_ADMIN", "ADMIN", "PROJECT_ADMIN", "REPO_ADMIN"])
-    .optional(),
+  permission: z.enum(['SYS_ADMIN', 'ADMIN', 'PROJECT_ADMIN', 'REPO_ADMIN']).optional(),
 });
 
 export type RestRepositoryPolicy = z.infer<typeof RestRepositoryPolicySchema>;
@@ -7488,7 +6977,7 @@ export const RestBrokenIndexStatusRepositorySchema = z.object({
       lastIndexedTimestamp: z.number().int().optional(),
       projectKey: z.string(),
       repositorySlug: z.string(),
-      status: z.enum(["BROKEN", "INDEXED", "INDEXING", "UNKNOWN"]),
+      status: z.enum(['BROKEN', 'INDEXED', 'INDEXING', 'UNKNOWN']),
     })
     .optional(),
   repository: z
@@ -7523,7 +7012,7 @@ export const RestBrokenIndexStatusRepositorySchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -7532,12 +7021,7 @@ export const RestBrokenIndexStatusRepositorySchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -7554,7 +7038,7 @@ export const RestBrokenIndexStatusRepositorySchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -7562,21 +7046,17 @@ export const RestBrokenIndexStatusRepositorySchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
 });
 
-export type RestBrokenIndexStatusRepository = z.infer<
-  typeof RestBrokenIndexStatusRepositorySchema
->;
+export type RestBrokenIndexStatusRepository = z.infer<typeof RestBrokenIndexStatusRepositorySchema>;
 
 export const RestIndexEventSchema = z.object({
   eventMetadata: z.object({}).optional(),
-  eventType: z.enum(["PROJECT", "REPOSITORY", "USER", "OTHER"]),
+  eventType: z.enum(['PROJECT', 'REPOSITORY', 'USER', 'OTHER']),
   retries: z.number().int(),
 });
 
@@ -7584,23 +7064,19 @@ export type RestIndexEvent = z.infer<typeof RestIndexEventSchema>;
 
 export const RestIndexEventMetadataSchema = z.object({});
 
-export type RestIndexEventMetadata = z.infer<
-  typeof RestIndexEventMetadataSchema
->;
+export type RestIndexEventMetadata = z.infer<typeof RestIndexEventMetadataSchema>;
 
 export const RestIndexingIsRepositoryQueuedSchema = z.object({
   queued: z.boolean().optional(),
 });
 
-export type RestIndexingIsRepositoryQueued = z.infer<
-  typeof RestIndexingIsRepositoryQueuedSchema
->;
+export type RestIndexingIsRepositoryQueued = z.infer<typeof RestIndexingIsRepositoryQueuedSchema>;
 
 export const RestIndexingProcessSchema = z.object({
   currentTask: z.string(),
   event: z.object({
     eventMetadata: z.object({}).optional(),
-    eventType: z.enum(["PROJECT", "REPOSITORY", "USER", "OTHER"]),
+    eventType: z.enum(['PROJECT', 'REPOSITORY', 'USER', 'OTHER']),
     retries: z.number().int(),
   }),
 });
@@ -7614,7 +7090,7 @@ export const RestIndexingThreadDetailsSchema = z.object({
       currentTask: z.string(),
       event: z.object({
         eventMetadata: z.object({}).optional(),
-        eventType: z.enum(["PROJECT", "REPOSITORY", "USER", "OTHER"]),
+        eventType: z.enum(['PROJECT', 'REPOSITORY', 'USER', 'OTHER']),
         retries: z.number().int(),
       }),
     })
@@ -7622,23 +7098,19 @@ export const RestIndexingThreadDetailsSchema = z.object({
   delayedQueueSize: z.number().int(),
   queueSize: z.number().int(),
   state: z.object({
-    code: z.enum(["BROKEN", "IDLE", "PROCESSING", "STOPPED", "UNKNOWN"]),
+    code: z.enum(['BROKEN', 'IDLE', 'PROCESSING', 'STOPPED', 'UNKNOWN']),
     description: z.string().optional(),
   }),
 });
 
-export type RestIndexingThreadDetails = z.infer<
-  typeof RestIndexingThreadDetailsSchema
->;
+export type RestIndexingThreadDetails = z.infer<typeof RestIndexingThreadDetailsSchema>;
 
 export const RestIndexingThreadStateSchema = z.object({
-  code: z.enum(["BROKEN", "IDLE", "PROCESSING", "STOPPED", "UNKNOWN"]),
+  code: z.enum(['BROKEN', 'IDLE', 'PROCESSING', 'STOPPED', 'UNKNOWN']),
   description: z.string().optional(),
 });
 
-export type RestIndexingThreadState = z.infer<
-  typeof RestIndexingThreadStateSchema
->;
+export type RestIndexingThreadState = z.infer<typeof RestIndexingThreadStateSchema>;
 
 export const RestIndexingWorkerRestartRequestSchema = z.object({
   gracefulShutdown: z.boolean().default(false).optional(),
@@ -7655,12 +7127,10 @@ export const RestRepositoryIndexingDetailsSchema = z.object({
   lastIndexedTimestamp: z.number().int().optional(),
   projectKey: z.string().optional(),
   repositorySlug: z.string().optional(),
-  status: z.enum(["BROKEN", "INDEXED", "INDEXING", "UNKNOWN"]).optional(),
+  status: z.enum(['BROKEN', 'INDEXED', 'INDEXING', 'UNKNOWN']).optional(),
 });
 
-export type RestRepositoryIndexingDetails = z.infer<
-  typeof RestRepositoryIndexingDetailsSchema
->;
+export type RestRepositoryIndexingDetails = z.infer<typeof RestRepositoryIndexingDetailsSchema>;
 
 export const RestRepositoryIndexingQueueDetailsSchema = z.object({
   capturedAt: z.number().int().optional(),
@@ -7678,9 +7148,7 @@ export const RestRepositorySelectorSchema = z.object({
   slug: z.string(),
 });
 
-export type RestRepositorySelector = z.infer<
-  typeof RestRepositorySelectorSchema
->;
+export type RestRepositorySelector = z.infer<typeof RestRepositorySelectorSchema>;
 
 export const RestSshAccessKeyLocationsSchema = z.object({
   projects: z
@@ -7694,7 +7162,7 @@ export const RestSshAccessKeyLocationsSchema = z.object({
       name: z.string().optional(),
       public: z.boolean().optional(),
       scope: z.string().optional(),
-      type: z.enum(["NORMAL", "PERSONAL"]).optional(),
+      type: z.enum(['NORMAL', 'PERSONAL']).optional(),
     })
     .optional(),
   repositories: z
@@ -7729,7 +7197,7 @@ export const RestSshAccessKeyLocationsSchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -7738,12 +7206,7 @@ export const RestSshAccessKeyLocationsSchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -7760,7 +7223,7 @@ export const RestSshAccessKeyLocationsSchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -7768,17 +7231,13 @@ export const RestSshAccessKeyLocationsSchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
 });
 
-export type RestSshAccessKeyLocations = z.infer<
-  typeof RestSshAccessKeyLocationsSchema
->;
+export type RestSshAccessKeyLocations = z.infer<typeof RestSshAccessKeyLocationsSchema>;
 
 export const RestSshKeySettingsSchema = z.object({
   keyTypeRestrictions: z
@@ -7801,9 +7260,7 @@ export const RestSshKeyTypeRestrictionSchema = z.object({
   minKeyLength: z.number().int().optional(),
 });
 
-export type RestSshKeyTypeRestriction = z.infer<
-  typeof RestSshKeyTypeRestrictionSchema
->;
+export type RestSshKeyTypeRestriction = z.infer<typeof RestSshKeyTypeRestrictionSchema>;
 
 export const RestSshSettingsSchema = z.object({
   accessKeysEnabled: z.boolean().optional(),
@@ -7825,9 +7282,7 @@ export const SimpleSshKeyFingerprintSchema = z.object({
   value: z.string().optional(),
 });
 
-export type SimpleSshKeyFingerprint = z.infer<
-  typeof SimpleSshKeyFingerprintSchema
->;
+export type SimpleSshKeyFingerprint = z.infer<typeof SimpleSshKeyFingerprintSchema>;
 
 export const AdminPasswordUpdateSchema = z.object({
   name: z.string().optional(),
@@ -7845,9 +7300,7 @@ export const ExampleAvatarMultipartFormDataSchema = z.object({
   avatar: z.string().optional(),
 });
 
-export type ExampleAvatarMultipartFormData = z.infer<
-  typeof ExampleAvatarMultipartFormDataSchema
->;
+export type ExampleAvatarMultipartFormData = z.infer<typeof ExampleAvatarMultipartFormDataSchema>;
 
 export const ExampleCertificateMultipartFormDataSchema = z.object({
   certificate: z.string().optional(),
@@ -8034,9 +7487,7 @@ export const ExampleJsonLastModifiedCallbackSchema = z.object({
     .optional(),
 });
 
-export type ExampleJsonLastModifiedCallback = z.infer<
-  typeof ExampleJsonLastModifiedCallbackSchema
->;
+export type ExampleJsonLastModifiedCallback = z.infer<typeof ExampleJsonLastModifiedCallbackSchema>;
 
 export const ExampleMultipartFormDataSchema = z.object({
   branch: z.string().optional(),
@@ -8046,9 +7497,7 @@ export const ExampleMultipartFormDataSchema = z.object({
   sourceCommitId: z.string().optional(),
 });
 
-export type ExampleMultipartFormData = z.infer<
-  typeof ExampleMultipartFormDataSchema
->;
+export type ExampleMultipartFormData = z.infer<typeof ExampleMultipartFormDataSchema>;
 
 export const ExamplePostMultipartFormDataSchema = z.object({
   content: z.string().optional(),
@@ -8057,9 +7506,7 @@ export const ExamplePostMultipartFormDataSchema = z.object({
   type: z.string().optional(),
 });
 
-export type ExamplePostMultipartFormData = z.infer<
-  typeof ExamplePostMultipartFormDataSchema
->;
+export type ExamplePostMultipartFormData = z.infer<typeof ExamplePostMultipartFormDataSchema>;
 
 export const ExamplePreviewMigrationSchema = z.object({
   repositories: z
@@ -8095,7 +7542,7 @@ export const ExamplePreviewMigrationSchema = z.object({
                 name: z.string(),
                 public: z.boolean().optional(),
                 scope: z.string().optional(),
-                type: z.enum(["NORMAL", "PERSONAL"]),
+                type: z.enum(['NORMAL', 'PERSONAL']),
               })
               .optional(),
             public: z.boolean().optional(),
@@ -8104,12 +7551,7 @@ export const ExamplePreviewMigrationSchema = z.object({
             scope: z.string().optional(),
             slug: z.string().optional(),
             state: z
-              .enum([
-                "AVAILABLE",
-                "INITIALISATION_FAILED",
-                "INITIALISING",
-                "OFFLINE",
-              ])
+              .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
               .optional(),
             statusMessage: z.string().optional(),
           })
@@ -8126,7 +7568,7 @@ export const ExamplePreviewMigrationSchema = z.object({
             name: z.string(),
             public: z.boolean().optional(),
             scope: z.string().optional(),
-            type: z.enum(["NORMAL", "PERSONAL"]),
+            type: z.enum(['NORMAL', 'PERSONAL']),
           })
           .optional(),
         public: z.boolean().optional(),
@@ -8134,23 +7576,14 @@ export const ExamplePreviewMigrationSchema = z.object({
         scmId: z.string().optional(),
         scope: z.string().optional(),
         slug: z.string().optional(),
-        state: z
-          .enum([
-            "AVAILABLE",
-            "INITIALISATION_FAILED",
-            "INITIALISING",
-            "OFFLINE",
-          ])
-          .optional(),
+        state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
         statusMessage: z.string().optional(),
       }),
     )
     .optional(),
 });
 
-export type ExamplePreviewMigration = z.infer<
-  typeof ExamplePreviewMigrationSchema
->;
+export type ExamplePreviewMigration = z.infer<typeof ExamplePreviewMigrationSchema>;
 
 export const ExamplePutMultipartFormDataSchema = z.object({
   content: z.string().optional(),
@@ -8158,9 +7591,7 @@ export const ExamplePutMultipartFormDataSchema = z.object({
   name: z.string().optional(),
 });
 
-export type ExamplePutMultipartFormData = z.infer<
-  typeof ExamplePutMultipartFormDataSchema
->;
+export type ExamplePutMultipartFormData = z.infer<typeof ExamplePutMultipartFormDataSchema>;
 
 export const ExampleRequirementsSchema = z.object({
   count: z.string().optional(),
@@ -8180,9 +7611,9 @@ export const ExampleSettingsSchema = z.object({
 export type ExampleSettings = z.infer<typeof ExampleSettingsSchema>;
 
 export const ExampleSettingsMapSchema = z.object({
-  "boolean key": z.boolean().optional(),
-  "long key": z.number().optional(),
-  "string key": z.string().optional(),
+  'boolean key': z.boolean().optional(),
+  'long key': z.number().optional(),
+  'string key': z.string().optional(),
 });
 
 export type ExampleSettingsMap = z.infer<typeof ExampleSettingsMapSchema>;
@@ -8226,12 +7657,9 @@ export const GroupAndUsersSchema = z.object({
   group: z.string().optional(),
   users: z
     .array(z.string())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
 });
 
 export type GroupAndUsers = z.infer<typeof GroupAndUsersSchema>;
@@ -8254,17 +7682,12 @@ export const RepositoryHookDetailsSchema = z.object({
   key: z.string().optional(),
   name: z.string().optional(),
   supportedScopes: z
-    .array(z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]))
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    )
+    .array(z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']))
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    })
     .optional(),
-  type: z
-    .enum(["PRE_RECEIVE", "PRE_PULL_REQUEST_MERGE", "POST_RECEIVE"])
-    .optional(),
+  type: z.enum(['PRE_RECEIVE', 'PRE_PULL_REQUEST_MERGE', 'POST_RECEIVE']).optional(),
   version: z.string().optional(),
 });
 
@@ -8283,24 +7706,20 @@ export const RestAggregateRejectCounterSchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
 });
 
-export type RestAggregateRejectCounter = z.infer<
-  typeof RestAggregateRejectCounterSchema
->;
+export type RestAggregateRejectCounter = z.infer<typeof RestAggregateRejectCounterSchema>;
 
 export const RestAnnouncementBannerSchema = z.object({
-  audience: z.enum(["AUTHENTICATED", "ALL"]).optional(),
+  audience: z.enum(['AUTHENTICATED', 'ALL']).optional(),
   enabled: z.boolean().optional(),
   message: z.string().optional(),
 });
 
-export type RestAnnouncementBanner = z.infer<
-  typeof RestAnnouncementBannerSchema
->;
+export type RestAnnouncementBanner = z.infer<typeof RestAnnouncementBannerSchema>;
 
 export const RestApplicationPropertiesSchema = z.object({
   buildDate: z.string().optional(),
@@ -8309,9 +7728,7 @@ export const RestApplicationPropertiesSchema = z.object({
   version: z.string().optional(),
 });
 
-export type RestApplicationProperties = z.infer<
-  typeof RestApplicationPropertiesSchema
->;
+export type RestApplicationProperties = z.infer<typeof RestApplicationPropertiesSchema>;
 
 export const RestApplySuggestionRequestSchema = z.object({
   commentVersion: z.number().int(),
@@ -8320,9 +7737,7 @@ export const RestApplySuggestionRequestSchema = z.object({
   suggestionIndex: z.number().int(),
 });
 
-export type RestApplySuggestionRequest = z.infer<
-  typeof RestApplySuggestionRequestSchema
->;
+export type RestApplySuggestionRequest = z.infer<typeof RestApplySuggestionRequestSchema>;
 
 export const RestAttachmentMetadataSchema = z.object({
   id: z.number().int().optional(),
@@ -8330,9 +7745,7 @@ export const RestAttachmentMetadataSchema = z.object({
   url: z.string().optional(),
 });
 
-export type RestAttachmentMetadata = z.infer<
-  typeof RestAttachmentMetadataSchema
->;
+export type RestAttachmentMetadata = z.infer<typeof RestAttachmentMetadataSchema>;
 
 export const RestAutoDeclineSettingsSchema = z.object({
   enabled: z.boolean().optional(),
@@ -8340,27 +7753,23 @@ export const RestAutoDeclineSettingsSchema = z.object({
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
 });
 
-export type RestAutoDeclineSettings = z.infer<
-  typeof RestAutoDeclineSettingsSchema
->;
+export type RestAutoDeclineSettings = z.infer<typeof RestAutoDeclineSettingsSchema>;
 
 export const RestAutoDeclineSettingsRequestSchema = z.object({
   enabled: z.boolean().optional(),
   inactivityWeeks: z.number().int().optional(),
 });
 
-export type RestAutoDeclineSettingsRequest = z.infer<
-  typeof RestAutoDeclineSettingsRequestSchema
->;
+export type RestAutoDeclineSettingsRequest = z.infer<typeof RestAutoDeclineSettingsRequestSchema>;
 
 export const RestAutoMergeProcessingResultSchema = z.object({
   autoMergeProcessingStatus: z
-    .enum(["CANCELLED", "VETOED", "STALE", "MERGED", "LOCK_FAILURE", "UNKNOWN"])
+    .enum(['CANCELLED', 'VETOED', 'STALE', 'MERGED', 'LOCK_FAILURE', 'UNKNOWN'])
     .optional(),
   pullRequest: z
     .object({
@@ -8368,8 +7777,8 @@ export const RestAutoMergeProcessingResultSchema = z.object({
         .object({
           approved: z.boolean().optional(),
           lastReviewedCommit: z.string().optional(),
-          role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-          status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+          role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+          status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
           user: z
             .object({
               active: z.boolean().optional(),
@@ -8380,7 +7789,7 @@ export const RestAutoMergeProcessingResultSchema = z.object({
               links: z.object({}).optional(),
               name: z.string(),
               slug: z.string(),
-              type: z.enum(["NORMAL", "SERVICE"]),
+              type: z.enum(['NORMAL', 'SERVICE']),
             })
             .optional(),
         })
@@ -8428,7 +7837,7 @@ export const RestAutoMergeProcessingResultSchema = z.object({
                       name: z.string(),
                       public: z.boolean().optional(),
                       scope: z.string().optional(),
-                      type: z.enum(["NORMAL", "PERSONAL"]),
+                      type: z.enum(['NORMAL', 'PERSONAL']),
                     })
                     .optional(),
                   public: z.boolean().optional(),
@@ -8437,12 +7846,7 @@ export const RestAutoMergeProcessingResultSchema = z.object({
                   scope: z.string().optional(),
                   slug: z.string().optional(),
                   state: z
-                    .enum([
-                      "AVAILABLE",
-                      "INITIALISATION_FAILED",
-                      "INITIALISING",
-                      "OFFLINE",
-                    ])
+                    .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                     .optional(),
                   statusMessage: z.string().optional(),
                 })
@@ -8459,7 +7863,7 @@ export const RestAutoMergeProcessingResultSchema = z.object({
                   name: z.string(),
                   public: z.boolean().optional(),
                   scope: z.string().optional(),
-                  type: z.enum(["NORMAL", "PERSONAL"]),
+                  type: z.enum(['NORMAL', 'PERSONAL']),
                 })
                 .optional(),
               public: z.boolean().optional(),
@@ -8468,17 +7872,12 @@ export const RestAutoMergeProcessingResultSchema = z.object({
               scope: z.string().optional(),
               slug: z.string().optional(),
               state: z
-                .enum([
-                  "AVAILABLE",
-                  "INITIALISATION_FAILED",
-                  "INITIALISING",
-                  "OFFLINE",
-                ])
+                .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                 .optional(),
               statusMessage: z.string().optional(),
             })
             .optional(),
-          type: z.enum(["BRANCH", "TAG"]).optional(),
+          type: z.enum(['BRANCH', 'TAG']).optional(),
         })
         .optional(),
       htmlDescription: z.string().optional(),
@@ -8491,8 +7890,8 @@ export const RestAutoMergeProcessingResultSchema = z.object({
           z.object({
             approved: z.boolean().optional(),
             lastReviewedCommit: z.string().optional(),
-            role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-            status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+            role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+            status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
             user: z
               .object({
                 active: z.boolean().optional(),
@@ -8503,7 +7902,7 @@ export const RestAutoMergeProcessingResultSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
           }),
@@ -8514,8 +7913,8 @@ export const RestAutoMergeProcessingResultSchema = z.object({
           z.object({
             approved: z.boolean().optional(),
             lastReviewedCommit: z.string().optional(),
-            role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
-            status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+            role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+            status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
             user: z
               .object({
                 active: z.boolean().optional(),
@@ -8526,13 +7925,13 @@ export const RestAutoMergeProcessingResultSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
           }),
         )
         .optional(),
-      state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+      state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
       title: z.string().optional(),
       toRef: z
         .object({
@@ -8571,7 +7970,7 @@ export const RestAutoMergeProcessingResultSchema = z.object({
                       name: z.string(),
                       public: z.boolean().optional(),
                       scope: z.string().optional(),
-                      type: z.enum(["NORMAL", "PERSONAL"]),
+                      type: z.enum(['NORMAL', 'PERSONAL']),
                     })
                     .optional(),
                   public: z.boolean().optional(),
@@ -8580,12 +7979,7 @@ export const RestAutoMergeProcessingResultSchema = z.object({
                   scope: z.string().optional(),
                   slug: z.string().optional(),
                   state: z
-                    .enum([
-                      "AVAILABLE",
-                      "INITIALISATION_FAILED",
-                      "INITIALISING",
-                      "OFFLINE",
-                    ])
+                    .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                     .optional(),
                   statusMessage: z.string().optional(),
                 })
@@ -8602,7 +7996,7 @@ export const RestAutoMergeProcessingResultSchema = z.object({
                   name: z.string(),
                   public: z.boolean().optional(),
                   scope: z.string().optional(),
-                  type: z.enum(["NORMAL", "PERSONAL"]),
+                  type: z.enum(['NORMAL', 'PERSONAL']),
                 })
                 .optional(),
               public: z.boolean().optional(),
@@ -8611,17 +8005,12 @@ export const RestAutoMergeProcessingResultSchema = z.object({
               scope: z.string().optional(),
               slug: z.string().optional(),
               state: z
-                .enum([
-                  "AVAILABLE",
-                  "INITIALISATION_FAILED",
-                  "INITIALISING",
-                  "OFFLINE",
-                ])
+                .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                 .optional(),
               statusMessage: z.string().optional(),
             })
             .optional(),
-          type: z.enum(["BRANCH", "TAG"]).optional(),
+          type: z.enum(['BRANCH', 'TAG']).optional(),
         })
         .optional(),
       updatedDate: z.number().int().optional(),
@@ -8630,13 +8019,11 @@ export const RestAutoMergeProcessingResultSchema = z.object({
     .optional(),
 });
 
-export type RestAutoMergeProcessingResult = z.infer<
-  typeof RestAutoMergeProcessingResultSchema
->;
+export type RestAutoMergeProcessingResult = z.infer<typeof RestAutoMergeProcessingResultSchema>;
 
 export const RestAutoMergeProjectSettingsRequestSchema = z.object({
   enabled: z.boolean().optional(),
-  restrictionAction: z.enum(["CREATE", "DELETE", "NONE"]).optional(),
+  restrictionAction: z.enum(['CREATE', 'DELETE', 'NONE']).optional(),
 });
 
 export type RestAutoMergeProjectSettingsRequest = z.infer<
@@ -8656,28 +8043,22 @@ export type RestAutoMergeRequest = z.infer<typeof RestAutoMergeRequestSchema>;
 
 export const RestAutoMergeRestrictedSettingsSchema = z.object({
   enabled: z.boolean().optional(),
-  restrictionState: z
-    .enum(["NONE", "RESTRICTED_UNMODIFIABLE", "RESTRICTED_MODIFIABLE"])
-    .optional(),
+  restrictionState: z.enum(['NONE', 'RESTRICTED_UNMODIFIABLE', 'RESTRICTED_MODIFIABLE']).optional(),
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
 });
 
-export type RestAutoMergeRestrictedSettings = z.infer<
-  typeof RestAutoMergeRestrictedSettingsSchema
->;
+export type RestAutoMergeRestrictedSettings = z.infer<typeof RestAutoMergeRestrictedSettingsSchema>;
 
 export const RestAutoMergeSettingsRequestSchema = z.object({
   enabled: z.boolean().optional(),
 });
 
-export type RestAutoMergeSettingsRequest = z.infer<
-  typeof RestAutoMergeSettingsRequestSchema
->;
+export type RestAutoMergeSettingsRequest = z.infer<typeof RestAutoMergeSettingsRequestSchema>;
 
 export const RestBitbucketLicenseSchema = z.object({
   creationDate: z.number().int().optional(),
@@ -8718,8 +8099,8 @@ export const RestBuildStatusSetRequestSchema = z.object({
   lastUpdated: z.number().int().optional(),
   name: z.string().min(0).max(255).optional(),
   parent: z.string().min(0).max(1024).optional(),
-  ref: z.string().min(0).max(1024).regex(new RegExp("^refs\\/.*")).optional(),
-  state: z.enum(["CANCELLED", "FAILED", "INPROGRESS", "SUCCESSFUL", "UNKNOWN"]),
+  ref: z.string().min(0).max(1024).regex(new RegExp('^refs\\/.*')).optional(),
+  state: z.enum(['CANCELLED', 'FAILED', 'INPROGRESS', 'SUCCESSFUL', 'UNKNOWN']),
   testResults: z
     .object({
       failed: z.number().int().optional(),
@@ -8730,9 +8111,7 @@ export const RestBuildStatusSetRequestSchema = z.object({
   url: z.string().min(0).max(450),
 });
 
-export type RestBuildStatusSetRequest = z.infer<
-  typeof RestBuildStatusSetRequestSchema
->;
+export type RestBuildStatusSetRequest = z.infer<typeof RestBuildStatusSetRequestSchema>;
 
 export const RestBulkUserRateLimitSettingsUpdateRequestSchema = z.object({
   settings: z
@@ -8743,12 +8122,9 @@ export const RestBulkUserRateLimitSettingsUpdateRequestSchema = z.object({
     .optional(),
   usernames: z
     .array(z.string())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
   whitelisted: z.boolean().optional(),
 });
 
@@ -8777,9 +8153,7 @@ export const RestChangeSchema = z.object({
               parent: z.string().optional(),
             })
             .optional(),
-          type: z
-            .enum(["ADD", "COPY", "DELETE", "MODIFY", "MOVE", "UNKNOWN"])
-            .optional(),
+          type: z.enum(['ADD', 'COPY', 'DELETE', 'MODIFY', 'MOVE', 'UNKNOWN']).optional(),
         })
         .optional(),
       theirChange: z
@@ -8800,9 +8174,7 @@ export const RestChangeSchema = z.object({
               parent: z.string().optional(),
             })
             .optional(),
-          type: z
-            .enum(["ADD", "COPY", "DELETE", "MODIFY", "MOVE", "UNKNOWN"])
-            .optional(),
+          type: z.enum(['ADD', 'COPY', 'DELETE', 'MODIFY', 'MOVE', 'UNKNOWN']).optional(),
         })
         .optional(),
     })
@@ -8811,7 +8183,7 @@ export const RestChangeSchema = z.object({
   executable: z.boolean().optional(),
   fromContentId: z.string().optional(),
   links: z.object({}).optional(),
-  nodeType: z.enum(["DIRECTORY", "FILE", "SUBMODULE"]).optional(),
+  nodeType: z.enum(['DIRECTORY', 'FILE', 'SUBMODULE']).optional(),
   path: z
     .object({
       components: z.array(z.string()).optional(),
@@ -8830,9 +8202,7 @@ export const RestChangeSchema = z.object({
       parent: z.string().optional(),
     })
     .optional(),
-  type: z
-    .enum(["ADD", "COPY", "DELETE", "MODIFY", "MOVE", "UNKNOWN"])
-    .optional(),
+  type: z.enum(['ADD', 'COPY', 'DELETE', 'MODIFY', 'MOVE', 'UNKNOWN']).optional(),
 });
 
 export type RestChange = z.infer<typeof RestChangeSchema>;
@@ -8869,18 +8239,14 @@ export const RestClusterInformationSchema = z.object({
   running: z.boolean().optional(),
 });
 
-export type RestClusterInformation = z.infer<
-  typeof RestClusterInformationSchema
->;
+export type RestClusterInformation = z.infer<typeof RestClusterInformationSchema>;
 
 export const RestCommitMessageSuggestionSchema = z.object({
   body: z.string().optional(),
   title: z.string().optional(),
 });
 
-export type RestCommitMessageSuggestion = z.infer<
-  typeof RestCommitMessageSuggestionSchema
->;
+export type RestCommitMessageSuggestion = z.infer<typeof RestCommitMessageSuggestionSchema>;
 
 export const RestConflictSchema = z.object({
   ourChange: z
@@ -8901,9 +8267,7 @@ export const RestConflictSchema = z.object({
           parent: z.string().optional(),
         })
         .optional(),
-      type: z
-        .enum(["ADD", "COPY", "DELETE", "MODIFY", "MOVE", "UNKNOWN"])
-        .optional(),
+      type: z.enum(['ADD', 'COPY', 'DELETE', 'MODIFY', 'MOVE', 'UNKNOWN']).optional(),
     })
     .optional(),
   theirChange: z
@@ -8924,9 +8288,7 @@ export const RestConflictSchema = z.object({
           parent: z.string().optional(),
         })
         .optional(),
-      type: z
-        .enum(["ADD", "COPY", "DELETE", "MODIFY", "MOVE", "UNKNOWN"])
-        .optional(),
+      type: z.enum(['ADD', 'COPY', 'DELETE', 'MODIFY', 'MOVE', 'UNKNOWN']).optional(),
     })
     .optional(),
 });
@@ -8950,9 +8312,7 @@ export const RestConflictChangeSchema = z.object({
       parent: z.string().optional(),
     })
     .optional(),
-  type: z
-    .enum(["ADD", "COPY", "DELETE", "MODIFY", "MOVE", "UNKNOWN"])
-    .optional(),
+  type: z.enum(['ADD', 'COPY', 'DELETE', 'MODIFY', 'MOVE', 'UNKNOWN']).optional(),
 });
 
 export type RestConflictChange = z.infer<typeof RestConflictChangeSchema>;
@@ -8963,9 +8323,7 @@ export const RestConnectivitySummarySchema = z.object({
   roundTripTime: z.number().int().optional(),
 });
 
-export type RestConnectivitySummary = z.infer<
-  typeof RestConnectivitySummarySchema
->;
+export type RestConnectivitySummary = z.infer<typeof RestConnectivitySummarySchema>;
 
 export const RestCreateBranchRequestSchema = z.object({
   message: z.string().optional(),
@@ -8973,9 +8331,7 @@ export const RestCreateBranchRequestSchema = z.object({
   startPoint: z.string().optional(),
 });
 
-export type RestCreateBranchRequest = z.infer<
-  typeof RestCreateBranchRequestSchema
->;
+export type RestCreateBranchRequest = z.infer<typeof RestCreateBranchRequestSchema>;
 
 export const RestCreateTagRequestSchema = z.object({
   message: z.string().optional(),
@@ -8999,10 +8355,7 @@ export const RestDeploymentSchema = z.object({
     .object({
       displayName: z.string().min(0).max(255),
       key: z.string().min(0).max(255),
-      type: z
-        .string()
-        .regex(new RegExp("DEVELOPMENT|TESTING|STAGING|PRODUCTION"))
-        .optional(),
+      type: z.string().regex(new RegExp('DEVELOPMENT|TESTING|STAGING|PRODUCTION')).optional(),
       url: z.string().min(0).max(1024).optional(),
     })
     .optional(),
@@ -9046,7 +8399,7 @@ export const RestDeploymentSchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -9055,12 +8408,7 @@ export const RestDeploymentSchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -9077,7 +8425,7 @@ export const RestDeploymentSchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -9085,22 +8433,12 @@ export const RestDeploymentSchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
   state: z
-    .enum([
-      "PENDING",
-      "IN_PROGRESS",
-      "CANCELLED",
-      "FAILED",
-      "ROLLED_BACK",
-      "SUCCESSFUL",
-      "UNKNOWN",
-    ])
+    .enum(['PENDING', 'IN_PROGRESS', 'CANCELLED', 'FAILED', 'ROLLED_BACK', 'SUCCESSFUL', 'UNKNOWN'])
     .optional(),
   toCommit: z
     .object({
@@ -9116,16 +8454,11 @@ export type RestDeployment = z.infer<typeof RestDeploymentSchema>;
 export const RestDeploymentEnvironmentSchema = z.object({
   displayName: z.string().min(0).max(255).optional(),
   key: z.string().min(0).max(255).optional(),
-  type: z
-    .string()
-    .regex(new RegExp("DEVELOPMENT|TESTING|STAGING|PRODUCTION"))
-    .optional(),
+  type: z.string().regex(new RegExp('DEVELOPMENT|TESTING|STAGING|PRODUCTION')).optional(),
   url: z.string().min(0).max(1024).optional(),
 });
 
-export type RestDeploymentEnvironment = z.infer<
-  typeof RestDeploymentEnvironmentSchema
->;
+export type RestDeploymentEnvironment = z.infer<typeof RestDeploymentEnvironmentSchema>;
 
 export const RestDeploymentSetRequestSchema = z.object({
   deploymentSequenceNumber: z.number().int(),
@@ -9134,29 +8467,24 @@ export const RestDeploymentSetRequestSchema = z.object({
   environment: z.object({
     displayName: z.string().min(0).max(255).optional(),
     key: z.string().min(0).max(255).optional(),
-    type: z
-      .string()
-      .regex(new RegExp("DEVELOPMENT|TESTING|STAGING|PRODUCTION"))
-      .optional(),
+    type: z.string().regex(new RegExp('DEVELOPMENT|TESTING|STAGING|PRODUCTION')).optional(),
     url: z.string().min(0).max(1024).optional(),
   }),
   key: z.string().min(0).max(255),
   lastUpdated: z.number().int().min(0).optional(),
   state: z.enum([
-    "PENDING",
-    "IN_PROGRESS",
-    "CANCELLED",
-    "FAILED",
-    "ROLLED_BACK",
-    "SUCCESSFUL",
-    "UNKNOWN",
+    'PENDING',
+    'IN_PROGRESS',
+    'CANCELLED',
+    'FAILED',
+    'ROLLED_BACK',
+    'SUCCESSFUL',
+    'UNKNOWN',
   ]),
   url: z.string().min(0).max(1024),
 });
 
-export type RestDeploymentSetRequest = z.infer<
-  typeof RestDeploymentSetRequestSchema
->;
+export type RestDeploymentSetRequest = z.infer<typeof RestDeploymentSetRequestSchema>;
 
 export const RestDetailedGroupSchema = z.object({
   deletable: z.boolean().optional(),
@@ -9181,9 +8509,7 @@ export const RestDetailedInvocationSchema = z.object({
   start: z.number().int().optional(),
 });
 
-export type RestDetailedInvocation = z.infer<
-  typeof RestDetailedInvocationSchema
->;
+export type RestDetailedInvocation = z.infer<typeof RestDetailedInvocationSchema>;
 
 export const RestDetailedUserSchema = z.object({
   active: z.boolean().optional(),
@@ -9200,7 +8526,7 @@ export const RestDetailedUserSchema = z.object({
   mutableGroups: z.boolean().optional(),
   name: z.string().optional(),
   slug: z.string().optional(),
-  type: z.enum(["NORMAL", "SERVICE"]).optional(),
+  type: z.enum(['NORMAL', 'SERVICE']).optional(),
 });
 
 export type RestDetailedUser = z.infer<typeof RestDetailedUserSchema>;
@@ -9210,7 +8536,7 @@ export const RestDiffSegmentSchema = z.object({
     .array(
       z.object({
         commentIds: z.array(z.number().int()).optional(),
-        conflictMarker: z.enum(["MARKER", "OURS", "THEIRS"]).optional(),
+        conflictMarker: z.enum(['MARKER', 'OURS', 'THEIRS']).optional(),
         destination: z.number().int().optional(),
         line: z.string().optional(),
         source: z.number().int().optional(),
@@ -9219,7 +8545,7 @@ export const RestDiffSegmentSchema = z.object({
     )
     .optional(),
   truncated: z.boolean().optional(),
-  type: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+  type: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
 });
 
 export type RestDiffSegment = z.infer<typeof RestDiffSegmentSchema>;
@@ -9252,15 +8578,15 @@ export const RestDiffSchema = z.object({
       z.object({
         anchor: z
           .object({
-            diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-            fileType: z.enum(["FROM", "TO"]).optional(),
+            diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+            fileType: z.enum(['FROM', 'TO']).optional(),
             fromHash: z.string().optional(),
             line: z.number().int().optional(),
-            lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+            lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
             multilineMarker: z
               .object({
                 startLine: z.number().int().optional(),
-                startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
               })
               .optional(),
             multilineSpan: z
@@ -9285,12 +8611,8 @@ export const RestDiffSchema = z.object({
                   .object({
                     approved: z.boolean().optional(),
                     lastReviewedCommit: z.string().optional(),
-                    role: z
-                      .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                      .optional(),
-                    status: z
-                      .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                      .optional(),
+                    role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                    status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                     user: z
                       .object({
                         active: z.boolean().optional(),
@@ -9301,7 +8623,7 @@ export const RestDiffSchema = z.object({
                         links: z.object({}).optional(),
                         name: z.string(),
                         slug: z.string(),
-                        type: z.enum(["NORMAL", "SERVICE"]),
+                        type: z.enum(['NORMAL', 'SERVICE']),
                       })
                       .optional(),
                   })
@@ -9349,7 +8671,7 @@ export const RestDiffSchema = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -9359,10 +8681,10 @@ export const RestDiffSchema = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
@@ -9380,7 +8702,7 @@ export const RestDiffSchema = z.object({
                             name: z.string(),
                             public: z.boolean().optional(),
                             scope: z.string().optional(),
-                            type: z.enum(["NORMAL", "PERSONAL"]),
+                            type: z.enum(['NORMAL', 'PERSONAL']),
                           })
                           .optional(),
                         public: z.boolean().optional(),
@@ -9389,17 +8711,12 @@ export const RestDiffSchema = z.object({
                         scope: z.string().optional(),
                         slug: z.string().optional(),
                         state: z
-                          .enum([
-                            "AVAILABLE",
-                            "INITIALISATION_FAILED",
-                            "INITIALISING",
-                            "OFFLINE",
-                          ])
+                          .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                           .optional(),
                         statusMessage: z.string().optional(),
                       })
                       .optional(),
-                    type: z.enum(["BRANCH", "TAG"]).optional(),
+                    type: z.enum(['BRANCH', 'TAG']).optional(),
                   })
                   .optional(),
                 htmlDescription: z.string().optional(),
@@ -9407,11 +8724,9 @@ export const RestDiffSchema = z.object({
                 links: z.object({}).optional(),
                 locked: z.boolean().optional(),
                 open: z.boolean().optional(),
-                participants: z
-                  .array(RestPullRequestParticipantSchema)
-                  .optional(),
+                participants: z.array(RestPullRequestParticipantSchema).optional(),
                 reviewers: z.array(RestPullRequestParticipantSchema).optional(),
-                state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+                state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                 title: z.string().optional(),
                 toRef: z
                   .object({
@@ -9450,7 +8765,7 @@ export const RestDiffSchema = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -9460,10 +8775,10 @@ export const RestDiffSchema = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
@@ -9481,7 +8796,7 @@ export const RestDiffSchema = z.object({
                             name: z.string(),
                             public: z.boolean().optional(),
                             scope: z.string().optional(),
-                            type: z.enum(["NORMAL", "PERSONAL"]),
+                            type: z.enum(['NORMAL', 'PERSONAL']),
                           })
                           .optional(),
                         public: z.boolean().optional(),
@@ -9490,17 +8805,12 @@ export const RestDiffSchema = z.object({
                         scope: z.string().optional(),
                         slug: z.string().optional(),
                         state: z
-                          .enum([
-                            "AVAILABLE",
-                            "INITIALISATION_FAILED",
-                            "INITIALISING",
-                            "OFFLINE",
-                          ])
+                          .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
                           .optional(),
                         statusMessage: z.string().optional(),
                       })
                       .optional(),
-                    type: z.enum(["BRANCH", "TAG"]).optional(),
+                    type: z.enum(['BRANCH', 'TAG']).optional(),
                   })
                   .optional(),
                 updatedDate: z.number().int().optional(),
@@ -9529,7 +8839,7 @@ export const RestDiffSchema = z.object({
             links: z.object({}).optional(),
             name: z.string(),
             slug: z.string(),
-            type: z.enum(["NORMAL", "SERVICE"]),
+            type: z.enum(['NORMAL', 'SERVICE']),
           })
           .optional(),
         comments: z.array(RestCommentSchema).optional(),
@@ -9540,15 +8850,15 @@ export const RestDiffSchema = z.object({
           .object({
             anchor: z
               .object({
-                diffType: z.enum(["COMMIT", "EFFECTIVE", "RANGE"]).optional(),
-                fileType: z.enum(["FROM", "TO"]).optional(),
+                diffType: z.enum(['COMMIT', 'EFFECTIVE', 'RANGE']).optional(),
+                fileType: z.enum(['FROM', 'TO']).optional(),
                 fromHash: z.string().optional(),
                 line: z.number().int().optional(),
-                lineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+                lineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
                 multilineMarker: z
                   .object({
                     startLine: z.number().int().optional(),
-                    startLineType: z.enum(["ADDED", "CONTEXT", "REMOVED"]),
+                    startLineType: z.enum(['ADDED', 'CONTEXT', 'REMOVED']),
                   })
                   .optional(),
                 multilineSpan: z
@@ -9573,12 +8883,8 @@ export const RestDiffSchema = z.object({
                       .object({
                         approved: z.boolean().optional(),
                         lastReviewedCommit: z.string().optional(),
-                        role: z
-                          .enum(["AUTHOR", "REVIEWER", "PARTICIPANT"])
-                          .optional(),
-                        status: z
-                          .enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"])
-                          .optional(),
+                        role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
+                        status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
                         user: z
                           .object({
                             active: z.boolean().optional(),
@@ -9589,7 +8895,7 @@ export const RestDiffSchema = z.object({
                             links: z.object({}).optional(),
                             name: z.string(),
                             slug: z.string(),
-                            type: z.enum(["NORMAL", "SERVICE"]),
+                            type: z.enum(['NORMAL', 'SERVICE']),
                           })
                           .optional(),
                       })
@@ -9637,7 +8943,7 @@ export const RestDiffSchema = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -9647,10 +8953,10 @@ export const RestDiffSchema = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
@@ -9668,7 +8974,7 @@ export const RestDiffSchema = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -9678,16 +8984,16 @@ export const RestDiffSchema = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
                           })
                           .optional(),
-                        type: z.enum(["BRANCH", "TAG"]).optional(),
+                        type: z.enum(['BRANCH', 'TAG']).optional(),
                       })
                       .optional(),
                     htmlDescription: z.string().optional(),
@@ -9695,13 +9001,9 @@ export const RestDiffSchema = z.object({
                     links: z.object({}).optional(),
                     locked: z.boolean().optional(),
                     open: z.boolean().optional(),
-                    participants: z
-                      .array(RestPullRequestParticipantSchema)
-                      .optional(),
-                    reviewers: z
-                      .array(RestPullRequestParticipantSchema)
-                      .optional(),
-                    state: z.enum(["DECLINED", "MERGED", "OPEN"]).optional(),
+                    participants: z.array(RestPullRequestParticipantSchema).optional(),
+                    reviewers: z.array(RestPullRequestParticipantSchema).optional(),
+                    state: z.enum(['DECLINED', 'MERGED', 'OPEN']).optional(),
                     title: z.string().optional(),
                     toRef: z
                       .object({
@@ -9740,7 +9042,7 @@ export const RestDiffSchema = z.object({
                                     name: z.string(),
                                     public: z.boolean().optional(),
                                     scope: z.string().optional(),
-                                    type: z.enum(["NORMAL", "PERSONAL"]),
+                                    type: z.enum(['NORMAL', 'PERSONAL']),
                                   })
                                   .optional(),
                                 public: z.boolean().optional(),
@@ -9750,10 +9052,10 @@ export const RestDiffSchema = z.object({
                                 slug: z.string().optional(),
                                 state: z
                                   .enum([
-                                    "AVAILABLE",
-                                    "INITIALISATION_FAILED",
-                                    "INITIALISING",
-                                    "OFFLINE",
+                                    'AVAILABLE',
+                                    'INITIALISATION_FAILED',
+                                    'INITIALISING',
+                                    'OFFLINE',
                                   ])
                                   .optional(),
                                 statusMessage: z.string().optional(),
@@ -9771,7 +9073,7 @@ export const RestDiffSchema = z.object({
                                 name: z.string(),
                                 public: z.boolean().optional(),
                                 scope: z.string().optional(),
-                                type: z.enum(["NORMAL", "PERSONAL"]),
+                                type: z.enum(['NORMAL', 'PERSONAL']),
                               })
                               .optional(),
                             public: z.boolean().optional(),
@@ -9781,16 +9083,16 @@ export const RestDiffSchema = z.object({
                             slug: z.string().optional(),
                             state: z
                               .enum([
-                                "AVAILABLE",
-                                "INITIALISATION_FAILED",
-                                "INITIALISING",
-                                "OFFLINE",
+                                'AVAILABLE',
+                                'INITIALISATION_FAILED',
+                                'INITIALISING',
+                                'OFFLINE',
                               ])
                               .optional(),
                             statusMessage: z.string().optional(),
                           })
                           .optional(),
-                        type: z.enum(["BRANCH", "TAG"]).optional(),
+                        type: z.enum(['BRANCH', 'TAG']).optional(),
                       })
                       .optional(),
                     updatedDate: z.number().int().optional(),
@@ -9819,7 +9121,7 @@ export const RestDiffSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             comments: z.array(RestCommentSchema).optional(),
@@ -9840,7 +9142,7 @@ export const RestDiffSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             severity: z.string().optional(),
@@ -9858,7 +9160,7 @@ export const RestDiffSchema = z.object({
                 links: z.object({}).optional(),
                 name: z.string(),
                 slug: z.string(),
-                type: z.enum(["NORMAL", "SERVICE"]),
+                type: z.enum(['NORMAL', 'SERVICE']),
               })
               .optional(),
             updatedDate: z.number().int().optional(),
@@ -9879,7 +9181,7 @@ export const RestDiffSchema = z.object({
             links: z.object({}).optional(),
             name: z.string(),
             slug: z.string(),
-            type: z.enum(["NORMAL", "SERVICE"]),
+            type: z.enum(['NORMAL', 'SERVICE']),
           })
           .optional(),
         severity: z.string().optional(),
@@ -9897,7 +9199,7 @@ export const RestDiffSchema = z.object({
             links: z.object({}).optional(),
             name: z.string(),
             slug: z.string(),
-            type: z.enum(["NORMAL", "SERVICE"]),
+            type: z.enum(['NORMAL', 'SERVICE']),
           })
           .optional(),
         updatedDate: z.number().int().optional(),
@@ -9921,7 +9223,7 @@ export type RestDiff = z.infer<typeof RestDiffSchema>;
 
 export const RestDiffLineSchema = z.object({
   commentIds: z.array(z.number().int()).optional(),
-  conflictMarker: z.enum(["MARKER", "OURS", "THEIRS"]).optional(),
+  conflictMarker: z.enum(['MARKER', 'OURS', 'THEIRS']).optional(),
   destination: z.number().int().optional(),
   line: z.string().optional(),
   source: z.number().int().optional(),
@@ -9939,7 +9241,7 @@ export const RestDiffHunkSchema = z.object({
       z.object({
         lines: z.array(RestDiffLineSchema).optional(),
         truncated: z.boolean().optional(),
-        type: z.enum(["ADDED", "CONTEXT", "REMOVED"]).optional(),
+        type: z.enum(['ADDED', 'CONTEXT', 'REMOVED']).optional(),
       }),
     )
     .optional(),
@@ -9970,12 +9272,9 @@ export const RestExportRequestSchema = z.object({
           slug: z.string(),
         }),
       )
-      .refine(
-        (value) =>
-          value.length ===
-          new Set(value.map((item) => JSON.stringify(item))).size,
-        { message: "Array items must be unique" },
-      ),
+      .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+        message: 'Array items must be unique',
+      }),
   }),
 });
 
@@ -9987,7 +9286,7 @@ export const RestHookScriptSchema = z.object({
   id: z.number().int().optional(),
   name: z.string().optional(),
   pluginKey: z.string().optional(),
-  type: z.enum(["POST", "PRE"]).optional(),
+  type: z.enum(['POST', 'PRE']).optional(),
   updatedDate: z.string().datetime().optional(),
   version: z.number().int().optional(),
 });
@@ -9998,7 +9297,7 @@ export const RestHookScriptConfigSchema = z.object({
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
   script: z
@@ -10008,19 +9307,16 @@ export const RestHookScriptConfigSchema = z.object({
       id: z.number().int().optional(),
       name: z.string().optional(),
       pluginKey: z.string().optional(),
-      type: z.enum(["POST", "PRE"]).optional(),
+      type: z.enum(['POST', 'PRE']).optional(),
       updatedDate: z.string().datetime().optional(),
       version: z.number().int().optional(),
     })
     .optional(),
   triggerIds: z
     .array(z.string())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    )
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    })
     .optional(),
 });
 
@@ -10029,17 +9325,12 @@ export type RestHookScriptConfig = z.infer<typeof RestHookScriptConfigSchema>;
 export const RestHookScriptTriggersSchema = z.object({
   triggerIds: z
     .array(z.string())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
 });
 
-export type RestHookScriptTriggers = z.infer<
-  typeof RestHookScriptTriggersSchema
->;
+export type RestHookScriptTriggers = z.infer<typeof RestHookScriptTriggersSchema>;
 
 export const RestImportRequestSchema = z.object({
   archivePath: z.string().optional(),
@@ -10072,7 +9363,7 @@ export const RestJobSchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
   nodeId: z.string().optional(),
@@ -10085,16 +9376,16 @@ export const RestJobSchema = z.object({
   startDate: z.number().int().optional(),
   state: z
     .enum([
-      "INITIALISING",
-      "READY",
-      "RUNNING",
-      "FINALISING",
-      "COMPLETED",
-      "FAILED",
-      "CANCELING",
-      "CANCELED",
-      "TIMED_OUT",
-      "ABORTED",
+      'INITIALISING',
+      'READY',
+      'RUNNING',
+      'FINALISING',
+      'COMPLETED',
+      'FAILED',
+      'CANCELING',
+      'CANCELED',
+      'TIMED_OUT',
+      'ABORTED',
     ])
     .optional(),
   type: z.string().optional(),
@@ -10106,7 +9397,7 @@ export type RestJob = z.infer<typeof RestJobSchema>;
 export const RestJobMessageSchema = z.object({
   createdDate: z.string().datetime().optional(),
   id: z.string().optional(),
-  severity: z.enum(["INFO", "WARN", "ERROR"]).optional(),
+  severity: z.enum(['INFO', 'WARN', 'ERROR']).optional(),
   subject: z.string().optional(),
   text: z.string().optional(),
 });
@@ -10126,7 +9417,7 @@ export const RestLabelableSchema = z.object({
   forkable: z.boolean().optional(),
   hierarchyId: z.string().optional(),
   id: z.number().int().optional(),
-  labelableType: z.enum(["REPOSITORY"]).optional(),
+  labelableType: z.enum(['REPOSITORY']).optional(),
   links: z.object({}).optional(),
   name: z.string().optional(),
   origin: z
@@ -10151,7 +9442,7 @@ export const RestLabelableSchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -10159,9 +9450,7 @@ export const RestLabelableSchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
@@ -10177,7 +9466,7 @@ export const RestLabelableSchema = z.object({
       name: z.string(),
       public: z.boolean().optional(),
       scope: z.string().optional(),
-      type: z.enum(["NORMAL", "PERSONAL"]),
+      type: z.enum(['NORMAL', 'PERSONAL']),
     })
     .optional(),
   public: z.boolean().optional(),
@@ -10185,9 +9474,7 @@ export const RestLabelableSchema = z.object({
   scmId: z.string().optional(),
   scope: z.string().optional(),
   slug: z.string().optional(),
-  state: z
-    .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-    .optional(),
+  state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
   statusMessage: z.string().optional(),
 });
 
@@ -10207,12 +9494,12 @@ export const RestLoggingSettingsSchema = z.object({
 export type RestLoggingSettings = z.infer<typeof RestLoggingSettingsSchema>;
 
 export const RestMailConfigurationSchema = z.object({
-  authType: z.enum(["BASIC", "OAUTH2"]).optional(),
+  authType: z.enum(['BASIC', 'OAUTH2']).optional(),
   hostname: z.string().optional(),
   oauth2ProviderId: z.string().optional(),
   password: z.string().optional(),
   port: z.number().int().optional(),
-  protocol: z.enum(["SMTP", "SMTPS"]).optional(),
+  protocol: z.enum(['SMTP', 'SMTPS']).optional(),
   requireStartTls: z.boolean().optional(),
   senderAddress: z.string().optional(),
   tokenId: z.string().optional(),
@@ -10233,7 +9520,7 @@ export const RestNodeConnectivitySummarySchema = z.object({
     .object({
       id: z.string(),
       name: z.string(),
-      type: z.enum(["BITBUCKET", "MESH"]),
+      type: z.enum(['BITBUCKET', 'MESH']),
     })
     .optional(),
   summary: z
@@ -10245,9 +9532,7 @@ export const RestNodeConnectivitySummarySchema = z.object({
     .optional(),
 });
 
-export type RestNodeConnectivitySummary = z.infer<
-  typeof RestNodeConnectivitySummarySchema
->;
+export type RestNodeConnectivitySummary = z.infer<typeof RestNodeConnectivitySummarySchema>;
 
 export const RestMeshConnectivityReportSchema = z.object({
   reports: z
@@ -10257,7 +9542,7 @@ export const RestMeshConnectivityReportSchema = z.object({
           .object({
             id: z.string(),
             name: z.string(),
-            type: z.enum(["BITBUCKET", "MESH"]),
+            type: z.enum(['BITBUCKET', 'MESH']),
           })
           .optional(),
         summaries: z.array(RestNodeConnectivitySummarySchema).optional(),
@@ -10266,9 +9551,7 @@ export const RestMeshConnectivityReportSchema = z.object({
     .optional(),
 });
 
-export type RestMeshConnectivityReport = z.infer<
-  typeof RestMeshConnectivityReportSchema
->;
+export type RestMeshConnectivityReport = z.infer<typeof RestMeshConnectivityReportSchema>;
 
 export const RestMeshMigrationQueueStateCountsSchema = z.object({});
 
@@ -10280,25 +9563,17 @@ export const RestMeshMigrationRequestSchema = z.object({
   all: z.boolean().optional(),
   projectIds: z
     .array(z.number().int())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
   repositoryIds: z
     .array(z.number().int())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
 });
 
-export type RestMeshMigrationRequest = z.infer<
-  typeof RestMeshMigrationRequestSchema
->;
+export type RestMeshMigrationRequest = z.infer<typeof RestMeshMigrationRequestSchema>;
 
 export const RestMeshMigrationSummarySchema = z.object({
   endTime: z.number().int().optional(),
@@ -10309,9 +9584,7 @@ export const RestMeshMigrationSummarySchema = z.object({
   state: z.string().optional(),
 });
 
-export type RestMeshMigrationSummary = z.infer<
-  typeof RestMeshMigrationSummarySchema
->;
+export type RestMeshMigrationSummary = z.infer<typeof RestMeshMigrationSummarySchema>;
 
 export const RestMeshNodeSchema = z.object({
   availabilityZone: z.string().optional(),
@@ -10321,24 +9594,14 @@ export const RestMeshNodeSchema = z.object({
   offline: z.boolean().optional(),
   rpcId: z.string().optional(),
   rpcUrl: z.string().optional(),
-  state: z
-    .enum(["AVAILABLE", "DELETING", "DISABLED", "DRAINING", "OFFLINE"])
-    .optional(),
+  state: z.enum(['AVAILABLE', 'DELETING', 'DISABLED', 'DRAINING', 'OFFLINE']).optional(),
 });
 
 export type RestMeshNode = z.infer<typeof RestMeshNodeSchema>;
 
 export const RestMigrationRepositorySchema = z.object({
   migrationState: z
-    .enum([
-      "QUEUED",
-      "STAGING",
-      "STAGED",
-      "MIGRATED",
-      "FAILED",
-      "CANCELED",
-      "SKIPPED",
-    ])
+    .enum(['QUEUED', 'STAGING', 'STAGED', 'MIGRATED', 'FAILED', 'CANCELED', 'SKIPPED'])
     .optional(),
   repository: z
     .object({
@@ -10372,7 +9635,7 @@ export const RestMigrationRepositorySchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -10381,12 +9644,7 @@ export const RestMigrationRepositorySchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -10403,7 +9661,7 @@ export const RestMigrationRepositorySchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -10411,22 +9669,18 @@ export const RestMigrationRepositorySchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
 });
 
-export type RestMigrationRepository = z.infer<
-  typeof RestMigrationRepositorySchema
->;
+export type RestMigrationRepository = z.infer<typeof RestMigrationRepositorySchema>;
 
 export const RestNodeSchema = z.object({
   id: z.string().optional(),
   name: z.string().optional(),
-  type: z.enum(["BITBUCKET", "MESH"]).optional(),
+  type: z.enum(['BITBUCKET', 'MESH']).optional(),
 });
 
 export type RestNode = z.infer<typeof RestNodeSchema>;
@@ -10436,7 +9690,7 @@ export const RestNodeConnectivityReportSchema = z.object({
     .object({
       id: z.string(),
       name: z.string(),
-      type: z.enum(["BITBUCKET", "MESH"]),
+      type: z.enum(['BITBUCKET', 'MESH']),
     })
     .optional(),
   summaries: z
@@ -10446,7 +9700,7 @@ export const RestNodeConnectivityReportSchema = z.object({
           .object({
             id: z.string(),
             name: z.string(),
-            type: z.enum(["BITBUCKET", "MESH"]),
+            type: z.enum(['BITBUCKET', 'MESH']),
           })
           .optional(),
         summary: z
@@ -10461,9 +9715,7 @@ export const RestNodeConnectivityReportSchema = z.object({
     .optional(),
 });
 
-export type RestNodeConnectivityReport = z.infer<
-  typeof RestNodeConnectivityReportSchema
->;
+export type RestNodeConnectivityReport = z.infer<typeof RestNodeConnectivityReportSchema>;
 
 export const RestPermittedSchema = z.object({
   permitted: z.boolean().optional(),
@@ -10485,19 +9737,19 @@ export type RestPermittedGroup = z.infer<typeof RestPermittedGroupSchema>;
 export const RestPermittedUserSchema = z.object({
   permission: z
     .enum([
-      "USER_ADMIN",
-      "PROJECT_VIEW",
-      "REPO_READ",
-      "REPO_WRITE",
-      "REPO_ADMIN",
-      "PROJECT_READ",
-      "PROJECT_WRITE",
-      "REPO_CREATE",
-      "PROJECT_ADMIN",
-      "LICENSED_USER",
-      "PROJECT_CREATE",
-      "ADMIN",
-      "SYS_ADMIN",
+      'USER_ADMIN',
+      'PROJECT_VIEW',
+      'REPO_READ',
+      'REPO_WRITE',
+      'REPO_ADMIN',
+      'PROJECT_READ',
+      'PROJECT_WRITE',
+      'REPO_CREATE',
+      'PROJECT_ADMIN',
+      'LICENSED_USER',
+      'PROJECT_CREATE',
+      'ADMIN',
+      'SYS_ADMIN',
     ])
     .optional(),
   user: z
@@ -10510,7 +9762,7 @@ export const RestPermittedUserSchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
 });
@@ -10528,9 +9780,7 @@ export const RestProjectSettingsRestrictionSchema = z.object({
   componentKey: z.string().optional(),
   featureKey: z.string().optional(),
   namespace: z.string().optional(),
-  processedState: z
-    .enum(["UNPROCESSED", "PROCESSED", "FAILED", "IN_PROGRESS"])
-    .optional(),
+  processedState: z.enum(['UNPROCESSED', 'PROCESSED', 'FAILED', 'IN_PROGRESS']).optional(),
   project: z
     .object({
       avatar: z.string().optional(),
@@ -10542,14 +9792,12 @@ export const RestProjectSettingsRestrictionSchema = z.object({
       name: z.string(),
       public: z.boolean().optional(),
       scope: z.string().optional(),
-      type: z.enum(["NORMAL", "PERSONAL"]),
+      type: z.enum(['NORMAL', 'PERSONAL']),
     })
     .optional(),
 });
 
-export type RestProjectSettingsRestriction = z.infer<
-  typeof RestProjectSettingsRestrictionSchema
->;
+export type RestProjectSettingsRestriction = z.infer<typeof RestProjectSettingsRestrictionSchema>;
 
 export const RestProjectSettingsRestrictionRequestSchema = z.object({
   componentKey: z.string().optional(),
@@ -10564,22 +9812,22 @@ export type RestProjectSettingsRestrictionRequest = z.infer<
 export const RestPullRequestActivitySchema = z.object({
   action: z
     .enum([
-      "APPROVED",
-      "AUTO_MERGE_CANCELLED",
-      "AUTO_MERGE_REQUESTED",
-      "COMMENTED",
-      "DECLINED",
-      "DELETED",
-      "MERGED",
-      "OPENED",
-      "REOPENED",
-      "RESCOPED",
-      "REVIEW_COMMENTED",
-      "REVIEW_DISCARDED",
-      "REVIEW_FINISHED",
-      "REVIEWED",
-      "UNAPPROVED",
-      "UPDATED",
+      'APPROVED',
+      'AUTO_MERGE_CANCELLED',
+      'AUTO_MERGE_REQUESTED',
+      'COMMENTED',
+      'DECLINED',
+      'DELETED',
+      'MERGED',
+      'OPENED',
+      'REOPENED',
+      'RESCOPED',
+      'REVIEW_COMMENTED',
+      'REVIEW_DISCARDED',
+      'REVIEW_FINISHED',
+      'REVIEWED',
+      'UNAPPROVED',
+      'UPDATED',
     ])
     .optional(),
   createdDate: z.number().int().optional(),
@@ -10594,17 +9842,15 @@ export const RestPullRequestActivitySchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
 });
 
-export type RestPullRequestActivity = z.infer<
-  typeof RestPullRequestActivitySchema
->;
+export type RestPullRequestActivity = z.infer<typeof RestPullRequestActivitySchema>;
 
 export const RestPullRequestAssignParticipantRoleRequestSchema = z.object({
-  role: z.enum(["AUTHOR", "REVIEWER", "PARTICIPANT"]).optional(),
+  role: z.enum(['AUTHOR', 'REVIEWER', 'PARTICIPANT']).optional(),
   user: z
     .object({
       active: z.boolean().optional(),
@@ -10615,7 +9861,7 @@ export const RestPullRequestAssignParticipantRoleRequestSchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
 });
@@ -10626,7 +9872,7 @@ export type RestPullRequestAssignParticipantRoleRequest = z.infer<
 
 export const RestPullRequestAssignStatusRequestSchema = z.object({
   lastReviewedCommit: z.string().optional(),
-  status: z.enum(["UNAPPROVED", "NEEDS_WORK", "APPROVED"]).optional(),
+  status: z.enum(['UNAPPROVED', 'NEEDS_WORK', 'APPROVED']).optional(),
 });
 
 export type RestPullRequestAssignStatusRequest = z.infer<
@@ -10647,17 +9893,13 @@ export const RestPullRequestDeclineRequestSchema = z.object({
   version: z.number().int().optional(),
 });
 
-export type RestPullRequestDeclineRequest = z.infer<
-  typeof RestPullRequestDeclineRequestSchema
->;
+export type RestPullRequestDeclineRequest = z.infer<typeof RestPullRequestDeclineRequestSchema>;
 
 export const RestPullRequestDeleteRequestSchema = z.object({
   version: z.number().int().optional(),
 });
 
-export type RestPullRequestDeleteRequest = z.infer<
-  typeof RestPullRequestDeleteRequestSchema
->;
+export type RestPullRequestDeleteRequest = z.infer<typeof RestPullRequestDeleteRequestSchema>;
 
 export const RestPullRequestFinishReviewRequestSchema = z.object({
   commentText: z.string().optional(),
@@ -10702,9 +9944,7 @@ export const RestPullRequestMergeConfigSchema = z.object({
   type: z.string().optional(),
 });
 
-export type RestPullRequestMergeConfig = z.infer<
-  typeof RestPullRequestMergeConfigSchema
->;
+export type RestPullRequestMergeConfig = z.infer<typeof RestPullRequestMergeConfigSchema>;
 
 export const RestPullRequestMergeRequestSchema = z.object({
   autoMerge: z.boolean().optional(),
@@ -10714,9 +9954,7 @@ export const RestPullRequestMergeRequestSchema = z.object({
   version: z.number().int().optional(),
 });
 
-export type RestPullRequestMergeRequest = z.infer<
-  typeof RestPullRequestMergeRequestSchema
->;
+export type RestPullRequestMergeRequest = z.infer<typeof RestPullRequestMergeRequestSchema>;
 
 export const RestPullRequestMergeStrategySchema = z.object({
   description: z.string().optional(),
@@ -10727,13 +9965,11 @@ export const RestPullRequestMergeStrategySchema = z.object({
   name: z.string().optional(),
 });
 
-export type RestPullRequestMergeStrategy = z.infer<
-  typeof RestPullRequestMergeStrategySchema
->;
+export type RestPullRequestMergeStrategy = z.infer<typeof RestPullRequestMergeStrategySchema>;
 
 export const RestPullRequestMergeabilitySchema = z.object({
   conflicted: z.boolean().optional(),
-  outcome: z.enum(["CLEAN", "CONFLICTED", "UNKNOWN"]).optional(),
+  outcome: z.enum(['CLEAN', 'CONFLICTED', 'UNKNOWN']).optional(),
   vetoes: z
     .array(
       z.object({
@@ -10744,17 +9980,13 @@ export const RestPullRequestMergeabilitySchema = z.object({
     .optional(),
 });
 
-export type RestPullRequestMergeability = z.infer<
-  typeof RestPullRequestMergeabilitySchema
->;
+export type RestPullRequestMergeability = z.infer<typeof RestPullRequestMergeabilitySchema>;
 
 export const RestPullRequestReopenRequestSchema = z.object({
   version: z.number().int().optional(),
 });
 
-export type RestPullRequestReopenRequest = z.infer<
-  typeof RestPullRequestReopenRequestSchema
->;
+export type RestPullRequestReopenRequest = z.infer<typeof RestPullRequestReopenRequestSchema>;
 
 export const RestPullRequestSettingsSchema = z.object({
   mergeConfig: z
@@ -10791,9 +10023,7 @@ export const RestPullRequestSettingsSchema = z.object({
     .optional(),
 });
 
-export type RestPullRequestSettings = z.infer<
-  typeof RestPullRequestSettingsSchema
->;
+export type RestPullRequestSettings = z.infer<typeof RestPullRequestSettingsSchema>;
 
 export const RestPullRequestSuggestionSchema = z.object({
   changeTme: z.number().int().optional(),
@@ -10801,7 +10031,7 @@ export const RestPullRequestSuggestionSchema = z.object({
     .object({
       displayId: z.string(),
       id: z.string(),
-      type: z.enum(["BRANCH", "TAG"]),
+      type: z.enum(['BRANCH', 'TAG']),
     })
     .optional(),
   refChange: z
@@ -10811,12 +10041,12 @@ export const RestPullRequestSuggestionSchema = z.object({
         .object({
           displayId: z.string(),
           id: z.string(),
-          type: z.enum(["BRANCH", "TAG"]),
+          type: z.enum(['BRANCH', 'TAG']),
         })
         .optional(),
       refId: z.string().optional(),
       toHash: z.string().optional(),
-      type: z.enum(["ADD", "DELETE", "UPDATE"]).optional(),
+      type: z.enum(['ADD', 'DELETE', 'UPDATE']).optional(),
     })
     .optional(),
   repository: z
@@ -10851,7 +10081,7 @@ export const RestPullRequestSuggestionSchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -10860,12 +10090,7 @@ export const RestPullRequestSuggestionSchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -10882,7 +10107,7 @@ export const RestPullRequestSuggestionSchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -10890,9 +10115,7 @@ export const RestPullRequestSuggestionSchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
@@ -10900,14 +10123,12 @@ export const RestPullRequestSuggestionSchema = z.object({
     .object({
       displayId: z.string(),
       id: z.string(),
-      type: z.enum(["BRANCH", "TAG"]),
+      type: z.enum(['BRANCH', 'TAG']),
     })
     .optional(),
 });
 
-export type RestPullRequestSuggestion = z.infer<
-  typeof RestPullRequestSuggestionSchema
->;
+export type RestPullRequestSuggestion = z.infer<typeof RestPullRequestSuggestionSchema>;
 
 export const RestPushRefChangeSchema = z.object({
   fromHash: z.string().optional(),
@@ -10915,15 +10136,13 @@ export const RestPushRefChangeSchema = z.object({
     .object({
       displayId: z.string(),
       id: z.string(),
-      type: z.enum(["BRANCH", "TAG"]),
+      type: z.enum(['BRANCH', 'TAG']),
     })
     .optional(),
   refId: z.string().optional(),
   toHash: z.string().optional(),
-  type: z.enum(["ADD", "DELETE", "UPDATE"]).optional(),
-  updatedType: z
-    .enum(["UNKNOWN", "UNRESOLVED", "NOT_FORCED", "FORCED"])
-    .optional(),
+  type: z.enum(['ADD', 'DELETE', 'UPDATE']).optional(),
+  updatedType: z.enum(['UNKNOWN', 'UNRESOLVED', 'NOT_FORCED', 'FORCED']).optional(),
 });
 
 export type RestPushRefChange = z.infer<typeof RestPushRefChangeSchema>;
@@ -10948,17 +10167,12 @@ export const RestRepositoriesExportRequestSchema = z.object({
         slug: z.string(),
       }),
     )
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
 });
 
-export type RestRepositoriesExportRequest = z.infer<
-  typeof RestRepositoriesExportRequestSchema
->;
+export type RestRepositoriesExportRequest = z.infer<typeof RestRepositoriesExportRequestSchema>;
 
 export const RestRepositoryHookSchema = z.object({
   configured: z.boolean().optional(),
@@ -10970,17 +10184,13 @@ export const RestRepositoryHookSchema = z.object({
       key: z.string().optional(),
       name: z.string().optional(),
       supportedScopes: z
-        .array(z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]))
+        .array(z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']))
         .refine(
-          (value) =>
-            value.length ===
-            new Set(value.map((item) => JSON.stringify(item))).size,
-          { message: "Array items must be unique" },
+          (value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size,
+          { message: 'Array items must be unique' },
         )
         .optional(),
-      type: z
-        .enum(["PRE_RECEIVE", "PRE_PULL_REQUEST_MERGE", "POST_RECEIVE"])
-        .optional(),
+      type: z.enum(['PRE_RECEIVE', 'PRE_PULL_REQUEST_MERGE', 'POST_RECEIVE']).optional(),
       version: z.string().optional(),
     })
     .optional(),
@@ -10988,7 +10198,7 @@ export const RestRepositoryHookSchema = z.object({
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
 });
@@ -11060,15 +10270,13 @@ export const RestRepositoryRefChangeActivitySchema = z.object({
         .object({
           displayId: z.string(),
           id: z.string(),
-          type: z.enum(["BRANCH", "TAG"]),
+          type: z.enum(['BRANCH', 'TAG']),
         })
         .optional(),
       refId: z.string().optional(),
       toHash: z.string().optional(),
-      type: z.enum(["ADD", "DELETE", "UPDATE"]).optional(),
-      updatedType: z
-        .enum(["UNKNOWN", "UNRESOLVED", "NOT_FORCED", "FORCED"])
-        .optional(),
+      type: z.enum(['ADD', 'DELETE', 'UPDATE']).optional(),
+      updatedType: z.enum(['UNKNOWN', 'UNRESOLVED', 'NOT_FORCED', 'FORCED']).optional(),
     })
     .optional(),
   repository: z
@@ -11103,7 +10311,7 @@ export const RestRepositoryRefChangeActivitySchema = z.object({
               name: z.string(),
               public: z.boolean().optional(),
               scope: z.string().optional(),
-              type: z.enum(["NORMAL", "PERSONAL"]),
+              type: z.enum(['NORMAL', 'PERSONAL']),
             })
             .optional(),
           public: z.boolean().optional(),
@@ -11112,12 +10320,7 @@ export const RestRepositoryRefChangeActivitySchema = z.object({
           scope: z.string().optional(),
           slug: z.string().optional(),
           state: z
-            .enum([
-              "AVAILABLE",
-              "INITIALISATION_FAILED",
-              "INITIALISING",
-              "OFFLINE",
-            ])
+            .enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE'])
             .optional(),
           statusMessage: z.string().optional(),
         })
@@ -11134,7 +10337,7 @@ export const RestRepositoryRefChangeActivitySchema = z.object({
           name: z.string(),
           public: z.boolean().optional(),
           scope: z.string().optional(),
-          type: z.enum(["NORMAL", "PERSONAL"]),
+          type: z.enum(['NORMAL', 'PERSONAL']),
         })
         .optional(),
       public: z.boolean().optional(),
@@ -11142,9 +10345,7 @@ export const RestRepositoryRefChangeActivitySchema = z.object({
       scmId: z.string().optional(),
       scope: z.string().optional(),
       slug: z.string().optional(),
-      state: z
-        .enum(["AVAILABLE", "INITIALISATION_FAILED", "INITIALISING", "OFFLINE"])
-        .optional(),
+      state: z.enum(['AVAILABLE', 'INITIALISATION_FAILED', 'INITIALISING', 'OFFLINE']).optional(),
       statusMessage: z.string().optional(),
     })
     .optional(),
@@ -11159,14 +10360,12 @@ export const RestRepositoryRefChangeActivitySchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
 });
 
-export type RestRepositoryRefChangeActivity = z.infer<
-  typeof RestRepositoryRefChangeActivitySchema
->;
+export type RestRepositoryRefChangeActivity = z.infer<typeof RestRepositoryRefChangeActivitySchema>;
 
 export const RestScopesExampleSchema = z.object({
   links: z.object({}).optional(),
@@ -11182,9 +10381,7 @@ export const RestSecretScanningAllowlistRuleSchema = z.object({
   pathRegex: z.string().optional(),
 });
 
-export type RestSecretScanningAllowlistRule = z.infer<
-  typeof RestSecretScanningAllowlistRuleSchema
->;
+export type RestSecretScanningAllowlistRule = z.infer<typeof RestSecretScanningAllowlistRuleSchema>;
 
 export const RestSecretScanningAllowlistRuleSetRequestSchema = z.object({
   lineRegex: z.string().optional(),
@@ -11204,14 +10401,12 @@ export const RestSecretScanningRuleSchema = z.object({
   scope: z
     .object({
       resourceId: z.number().int(),
-      type: z.enum(["GLOBAL", "PROJECT", "REPOSITORY"]),
+      type: z.enum(['GLOBAL', 'PROJECT', 'REPOSITORY']),
     })
     .optional(),
 });
 
-export type RestSecretScanningRule = z.infer<
-  typeof RestSecretScanningRuleSchema
->;
+export type RestSecretScanningRule = z.infer<typeof RestSecretScanningRuleSchema>;
 
 export const RestSecretScanningRuleSetRequestSchema = z.object({
   lineRegex: z.string().optional(),
@@ -11227,9 +10422,7 @@ export const RestSystemSigningConfigurationSchema = z.object({
   enabled: z.boolean().optional(),
 });
 
-export type RestSystemSigningConfiguration = z.infer<
-  typeof RestSystemSigningConfigurationSchema
->;
+export type RestSystemSigningConfiguration = z.infer<typeof RestSystemSigningConfigurationSchema>;
 
 export const RestTestResultsSchema = z.object({
   failed: z.number().int().optional(),
@@ -11244,9 +10437,7 @@ export const RestTokenBucketSettingsSchema = z.object({
   fillRate: z.number().int().optional(),
 });
 
-export type RestTokenBucketSettings = z.infer<
-  typeof RestTokenBucketSettingsSchema
->;
+export type RestTokenBucketSettings = z.infer<typeof RestTokenBucketSettingsSchema>;
 
 export const RestUserDirectorySchema = z.object({
   active: z.boolean().optional(),
@@ -11274,15 +10465,13 @@ export const RestUserRateLimitSettingsSchema = z.object({
       links: z.object({}).optional(),
       name: z.string(),
       slug: z.string(),
-      type: z.enum(["NORMAL", "SERVICE"]),
+      type: z.enum(['NORMAL', 'SERVICE']),
     })
     .optional(),
   whitelisted: z.boolean().optional(),
 });
 
-export type RestUserRateLimitSettings = z.infer<
-  typeof RestUserRateLimitSettingsSchema
->;
+export type RestUserRateLimitSettings = z.infer<typeof RestUserRateLimitSettingsSchema>;
 
 export const RestUserRateLimitSettingsUpdateRequestSchema = z.object({
   settings: z
@@ -11309,12 +10498,9 @@ export const RestWebhookSchema = z.object({
     .optional(),
   events: z
     .array(z.string())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    )
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    })
     .optional(),
   name: z.string().optional(),
   scopeType: z.string().optional(),
@@ -11330,15 +10516,11 @@ export const RestWebhookCredentialsSchema = z.object({
   username: z.string().optional(),
 });
 
-export type RestWebhookCredentials = z.infer<
-  typeof RestWebhookCredentialsSchema
->;
+export type RestWebhookCredentials = z.infer<typeof RestWebhookCredentialsSchema>;
 
 export const RestWebhookRequestResponseSchema = z.object({});
 
-export type RestWebhookRequestResponse = z.infer<
-  typeof RestWebhookRequestResponseSchema
->;
+export type RestWebhookRequestResponse = z.infer<typeof RestWebhookRequestResponseSchema>;
 
 export const RestWebhookScopeSchema = z.object({
   id: z.string().optional(),
@@ -11357,12 +10539,9 @@ export type RestX509Certificate = z.infer<typeof RestX509CertificateSchema>;
 export const UserAndGroupsSchema = z.object({
   groups: z
     .array(z.string())
-    .refine(
-      (value) =>
-        value.length ===
-        new Set(value.map((item) => JSON.stringify(item))).size,
-      { message: "Array items must be unique" },
-    ),
+    .refine((value) => value.length === new Set(value.map((item) => JSON.stringify(item))).size, {
+      message: 'Array items must be unique',
+    }),
   user: z.string().optional(),
 });
 
@@ -11405,6 +10584,4 @@ export const UserUpdateWithCredentialsSchema = z.object({
   password: z.string().optional(),
 });
 
-export type UserUpdateWithCredentials = z.infer<
-  typeof UserUpdateWithCredentialsSchema
->;
+export type UserUpdateWithCredentials = z.infer<typeof UserUpdateWithCredentialsSchema>;

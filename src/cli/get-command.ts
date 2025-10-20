@@ -232,7 +232,7 @@ export async function getCommand(operationId: string, options: GetOptions): Prom
     if (!existsSync(operationsPath)) {
       throw new Error(
         `Operations file not found at ${operationsPath}\n` +
-        'Please ensure the package is properly installed with operations.json included.',
+          'Please ensure the package is properly installed with operations.json included.',
       );
     }
 

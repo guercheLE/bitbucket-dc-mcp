@@ -98,7 +98,10 @@ describe('CredentialStorage - Real Keychain Integration', () => {
 
       // Save two accounts
       await storage.save(account1, credentials);
-      await storage.save(account2, { ...credentials, bitbucket_url: 'https://bitbucket2-test.example.com' });
+      await storage.save(account2, {
+        ...credentials,
+        bitbucket_url: 'https://bitbucket2-test.example.com',
+      });
 
       // List
       const accounts = await storage.list();
@@ -182,7 +185,7 @@ describe('CredentialStorage - Fallback File System Storage', () => {
 
   afterEach(async () => {
     // Cleanup test directory
-    await fs.rm(testDir, { recursive: true, force: true }).catch(() => { });
+    await fs.rm(testDir, { recursive: true, force: true }).catch(() => {});
   });
 
   /**
@@ -319,8 +322,8 @@ describe('CredentialStorage - Machine-Specific Encryption Key', () => {
   });
 
   afterEach(async () => {
-    await fs.rm(testDir1, { recursive: true, force: true }).catch(() => { });
-    await fs.rm(testDir2, { recursive: true, force: true }).catch(() => { });
+    await fs.rm(testDir1, { recursive: true, force: true }).catch(() => {});
+    await fs.rm(testDir2, { recursive: true, force: true }).catch(() => {});
   });
 
   it('should decrypt credentials with same machine ID', async () => {

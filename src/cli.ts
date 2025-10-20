@@ -40,7 +40,9 @@ const program = new Command();
 
 program
   .name('bitbucket-mcp')
-  .description('Bitbucket DataCenter MCP Server - Semantic search and operation execution for Bitbucket DC')
+  .description(
+    'Bitbucket DataCenter MCP Server - Semantic search and operation execution for Bitbucket DC',
+  )
   .version(packageJson.version);
 
 // Global options

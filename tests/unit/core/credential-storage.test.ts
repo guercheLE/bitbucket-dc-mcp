@@ -80,7 +80,7 @@ describe('CredentialStorage - Keychain Operations', () => {
     storage = new CredentialStorage(logger, testDir);
 
     // Trigger keychain availability check by calling load with a dummy account
-    await storage.load('__dummy_init__').catch(() => { });
+    await storage.load('__dummy_init__').catch(() => {});
 
     // Clear mocks after keychain availability check
     vi.clearAllMocks();
@@ -88,7 +88,7 @@ describe('CredentialStorage - Keychain Operations', () => {
 
   afterEach(async () => {
     // Cleanup test directory
-    await fs.rm(testDir, { recursive: true, force: true }).catch(() => { });
+    await fs.rm(testDir, { recursive: true, force: true }).catch(() => {});
   });
 
   describe('save()', () => {
@@ -288,7 +288,7 @@ describe('CredentialStorage - Encryption Fallback', () => {
 
   afterEach(async () => {
     // Cleanup test directory
-    await fs.rm(testDir, { recursive: true, force: true }).catch(() => { });
+    await fs.rm(testDir, { recursive: true, force: true }).catch(() => {});
   });
 
   it('should use fallback when keychain unavailable', async () => {
@@ -362,7 +362,10 @@ describe('CredentialStorage - Encryption Fallback', () => {
 
     // Save multiple accounts
     await storage.save('account1', mockCredentials);
-    await storage.save('account2', { ...mockCredentials, bitbucket_url: 'https://bitbucket2.example.com' });
+    await storage.save('account2', {
+      ...mockCredentials,
+      bitbucket_url: 'https://bitbucket2.example.com',
+    });
 
     // List
     const accounts = await storage.list();
@@ -443,6 +446,6 @@ describe('CredentialStorage - Credential Sanitization', () => {
     expect(allLogs).not.toContain('super-secret-token');
 
     // Cleanup
-    await fs.rm(testDir, { recursive: true, force: true }).catch(() => { });
+    await fs.rm(testDir, { recursive: true, force: true }).catch(() => {});
   });
 });

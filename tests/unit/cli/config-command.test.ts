@@ -21,8 +21,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock console to suppress output during tests
 const mockConsole = {
-    log: vi.fn(),
-    error: vi.fn(),
+  log: vi.fn(),
+  error: vi.fn(),
 };
 vi.stubGlobal('console', mockConsole);
 
@@ -31,8 +31,8 @@ const mockExit = vi.fn();
 vi.stubGlobal('process', { ...process, exit: mockExit });
 
 vi.mock('fs', () => ({
-    existsSync: vi.fn().mockReturnValue(true),
-    readFileSync: vi.fn().mockReturnValue(`
+  existsSync: vi.fn().mockReturnValue(true),
+  readFileSync: vi.fn().mockReturnValue(`
 bitbucket_url: https://bitbucket.example.com
 auth_method: pat
 rateLimit: 100
@@ -42,116 +42,116 @@ enableCircuitBreaker: true
 circuitBreakerThreshold: 5
 forceFileStorage: false
   `),
-    unlinkSync: vi.fn(),
+  unlinkSync: vi.fn(),
 }));
 
 vi.mock('js-yaml', () => ({
-    load: vi.fn().mockReturnValue({
-        bitbucket_url: 'https://bitbucket.example.com',
-        auth_method: 'pat',
-        rateLimit: 100,
-        requestTimeout: 30000,
-        logLevel: 'info',
-        enableCircuitBreaker: true,
-        circuitBreakerThreshold: 5,
-        forceFileStorage: false,
-    }),
+  load: vi.fn().mockReturnValue({
+    bitbucket_url: 'https://bitbucket.example.com',
+    auth_method: 'pat',
+    rateLimit: 100,
+    requestTimeout: 30000,
+    logLevel: 'info',
+    enableCircuitBreaker: true,
+    circuitBreakerThreshold: 5,
+    forceFileStorage: false,
+  }),
 }));
 
 vi.mock('inquirer', () => ({
-    default: {
-        prompt: vi.fn().mockResolvedValue({ confirmed: true }),
-    },
+  default: {
+    prompt: vi.fn().mockResolvedValue({ confirmed: true }),
+  },
 }));
 
 vi.mock('../../../src/core/config-manager.js', () => ({
-    ConfigManager: {
-        load: vi.fn().mockResolvedValue({
-            bitbucket_url: 'https://bitbucket.example.com',
-            auth_method: 'pat',
-            rateLimit: 100,
-            requestTimeout: 30000,
-            logLevel: 'info',
-            enableCircuitBreaker: true,
-            circuitBreakerThreshold: 5,
-            forceFileStorage: false,
-        }),
-    },
+  ConfigManager: {
+    load: vi.fn().mockResolvedValue({
+      bitbucket_url: 'https://bitbucket.example.com',
+      auth_method: 'pat',
+      rateLimit: 100,
+      requestTimeout: 30000,
+      logLevel: 'info',
+      enableCircuitBreaker: true,
+      circuitBreakerThreshold: 5,
+      forceFileStorage: false,
+    }),
+  },
 }));
 
 describe('configCommand', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-    it('should display current configuration with show action', async () => {
-        const { configCommand } = await import('../../../src/cli/config-command.js');
+  it('should display current configuration with show action', async () => {
+    const { configCommand } = await import('../../../src/cli/config-command.js');
 
-        await configCommand('show', {});
+    await configCommand('show', {});
 
-        expect(mockConsole.log).toHaveBeenCalledWith(expect.stringContaining('Configuration'));
-    });
+    expect(mockConsole.log).toHaveBeenCalledWith(expect.stringContaining('Configuration'));
+  });
 
-    it('should validate configuration', async () => {
-        const { configCommand } = await import('../../../src/cli/config-command.js');
-        const { ConfigManager } = await import('../../../src/core/config-manager.js');
+  it('should validate configuration', async () => {
+    const { configCommand } = await import('../../../src/cli/config-command.js');
+    const { ConfigManager } = await import('../../../src/core/config-manager.js');
 
-        // Mock ConfigManager to pass validation
-        vi.mocked(ConfigManager.load).mockResolvedValueOnce({
-            bitbucket_url: 'https://bitbucket.example.com',
-            auth_method: 'pat',
-            rateLimit: 100,
-            requestTimeout: 30000,
-            logLevel: 'info',
-            enableCircuitBreaker: true,
-            circuitBreakerThreshold: 5,
-            forceFileStorage: false,
-        } as any);
+    // Mock ConfigManager to pass validation
+    vi.mocked(ConfigManager.load).mockResolvedValueOnce({
+      bitbucket_url: 'https://bitbucket.example.com',
+      auth_method: 'pat',
+      rateLimit: 100,
+      requestTimeout: 30000,
+      logLevel: 'info',
+      enableCircuitBreaker: true,
+      circuitBreakerThreshold: 5,
+      forceFileStorage: false,
+    } as any);
 
-        await configCommand('validate', {});
+    await configCommand('validate', {});
 
-        expect(mockConsole.log).toHaveBeenCalled();
-    });
+    expect(mockConsole.log).toHaveBeenCalled();
+  });
 
-    it('should show config path', async () => {
-        const { configCommand } = await import('../../../src/cli/config-command.js');
+  it('should show config path', async () => {
+    const { configCommand } = await import('../../../src/cli/config-command.js');
 
-        await configCommand('path', {});
+    await configCommand('path', {});
 
-        expect(mockConsole.log).toHaveBeenCalledWith(expect.stringContaining('config'));
-    });
+    expect(mockConsole.log).toHaveBeenCalledWith(expect.stringContaining('config'));
+  });
 
-    it('should reset configuration', async () => {
-        const { configCommand } = await import('../../../src/cli/config-command.js');
+  it('should reset configuration', async () => {
+    const { configCommand } = await import('../../../src/cli/config-command.js');
 
-        await configCommand('reset', {});
+    await configCommand('reset', {});
 
-        expect(mockConsole.log).toHaveBeenCalled();
-    });
+    expect(mockConsole.log).toHaveBeenCalled();
+  });
 
-    it('should handle missing config file gracefully', async () => {
-        const { configCommand } = await import('../../../src/cli/config-command.js');
-        const fs = await import('fs');
+  it('should handle missing config file gracefully', async () => {
+    const { configCommand } = await import('../../../src/cli/config-command.js');
+    const fs = await import('fs');
 
-        vi.mocked(fs.existsSync).mockReturnValueOnce(false);
+    vi.mocked(fs.existsSync).mockReturnValueOnce(false);
 
-        await configCommand('show', {});
+    await configCommand('show', {});
 
-        expect(mockConsole.log).toHaveBeenCalledWith(expect.stringContaining('No configuration'));
-    });
+    expect(mockConsole.log).toHaveBeenCalledWith(expect.stringContaining('No configuration'));
+  });
 
-    it('should throw error for unknown action', async () => {
-        const { configCommand } = await import('../../../src/cli/config-command.js');
+  it('should throw error for unknown action', async () => {
+    const { configCommand } = await import('../../../src/cli/config-command.js');
 
-        await expect(configCommand('unknown_action', {})).rejects.toThrow('Unknown action');
-    });
+    await expect(configCommand('unknown_action', {})).rejects.toThrow('Unknown action');
+  });
 
-    it('should display help', async () => {
-        const { configCommand } = await import('../../../src/cli/config-command.js');
+  it('should display help', async () => {
+    const { configCommand } = await import('../../../src/cli/config-command.js');
 
-        await configCommand('help', {});
+    await configCommand('help', {});
 
-        // Should not throw
-        expect(true).toBe(true);
-    });
+    // Should not throw
+    expect(true).toBe(true);
+  });
 });

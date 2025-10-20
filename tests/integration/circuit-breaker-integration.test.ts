@@ -137,7 +137,9 @@ describe('CircuitBreaker + BitbucketClientService Integration', () => {
         json: async () => ({ id: '10001', key: 'TEST-123', fields: {} }),
       } as Response);
 
-      const result = await bitbucketClient.executeOperation('getIssue', { issueIdOrKey: 'TEST-123' });
+      const result = await bitbucketClient.executeOperation('getIssue', {
+        issueIdOrKey: 'TEST-123',
+      });
 
       expect(result).toBeDefined();
       expect((result as { key: string }).key).toBe('TEST-123');
@@ -233,7 +235,9 @@ describe('CircuitBreaker + BitbucketClientService Integration', () => {
       } as Response);
 
       // Next request should transition to HALF_OPEN and succeed
-      const result = await bitbucketClient.executeOperation('getIssue', { issueIdOrKey: 'TEST-123' });
+      const result = await bitbucketClient.executeOperation('getIssue', {
+        issueIdOrKey: 'TEST-123',
+      });
 
       // Verify circuit transitioned to CLOSED after success
       expect(circuitBreaker.getMetrics().state).toBe(CircuitState.CLOSED);
@@ -241,7 +245,9 @@ describe('CircuitBreaker + BitbucketClientService Integration', () => {
       expect((result as { key: string }).key).toBe('TEST-123');
 
       // Subsequent requests should work normally
-      const result2 = await bitbucketClient.executeOperation('getIssue', { issueIdOrKey: 'TEST-456' });
+      const result2 = await bitbucketClient.executeOperation('getIssue', {
+        issueIdOrKey: 'TEST-456',
+      });
       expect(result2).toBeDefined();
     });
 
@@ -453,7 +459,9 @@ describe('CircuitBreaker + BitbucketClientService Integration', () => {
         json: async () => ({ id: '10001', key: 'TEST-123' }),
       } as Response);
 
-      const result = await bitbucketClient.executeOperation('getIssue', { issueIdOrKey: 'TEST-123' });
+      const result = await bitbucketClient.executeOperation('getIssue', {
+        issueIdOrKey: 'TEST-123',
+      });
 
       expect(result).toBeDefined();
       expect(circuitBreaker.getMetrics().state).toBe(CircuitState.CLOSED);

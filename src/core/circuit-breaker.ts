@@ -405,7 +405,10 @@ export class CircuitBreaker {
         },
         'Request rejected by circuit breaker',
       );
-      throw new CircuitBreakerError('Circuit breaker is OPEN, Bitbucket DC may be down', this.state);
+      throw new CircuitBreakerError(
+        'Circuit breaker is OPEN, Bitbucket DC may be down',
+        this.state,
+      );
     }
 
     // Execute the operation

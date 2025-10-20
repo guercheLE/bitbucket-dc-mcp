@@ -37,7 +37,9 @@ export const ConfigSchema = z.object({
   api_version: z
     .enum(['1.0', 'latest'])
     .default('latest')
-    .describe('Bitbucket Data Center REST API version (1.0 for legacy, latest for modern instances)'),
+    .describe(
+      'Bitbucket Data Center REST API version (1.0 for legacy, latest for modern instances)',
+    ),
   credential_profile: z.string().optional(),
   rate_limit: z
     .number()
@@ -131,7 +133,8 @@ export const CONFIG_FIELD_METADATA: Record<string, { description: string; envVar
     envVar: 'BITBUCKET_AUTH_METHOD',
   },
   api_version: {
-    description: 'Bitbucket Data Center REST API version (1.0 for legacy, latest for modern instances)',
+    description:
+      'Bitbucket Data Center REST API version (1.0 for legacy, latest for modern instances)',
     envVar: 'BITBUCKET_API_VERSION',
   },
   credential_profile: {

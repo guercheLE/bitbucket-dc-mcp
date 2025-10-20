@@ -393,7 +393,9 @@ describeIfE2E('E2E MCP Integration Tests', () => {
           // First 2 calls fail with 500
           return {
             status: 500,
-            body: { errors: [{ context: null, message: 'Internal server error', exceptionName: null }] },
+            body: {
+              errors: [{ context: null, message: 'Internal server error', exceptionName: null }],
+            },
           };
         }
         // Third call succeeds
@@ -444,7 +446,9 @@ describeIfE2E('E2E MCP Integration Tests', () => {
         callCount++;
         return {
           status: 500,
-          body: { errors: [{ context: null, message: 'Internal server error', exceptionName: null }] },
+          body: {
+            errors: [{ context: null, message: 'Internal server error', exceptionName: null }],
+          },
         };
       });
 

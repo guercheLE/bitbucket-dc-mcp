@@ -21,72 +21,71 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RateLimiter } from '../../../src/core/rate-limiter.js';
 
 describe('RateLimiter', () => {
-    beforeEach(() => {
-        vi.useFakeTimers();
-    });
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
 
-    afterEach(() => {
-        vi.useRealTimers();
-    });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
-    it('should acquire tokens successfully', async () => {
-        const limiter = new RateLimiter({ capacity: 5, refillRate: 10 });
+  it('should acquire tokens successfully', async () => {
+    const limiter = new RateLimiter({ capacity: 5, refillRate: 10 });
 
-        await limiter.acquire();
-        await limiter.acquire();
-        await limiter.acquire();
+    await limiter.acquire();
+    await limiter.acquire();
+    await limiter.acquire();
 
-        const available = limiter.getAvailableTokens();
-        expect(available).toBeLessThanOrEqual(5);
-    });
+    const available = limiter.getAvailableTokens();
+    expect(available).toBeLessThanOrEqual(5);
+  });
 
-    it('should refill tokens over time', async () => {
-        const limiter = new RateLimiter({ capacity: 2, refillRate: 1 });
+  it('should refill tokens over time', async () => {
+    const limiter = new RateLimiter({ capacity: 2, refillRate: 1 });
 
-        // Use up all tokens
-        await limiter.acquire();
-        await limiter.acquire();
+    // Use up all tokens
+    await limiter.acquire();
+    await limiter.acquire();
 
-        // Advance time by 1 second
-        vi.advanceTimersByTime(1000);
+    // Advance time by 1 second
+    vi.advanceTimersByTime(1000);
 
-        // Should be able to acquire one more token
-        await limiter.acquire();
+    // Should be able to acquire one more token
+    await limiter.acquire();
 
-        const available = limiter.getAvailableTokens();
-        expect(available).toBeGreaterThanOrEqual(0);
-    });
+    const available = limiter.getAvailableTokens();
+    expect(available).toBeGreaterThanOrEqual(0);
+  });
 
-    it('should not exceed capacity when refilling', async () => {
-        const limiter = new RateLimiter({ capacity: 3, refillRate: 1 });
+  it('should not exceed capacity when refilling', async () => {
+    const limiter = new RateLimiter({ capacity: 3, refillRate: 1 });
 
-        // Use one token
-        await limiter.acquire();
+    // Use one token
+    await limiter.acquire();
 
-        // Advance time significantly
-        vi.advanceTimersByTime(10000);
+    // Advance time significantly
+    vi.advanceTimersByTime(10000);
 
-        // Available tokens should not exceed capacity
-        const available = limiter.getAvailableTokens();
-        expect(available).toBeLessThanOrEqual(3);
-    });
+    // Available tokens should not exceed capacity
+    const available = limiter.getAvailableTokens();
+    expect(available).toBeLessThanOrEqual(3);
+  });
 
-    it('should provide available token count', () => {
-        const limiter = new RateLimiter({ capacity: 10, refillRate: 5 });
+  it('should provide available token count', () => {
+    const limiter = new RateLimiter({ capacity: 10, refillRate: 5 });
 
-        const available = limiter.getAvailableTokens();
-        expect(available).toBe(10);
-    });
+    const available = limiter.getAvailableTokens();
+    expect(available).toBe(10);
+  });
 
-    it('should handle high refill rate', async () => {
-        const limiter = new RateLimiter({ capacity: 100, refillRate: 100 });
+  it('should handle high refill rate', async () => {
+    const limiter = new RateLimiter({ capacity: 100, refillRate: 100 });
 
-        await limiter.acquire();
-        await limiter.acquire();
-        await limiter.acquire();
+    await limiter.acquire();
+    await limiter.acquire();
+    await limiter.acquire();
 
-        const available = limiter.getAvailableTokens();
-        expect(available).toBeGreaterThanOrEqual(0);
-    });
+    const available = limiter.getAvailableTokens();
+    expect(available).toBeGreaterThanOrEqual(0);
+  });
 });
-

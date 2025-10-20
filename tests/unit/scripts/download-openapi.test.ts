@@ -158,7 +158,9 @@ describe('extractOperations', () => {
 
     expect(operations).toHaveLength(3);
 
-    const createIssue = operations.find((operation) => operation.operationId === 'issues_create_issue');
+    const createIssue = operations.find(
+      (operation) => operation.operationId === 'issues_create_issue',
+    );
     expect(createIssue?.method).toBe('post');
     expect(createIssue?.path).toBe('/rest/api/3/issue');
 

@@ -123,7 +123,9 @@ export async function callCommand(operationId: string, options: CallOptions): Pr
   } catch (error) {
     if (error instanceof Error && error.message.includes('config')) {
       console.error(chalk.red('\n❌ Configuration not found'));
-      console.error(chalk.yellow('\nRun "bitbucket-dc-mcp setup" to configure your Bitbucket connection.\n'));
+      console.error(
+        chalk.yellow('\nRun "bitbucket-dc-mcp setup" to configure your Bitbucket connection.\n'),
+      );
       process.exit(1);
     }
     throw new Error(

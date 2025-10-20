@@ -68,7 +68,7 @@ export async function searchCommand(query: string, options: SearchOptions): Prom
   if (!existsSync(embeddingsPath)) {
     throw new Error(
       `Embeddings database not found at ${embeddingsPath}\n` +
-      'Please ensure the package is properly installed with embeddings.db included.',
+        'Please ensure the package is properly installed with embeddings.db included.',
     );
   }
 

@@ -67,8 +67,8 @@ describe('populate-db script', () => {
       .prepare("SELECT value FROM schema_metadata WHERE key = 'version'")
       .get() as
       | {
-        value: string;
-      }
+          value: string;
+        }
       | undefined;
 
     expect(versionRow?.value).toBe('1.0.0');
@@ -108,13 +108,13 @@ describe('populate-db script', () => {
         'SELECT operation_id, tags, parameters, request_body, responses, deprecated FROM operations ORDER BY operation_id',
       )
       .all() as Array<{
-        operation_id: string;
-        tags: string;
-        parameters: string;
-        request_body: string;
-        responses: string;
-        deprecated: number;
-      }>;
+      operation_id: string;
+      tags: string;
+      parameters: string;
+      request_body: string;
+      responses: string;
+      deprecated: number;
+    }>;
 
     expect(JSON.parse(rows[0].tags)).toEqual(['read', 'resource']);
     expect(JSON.parse(rows[0].parameters)).toEqual([{ name: 'id', in: 'query' }]);
@@ -145,8 +145,8 @@ describe('populate-db script', () => {
       .prepare('SELECT length(vector) AS size FROM embeddings WHERE operation_id = ?')
       .get('op-1') as
       | {
-        size: number;
-      }
+          size: number;
+        }
       | undefined;
 
     expect(row?.size).toBe(VECTOR_DIMENSIONS * 4);

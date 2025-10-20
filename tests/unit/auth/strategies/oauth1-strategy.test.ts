@@ -188,7 +188,11 @@ describe('OAuth1Strategy', () => {
       };
 
       expect(() =>
-        strategy.getAuthHeaders(credentials, 'GET', 'https://bitbucket.example.com/rest/api/3/myself'),
+        strategy.getAuthHeaders(
+          credentials,
+          'GET',
+          'https://bitbucket.example.com/rest/api/3/myself',
+        ),
       ).toThrow(InvalidCredentialsError);
     });
 
@@ -201,7 +205,11 @@ describe('OAuth1Strategy', () => {
       };
 
       expect(() =>
-        strategy.getAuthHeaders(credentials, 'GET', 'https://bitbucket.example.com/rest/api/3/myself'),
+        strategy.getAuthHeaders(
+          credentials,
+          'GET',
+          'https://bitbucket.example.com/rest/api/3/myself',
+        ),
       ).toThrow(InvalidCredentialsError);
     });
   });

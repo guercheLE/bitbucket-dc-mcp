@@ -46,7 +46,11 @@
  * // Returns: 'https://bitbucket.example.com/rest/api/1.0/projects/PROJECT/repos'
  * ```
  */
-export function buildApiUrl(baseUrl: string, apiVersion: '1.0' | 'latest', endpoint: string): string {
+export function buildApiUrl(
+  baseUrl: string,
+  apiVersion: '1.0' | 'latest',
+  endpoint: string,
+): string {
   // Remove trailing slashes from base URL
   const cleanBaseUrl = baseUrl.replace(/\/+$/, '');
 
@@ -141,7 +145,11 @@ export function needsApiVersion(path: string): boolean {
  * // Returns: 'https://bitbucket.example.com/rest/api/1.0/projects'
  * ```
  */
-export function buildFullUrl(baseUrl: string, path: string, defaultApiVersion: '1.0' | 'latest'): string {
+export function buildFullUrl(
+  baseUrl: string,
+  path: string,
+  defaultApiVersion: '1.0' | 'latest',
+): string {
   const cleanBaseUrl = baseUrl.replace(/\/+$/, '');
 
   // If path already contains /rest/api/(1.0|latest), use it as-is

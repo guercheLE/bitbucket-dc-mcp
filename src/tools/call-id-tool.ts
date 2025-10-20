@@ -162,7 +162,7 @@ export class CallIdTool {
     private readonly logger: PinoLogger,
     private readonly config: AppConfig,
     private readonly registry?: ComponentRegistry,
-  ) { }
+  ) {}
 
   /**
    * Execute a Bitbucket operation with validated parameters

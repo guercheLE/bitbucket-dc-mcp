@@ -63,7 +63,12 @@ describe('CorrelationContext', () => {
     });
 
     it('should create context with tool and operation', () => {
-      const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0', 'call_id', 'create_issue');
+      const context = createCorrelationContext(
+        'bitbucket-dc-mcp',
+        '1.0.0',
+        'call_id',
+        'create_issue',
+      );
 
       expect(context.toolName).toBe('call_id');
       expect(context.operationId).toBe('create_issue');

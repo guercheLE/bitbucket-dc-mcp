@@ -262,7 +262,7 @@ describe('QueryCache', () => {
         get() {
           return undefined;
         },
-        delete() { },
+        delete() {},
       } as unknown as Map<string, unknown>;
 
       const result = await cache.healthCheck();

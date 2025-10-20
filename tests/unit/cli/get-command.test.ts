@@ -21,109 +21,107 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock console to suppress output during tests
 const mockConsole = {
-    log: vi.fn(),
-    error: vi.fn(),
+  log: vi.fn(),
+  error: vi.fn(),
 };
 vi.stubGlobal('console', mockConsole);
 
 // Mock fs
 vi.mock('fs', () => ({
-    existsSync: vi.fn().mockReturnValue(true),
-    readFileSync: vi.fn().mockReturnValue(
-        JSON.stringify({
-            _metadata: {
-                generated_at: '2025-01-01T00:00:00Z',
-                total_operations: 518,
+  existsSync: vi.fn().mockReturnValue(true),
+  readFileSync: vi.fn().mockReturnValue(
+    JSON.stringify({
+      _metadata: {
+        generated_at: '2025-01-01T00:00:00Z',
+        total_operations: 518,
+      },
+      operations: [
+        {
+          operationId: 'get_project',
+          method: 'GET',
+          path: '/rest/api/1.0/projects/{projectKey}',
+          summary: 'Get project',
+          description: 'Returns the project details',
+          tags: ['Projects'],
+          parameters: [
+            {
+              name: 'projectKey',
+              in: 'path',
+              required: true,
+              schema: { type: 'string' },
+              description: 'The project key',
             },
-            operations: [
-                {
-                    operationId: 'get_project',
-                    method: 'GET',
-                    path: '/rest/api/1.0/projects/{projectKey}',
-                    summary: 'Get project',
-                    description: 'Returns the project details',
-                    tags: ['Projects'],
-                    parameters: [
-                        {
-                            name: 'projectKey',
-                            in: 'path',
-                            required: true,
-                            schema: { type: 'string' },
-                            description: 'The project key',
-                        },
-                    ],
-                    responses: {
-                        '200': {
-                            description: 'Success',
-                        },
-                    },
-                },
-            ],
-        }),
-    ),
+          ],
+          responses: {
+            '200': {
+              description: 'Success',
+            },
+          },
+        },
+      ],
+    }),
+  ),
 }));
 
 describe('getCommand', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should display operation details in table format', async () => {
+    const { getCommand } = await import('../../../src/cli/get-command.js');
+
+    await getCommand('get_project', {
+      json: false,
+      verbose: false,
     });
 
-    it('should display operation details in table format', async () => {
-        const { getCommand } = await import('../../../src/cli/get-command.js');
+    expect(mockConsole.log).toHaveBeenCalled();
+  });
 
-        await getCommand('get_project', {
-            json: false,
-            verbose: false,
-        });
+  it('should output JSON when json flag is set', async () => {
+    const { getCommand } = await import('../../../src/cli/get-command.js');
 
-        expect(mockConsole.log).toHaveBeenCalled();
+    await getCommand('get_project', {
+      json: true,
+      verbose: false,
     });
 
-    it('should output JSON when json flag is set', async () => {
-        const { getCommand } = await import('../../../src/cli/get-command.js');
+    expect(mockConsole.log).toHaveBeenCalledWith(expect.stringContaining('"operationId"'));
+  });
 
-        await getCommand('get_project', {
-            json: true,
-            verbose: false,
-        });
+  it('should show verbose details when verbose flag is set', async () => {
+    const { getCommand } = await import('../../../src/cli/get-command.js');
 
-        expect(mockConsole.log).toHaveBeenCalledWith(
-            expect.stringContaining('"operationId"'),
-        );
+    await getCommand('get_project', {
+      json: false,
+      verbose: true,
     });
 
-    it('should show verbose details when verbose flag is set', async () => {
-        const { getCommand } = await import('../../../src/cli/get-command.js');
+    expect(mockConsole.log).toHaveBeenCalled();
+  });
 
-        await getCommand('get_project', {
-            json: false,
-            verbose: true,
-        });
+  it('should handle operation not found', async () => {
+    const { getCommand } = await import('../../../src/cli/get-command.js');
+    const fs = await import('fs');
 
-        expect(mockConsole.log).toHaveBeenCalled();
-    });
+    // Mock empty operations
+    vi.mocked(fs.readFileSync).mockReturnValueOnce(
+      JSON.stringify({
+        _metadata: { generated_at: '2025-01-01T00:00:00Z', total_operations: 0 },
+        operations: [],
+      }),
+    );
 
-    it('should handle operation not found', async () => {
-        const { getCommand } = await import('../../../src/cli/get-command.js');
-        const fs = await import('fs');
+    await expect(getCommand('nonexistent_operation', { json: false })).rejects.toThrow();
+  });
 
-        // Mock empty operations
-        vi.mocked(fs.readFileSync).mockReturnValueOnce(
-            JSON.stringify({
-                _metadata: { generated_at: '2025-01-01T00:00:00Z', total_operations: 0 },
-                operations: [],
-            }),
-        );
+  it('should handle missing operations.json file', async () => {
+    const { getCommand } = await import('../../../src/cli/get-command.js');
+    const fs = await import('fs');
 
-        await expect(getCommand('nonexistent_operation', { json: false })).rejects.toThrow();
-    });
+    vi.mocked(fs.existsSync).mockReturnValueOnce(false);
 
-    it('should handle missing operations.json file', async () => {
-        const { getCommand } = await import('../../../src/cli/get-command.js');
-        const fs = await import('fs');
-
-        vi.mocked(fs.existsSync).mockReturnValueOnce(false);
-
-        await expect(getCommand('get_project', { json: false })).rejects.toThrow();
-    });
+    await expect(getCommand('get_project', { json: false })).rejects.toThrow();
+  });
 });

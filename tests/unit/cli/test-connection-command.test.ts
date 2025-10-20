@@ -21,8 +21,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock console to suppress output during tests
 const mockConsole = {
-    log: vi.fn(),
-    error: vi.fn(),
+  log: vi.fn(),
+  error: vi.fn(),
 };
 vi.stubGlobal('console', mockConsole);
 
@@ -31,92 +31,86 @@ const mockExit = vi.fn();
 vi.stubGlobal('process', { ...process, exit: mockExit });
 
 vi.mock('fs', () => ({
-    existsSync: vi.fn().mockReturnValue(true),
-    readFileSync: vi.fn().mockReturnValue(`
+  existsSync: vi.fn().mockReturnValue(true),
+  readFileSync: vi.fn().mockReturnValue(`
 bitbucket_url: https://bitbucket.example.com
 auth_method: pat
   `),
 }));
 
 vi.mock('js-yaml', () => ({
-    load: vi.fn().mockReturnValue({
-        bitbucket_url: 'https://bitbucket.example.com',
-        auth_method: 'pat',
-    }),
+  load: vi.fn().mockReturnValue({
+    bitbucket_url: 'https://bitbucket.example.com',
+    auth_method: 'pat',
+  }),
 }));
 
 vi.mock('../../../src/core/config-manager.js', () => ({
-    ConfigManager: {
-        load: vi.fn().mockResolvedValue({
-            bitbucket_url: 'https://bitbucket.example.com',
-            auth_method: 'pat',
-        }),
-    },
+  ConfigManager: {
+    load: vi.fn().mockResolvedValue({
+      bitbucket_url: 'https://bitbucket.example.com',
+      auth_method: 'pat',
+    }),
+  },
 }));
 
 vi.mock('../../../src/auth/auth-manager.js', () => ({
-    AuthManager: vi.fn().mockImplementation(() => ({
-        testConnection: vi.fn().mockResolvedValue({
-            success: true,
-            user: { name: 'testuser', displayName: 'Test User' },
-        }),
-    })),
+  AuthManager: vi.fn().mockImplementation(() => ({
+    testConnection: vi.fn().mockResolvedValue({
+      success: true,
+      user: { name: 'testuser', displayName: 'Test User' },
+    }),
+  })),
 }));
 
 vi.mock('../../../src/core/credential-storage.js', () => ({
-    CredentialStorage: vi.fn().mockImplementation(() => ({})),
+  CredentialStorage: vi.fn().mockImplementation(() => ({})),
 }));
 
 vi.mock('../../../src/core/logger.js', () => ({
-    Logger: {
-        getInstance: vi.fn().mockReturnValue({
-            info: vi.fn(),
-            error: vi.fn(),
-            debug: vi.fn(),
-        }),
-    },
+  Logger: {
+    getInstance: vi.fn().mockReturnValue({
+      info: vi.fn(),
+      error: vi.fn(),
+      debug: vi.fn(),
+    }),
+  },
 }));
 
 describe('testConnectionCommand', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should test connection successfully', async () => {
+    const { testConnectionCommand } = await import('../../../src/cli/test-connection-command.js');
+
+    await testConnectionCommand({});
+
+    expect(mockConsole.log).toHaveBeenCalled();
+  });
+
+  it('should handle missing config file', async () => {
+    const { testConnectionCommand } = await import('../../../src/cli/test-connection-command.js');
+    const fs = await import('fs');
+
+    vi.mocked(fs.existsSync).mockReturnValueOnce(false);
+
+    await testConnectionCommand({});
+
+    expect(mockExit).toHaveBeenCalledWith(1);
+  });
+
+  it('should handle invalid config', async () => {
+    const { testConnectionCommand } = await import('../../../src/cli/test-connection-command.js');
+    const yaml = await import('js-yaml');
+
+    vi.mocked(yaml.load).mockReturnValueOnce({
+      // Missing required fields
     });
 
-    it('should test connection successfully', async () => {
-        const { testConnectionCommand } = await import(
-            '../../../src/cli/test-connection-command.js'
-        );
+    await testConnectionCommand({});
 
-        await testConnectionCommand({});
-
-        expect(mockConsole.log).toHaveBeenCalled();
-    });
-
-    it('should handle missing config file', async () => {
-        const { testConnectionCommand } = await import(
-            '../../../src/cli/test-connection-command.js'
-        );
-        const fs = await import('fs');
-
-        vi.mocked(fs.existsSync).mockReturnValueOnce(false);
-
-        await testConnectionCommand({});
-
-        expect(mockExit).toHaveBeenCalledWith(1);
-    });
-
-    it('should handle invalid config', async () => {
-        const { testConnectionCommand } = await import(
-            '../../../src/cli/test-connection-command.js'
-        );
-        const yaml = await import('js-yaml');
-
-        vi.mocked(yaml.load).mockReturnValueOnce({
-            // Missing required fields
-        });
-
-        await testConnectionCommand({});
-
-        expect(mockExit).toHaveBeenCalledWith(1);
-    });
+    expect(mockExit).toHaveBeenCalledWith(1);
+  });
 });

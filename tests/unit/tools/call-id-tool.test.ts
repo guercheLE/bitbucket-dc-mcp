@@ -142,7 +142,10 @@ describe('CallIdTool', () => {
       expect(parsedContent).toEqual(bitbucketResponse);
 
       expect(validateOperationInput).toHaveBeenCalledWith('get_issue', input.parameters);
-      expect(mockBitbucketClient.executeOperation).toHaveBeenCalledWith('get_issue', input.parameters);
+      expect(mockBitbucketClient.executeOperation).toHaveBeenCalledWith(
+        'get_issue',
+        input.parameters,
+      );
       expect(logger.info).toHaveBeenCalledWith(
         expect.objectContaining({
           event: 'call_id.execution_start',

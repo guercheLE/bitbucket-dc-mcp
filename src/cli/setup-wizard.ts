@@ -191,7 +191,9 @@ function displayWelcome(): void {
   console.log(chalk.cyan.bold('║                                                           ║'));
   console.log(chalk.cyan.bold('╚═══════════════════════════════════════════════════════════╝\n'));
 
-  console.log(chalk.white('Welcome! This wizard will help you configure the Bitbucket MCP Server.\n'));
+  console.log(
+    chalk.white('Welcome! This wizard will help you configure the Bitbucket MCP Server.\n'),
+  );
 
   console.log(chalk.white.bold('What this tool does:'));
   console.log(
@@ -214,7 +216,9 @@ function displayWelcome(): void {
  * Prompt for Bitbucket URL with validation and connectivity test
  * @returns Object containing normalized URL and detected API version
  */
-async function promptBitbucketUrl(logger: PinoLogger): Promise<{ url: string; apiVersion: 'latest' | '1.0' }> {
+async function promptBitbucketUrl(
+  logger: PinoLogger,
+): Promise<{ url: string; apiVersion: 'latest' | '1.0' }> {
   const { bitbucketUrl } = await inquirer.prompt<{ bitbucketUrl: string }>([
     {
       type: 'input',
@@ -560,19 +564,18 @@ async function testAuthentication(state: WizardState, logger: PinoLogger): Promi
     }
 
     // Use the profile endpoint for Bitbucket Data Center
-    const response = await fetch(`${state.bitbucketUrl}/rest/api/latest/profile/recent/repos?limit=1`, {
-      method: 'GET',
-      headers,
-    });
+    const response = await fetch(
+      `${state.bitbucketUrl}/rest/api/latest/profile/recent/repos?limit=1`,
+      {
+        method: 'GET',
+        headers,
+      },
+    );
 
     if (response.ok) {
       // For Bitbucket Data Center, we can't get user info from this endpoint,
       // but a successful response means authentication worked
-      console.log(
-        chalk.green(
-          `✓ Authentication successful\n`,
-        ),
-      );
+      console.log(chalk.green(`✓ Authentication successful\n`));
       logger.info({}, 'Authentication test successful');
     } else {
       const errorText = await response.text();
