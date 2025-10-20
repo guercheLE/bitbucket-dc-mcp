@@ -254,7 +254,7 @@ async function promptBitbucketUrl(logger: PinoLogger): Promise<{ url: string; ap
       headers: { Accept: 'application/json' },
     });
 
-    const detectedApiVersion: 'latest' = 'latest';
+    const detectedApiVersion = 'latest' as const;
 
     if (response.ok) {
       const serverInfo = (await response.json()) as { version?: string; displayName?: string };

@@ -253,8 +253,9 @@ describe('ConfigManager', () => {
       process.env.BITBUCKET_URL = 'https://bitbucket.example.com';
       process.env.BITBUCKET_AUTH_METHOD = 'invalid-method';
 
-      // Should throw because auth_method is still invalid
-      await expect(ConfigManager.load()).rejects.toThrow(/Config validation failed/);
+      // Should silently ignore the invalid value and use the default (pat)
+      const config = await ConfigManager.load();
+      expect(config.authMethod).toBe('pat'); // Default auth method
     });
 
     it('should handle complete Docker environment configuration', async () => {

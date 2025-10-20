@@ -220,7 +220,7 @@ describe('PATStrategy', () => {
 
       expect(isValid).toBe(true);
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://bitbucket.example.com/rest/api/3/myself',
+        'https://bitbucket.example.com/rest/api/latest/profile/recent/repos?limit=1',
         expect.objectContaining({
           method: 'GET',
           headers: expect.objectContaining({

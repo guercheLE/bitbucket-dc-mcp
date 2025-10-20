@@ -154,6 +154,11 @@ export function buildFullUrl(baseUrl: string, path: string, defaultApiVersion: '
     return `${cleanBaseUrl}${path.startsWith('/') ? path : `/${path}`}`;
   }
 
+  // If path starts with /agile/, /plugins/, or other non-REST API paths, use as-is
+  if (path.startsWith('/agile/') || path.startsWith('/plugins/')) {
+    return `${cleanBaseUrl}${path}`;
+  }
+
   // Otherwise, build URL with default API version for /rest/api/*
   const cleanPath = path.replace(/^\/+/, '');
   return buildApiUrl(cleanBaseUrl, defaultApiVersion, cleanPath);

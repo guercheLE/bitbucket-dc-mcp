@@ -335,7 +335,7 @@ describe('OAuth2Strategy', () => {
       const isValid = await (strategy as any).validateTokenWithBitbucket(credentials);
 
       expect(fetch).toHaveBeenCalledWith(
-        'https://bitbucket.example.com/rest/api/3/myself',
+        'https://bitbucket.example.com/rest/api/latest/profile/recent/repos?limit=1',
         expect.objectContaining({
           method: 'GET',
           headers: expect.objectContaining({
