@@ -103,6 +103,7 @@ export type Config = z.infer<typeof ConfigSchema>;
  * defaults < config file < env vars < CLI flags
  */
 export const DEFAULT_CONFIG: Partial<Config> = {
+  auth_method: 'pat',
   api_version: 'latest',
   rate_limit: 100,
   timeout: 30000,
