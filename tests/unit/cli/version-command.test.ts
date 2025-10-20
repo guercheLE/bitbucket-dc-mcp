@@ -21,8 +21,18 @@
  * Unit tests for version command
  */
 
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { versionCommand } from '../../../src/cli/version-command.js';
+
+// Read current version from package.json
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packagePath = join(__dirname, '../../../package.json');
+const packageJson = JSON.parse(readFileSync(packagePath, 'utf-8'));
+const CURRENT_VERSION = packageJson.version;
 
 describe('versionCommand', () => {
   let consoleLogSpy: ReturnType<typeof vi.spyOn>;
@@ -48,10 +58,10 @@ describe('versionCommand', () => {
 
   describe('with checkUpdates option', () => {
     it('should check npm registry and show when up to date', async () => {
-      // Mock successful npm registry response with same version
+      // Mock successful npm registry response with same version as package.json
       fetchSpy.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ version: '1.0.0' }),
+        json: async () => ({ version: CURRENT_VERSION }),
       } as Response);
 
       await versionCommand({ checkUpdates: true });
