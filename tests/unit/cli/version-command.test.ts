@@ -39,7 +39,7 @@ describe('versionCommand', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     fetchSpy = vi.fn();
     global.fetch = fetchSpy as typeof fetch;
   });
