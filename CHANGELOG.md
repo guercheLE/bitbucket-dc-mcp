@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.0.0...v1.0.1) (2025-10-21)
+
+### Bug Fixes
+
+* format version-command test file with prettier ([43cbb86](https://github.com/guercheLE/bitbucket-dc-mcp/commit/43cbb86dd660157a703f55f6092d462f60962752))
+* make version-command test dynamically read package.json version ([3e79cf0](https://github.com/guercheLE/bitbucket-dc-mcp/commit/3e79cf019956bd028dbffdd3e5eda115d8a82f72))
+* update version-command test to match v1.0.0 ([f9a2800](https://github.com/guercheLE/bitbucket-dc-mcp/commit/f9a2800591e079416754a17dc96bd12c47ff3fc8))
+* update version-command test to use correct version mock ([6a9f6c4](https://github.com/guercheLE/bitbucket-dc-mcp/commit/6a9f6c49e671b10b442804177de35c8afae910d6))
+
 ## 1.0.0 (2025-10-20)
 
 ### Features
