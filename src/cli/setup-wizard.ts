@@ -530,6 +530,75 @@ async function collectOAuth1Credentials(): Promise<WizardState['credentials']> {
   console.log(chalk.yellow('⚠️  OAuth 1.0a is Deprecated'));
   console.log(chalk.gray('   Consider upgrading to OAuth 2.0 for better security and support\n'));
 
+  // Display helpful instructions
+  console.log(chalk.white.bold('📋 Como obter Consumer Key e Consumer Secret:\n'));
+  console.log(chalk.white('OAuth 1.0a requer configuração no Bitbucket Data Center:\n'));
+
+  console.log(chalk.cyan('Passo 1: Gerar chaves RSA'));
+  console.log(chalk.gray('   openssl genrsa -out ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem 2048'));
+  console.log(
+    chalk.gray(
+      '   openssl rsa -in ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem -pubout -out ~/.bitbucket-dc-mcp/bitbucket_publickey.pem\n',
+    ),
+  );
+
+  console.log(chalk.cyan('Passo 2: Configurar no Bitbucket'));
+  console.log(chalk.gray('   1. Administração (⚙️) → Add-ons → Application Links'));
+  console.log(chalk.gray('   2. Create link → URL: http://localhost:8080'));
+  console.log(chalk.gray('   3. Application Name: Bitbucket MCP Server'));
+  console.log(chalk.gray('   4. ✅ Marque "Create incoming link"'));
+  console.log(chalk.gray('   5. Consumer Key: escolha um (ex: bitbucket-mcp-server)'));
+  console.log(chalk.gray('   6. Public Key: cole conteúdo de bitbucket_publickey.pem'));
+  console.log(chalk.gray('   7. Save\n'));
+
+  console.log(chalk.cyan('📖 Guia detalhado com screenshots:'));
+  console.log(chalk.blue.underline('   docs/oauth1-datacenter-setup.md'));
+  console.log(
+    chalk.gray(
+      '   https://github.com/your-repo/blob/main/docs/oauth1-datacenter-setup.md\n',
+    ),
+  );
+
+  console.log(chalk.yellow('💡 Dica importante:'));
+  console.log(chalk.gray('   • Consumer Key: identificador que VOCÊ escolhe no Bitbucket'));
+  console.log(chalk.gray('   • Consumer Secret: deixe vazio para RSA-SHA1 (recomendado)'));
+  console.log(chalk.gray('   • Private Key: arquivo gerado com OpenSSL no Passo 1\n'));
+
+  const { needHelp } = await inquirer.prompt<{ needHelp: boolean }>([
+    {
+      type: 'confirm',
+      name: 'needHelp',
+      message: 'Precisa ver o guia completo passo a passo?',
+      default: false,
+    },
+  ]);
+
+  if (needHelp) {
+    console.log(chalk.cyan('\n📖 Guia completo disponível em:\n'));
+    console.log(chalk.white('Documentação local:'));
+    console.log(chalk.blue('   docs/oauth1-datacenter-setup.md\n'));
+    console.log(chalk.white('Documentação online:'));
+    console.log(
+      chalk.blue.underline(
+        '   https://github.com/your-repo/blob/main/docs/oauth1-datacenter-setup.md\n',
+      ),
+    );
+    console.log(chalk.white('O guia inclui:'));
+    console.log(chalk.gray('   • Screenshots de cada passo no Bitbucket'));
+    console.log(chalk.gray('   • Comandos completos para gerar chaves'));
+    console.log(chalk.gray('   • Troubleshooting para erros comuns'));
+    console.log(chalk.gray('   • Diferença entre Consumer Key/Secret e Access Token\n'));
+    console.log(chalk.white('Pressione Enter quando tiver as credenciais...'));
+
+    await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'continue',
+        message: 'Pressione Enter para continuar',
+      },
+    ]);
+  }
+
   const answers = await inquirer.prompt<{
     consumerKey: string;
     consumerSecret: string;
@@ -545,16 +614,24 @@ async function collectOAuth1Credentials(): Promise<WizardState['credentials']> {
     {
       type: 'password',
       name: 'consumerSecret',
-      message: 'Enter OAuth 1.0a Consumer Secret:',
+      message: 'Enter OAuth 1.0a Consumer Secret (deixe vazio para RSA-SHA1):',
       mask: '*',
-      validate: (input: string) =>
-        input.trim().length > 0 ? true : 'Consumer Secret cannot be empty',
+      validate: () => {
+        // Consumer Secret is optional for RSA-SHA1
+        return true;
+      },
     },
     {
       type: 'input',
       name: 'privateKeyPath',
-      message: 'Enter path to private key file (optional):',
-      default: '',
+      message: 'Enter path to private key file:',
+      default: '~/.bitbucket-dc-mcp/bitbucket_privatekey.pem',
+      validate: (input: string) => {
+        if (!input || input.trim().length === 0) {
+          return 'Private key path is required for OAuth 1.0a with RSA-SHA1';
+        }
+        return true;
+      },
     },
   ]);
 

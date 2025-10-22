@@ -164,7 +164,94 @@ export async function testConnectionCommand(options: TestConnectionOptions): Pro
             '   OAuth 1.0a requires request signing which is handled by the full MCP server',
           ),
         );
-        console.log(chalk.yellow('   Use the MCP server to verify OAuth 1.0a authentication\n'));
+        console.log(chalk.gray('   Use the MCP server to verify OAuth 1.0a authentication\n'));
+
+        // Display helpful information about OAuth 1.0a credentials
+        console.log(chalk.cyan('📋 OAuth 1.0a Configuration Summary:\n'));
+        console.log(chalk.white('Configured credentials:'));
+        console.log(chalk.gray(`   • Consumer Key: ${credentials.consumer_key || 'Not set'}`));
+        console.log(
+          chalk.gray(
+            `   • Consumer Secret: ${credentials.consumer_secret ? '******' : 'Not set (RSA-SHA1)'}`,
+          ),
+        );
+        console.log(
+          chalk.gray(`   • Private Key Path: ${credentials.private_key_path || 'Not set'}`),
+        );
+        console.log(
+          chalk.gray(
+            `   • Access Token: ${credentials.access_token === 'pending_oauth1_flow' ? 'Pending first use' : credentials.access_token ? 'Set' : 'Not set'}`,
+          ),
+        );
+
+        if (!credentials.consumer_key || !credentials.private_key_path) {
+          console.log(
+            chalk.yellow('\n⚠️  Credenciais OAuth 1.0a parecem inválidas ou incompletas\n'),
+          );
+
+          console.log(chalk.white.bold('Como obter credenciais corretas:\n'));
+
+          console.log(chalk.cyan('1. Gerar chaves RSA:'));
+          console.log(chalk.gray('   openssl genrsa -out ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem 2048'));
+          console.log(
+            chalk.gray(
+              '   openssl rsa -in ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem -pubout -out ~/.bitbucket-dc-mcp/bitbucket_publickey.pem\n',
+            ),
+          );
+
+          console.log(chalk.cyan('2. Configurar no Bitbucket Data Center:'));
+          console.log(chalk.gray('   • Administração → Add-ons → Application Links'));
+          console.log(chalk.gray('   • Create link → URL: http://localhost:8080'));
+          console.log(chalk.gray('   • Application Name: Bitbucket MCP Server'));
+          console.log(chalk.gray('   • ✅ Marque "Create incoming link"'));
+          console.log(chalk.gray('   • Consumer Key: escolha um ID único (ex: bitbucket-mcp-server)'));
+          console.log(chalk.gray('   • Public Key: cole conteúdo de bitbucket_publickey.pem'));
+          console.log(chalk.gray('   • Consumer Secret: deixe vazio para RSA-SHA1'));
+          console.log(chalk.gray('   • Save\n'));
+
+          console.log(chalk.cyan('3. Reconfigurar MCP Server:'));
+          console.log(chalk.gray('   bitbucket-dc-mcp setup --force\n'));
+
+          console.log(chalk.cyan('📖 Guia detalhado passo a passo:'));
+          console.log(chalk.blue.underline('   docs/oauth1-datacenter-setup.md'));
+          console.log(
+            chalk.gray(
+              '   https://github.com/your-repo/blob/main/docs/oauth1-datacenter-setup.md\n',
+            ),
+          );
+
+          console.log(
+            chalk.yellow(
+              '💡 Dica: Consumer Key e Consumer Secret NÃO são a mesma coisa que Access Token!',
+            ),
+          );
+          console.log(
+            chalk.gray(
+              '   • Consumer Key: identificador que VOCÊ escolhe ao criar Application Link',
+            ),
+          );
+          console.log(chalk.gray('   • Consumer Secret: opcional para RSA-SHA1 (deixe vazio)'));
+          console.log(
+            chalk.gray('   • Access Token: obtido automaticamente após autorizar no navegador\n'),
+          );
+
+          console.log(chalk.yellow('🔄 Alternativas mais simples:'));
+          console.log(
+            chalk.gray('   • Bitbucket 7.0+: Use Personal Access Token (PAT) - setup em 3 minutos'),
+          );
+          console.log(chalk.gray('   • Bitbucket 7.0+: Use OAuth 2.0 - mais moderno e seguro'));
+          console.log(chalk.gray('   Veja: docs/authentication.md\n'));
+        } else {
+          console.log(chalk.green('\n✅ OAuth 1.0a configuration looks valid'));
+          console.log(chalk.cyan('\n💡 Para testar autenticação OAuth 1.0a:'));
+          console.log(chalk.gray('   1. Start the MCP server: npm start'));
+          console.log(chalk.gray('   2. The server will initiate OAuth flow on first API request'));
+          console.log(chalk.gray('   3. You will be redirected to Bitbucket to authorize'));
+          console.log(
+            chalk.gray('   4. After authorization, access token will be obtained automatically\n'),
+          );
+        }
+
         process.exit(0);
         break;
       default:

@@ -59,6 +59,9 @@ export interface Credentials {
   /** Consumer secret for OAuth 1.0a */
   consumer_secret?: string;
 
+  /** Private key path for OAuth 1.0a RSA-SHA1 */
+  private_key_path?: string;
+
   /** OAuth token for OAuth 1.0a */
   oauth_token?: string;
 
