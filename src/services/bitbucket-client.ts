@@ -535,13 +535,44 @@ export class BitbucketClientService {
       pathParamNames.add(match[1]);
     }
 
+    // DEBUG: Log path parameters found
+    this.logger.debug(
+      {
+        event: 'bitbucket_client.extract_body_debug',
+        path,
+        pathParamNames: Array.from(pathParamNames),
+        allParamKeys: Object.keys(paramsObj),
+      },
+      'Extracting request body - path parameters',
+    );
+
     // If 'fields' or 'body' property is present, use it directly (it should already be filtered)
     if (paramsObj.fields !== undefined) {
-      return JSON.stringify(paramsObj.fields);
+      const result = JSON.stringify(paramsObj.fields);
+      this.logger.debug(
+        {
+          event: 'bitbucket_client.extract_body_result',
+          source: 'fields',
+          bodyLength: result.length,
+          bodyPreview: result.substring(0, 200),
+        },
+        'Request body extracted from fields',
+      );
+      return result;
     }
 
     if (paramsObj.body !== undefined) {
-      return JSON.stringify(paramsObj.body);
+      const result = JSON.stringify(paramsObj.body);
+      this.logger.debug(
+        {
+          event: 'bitbucket_client.extract_body_result',
+          source: 'body',
+          bodyLength: result.length,
+          bodyPreview: result.substring(0, 200),
+        },
+        'Request body extracted from body',
+      );
+      return result;
     }
 
     // Otherwise, filter out path parameters and query parameters to create the body
@@ -549,19 +580,68 @@ export class BitbucketClientService {
     for (const [key, value] of Object.entries(paramsObj)) {
       // Skip path parameters
       if (pathParamNames.has(key)) {
+        this.logger.debug(
+          {
+            event: 'bitbucket_client.extract_body_skip',
+            key,
+            reason: 'path_parameter',
+          },
+          'Skipping path parameter',
+        );
         continue;
       }
 
       // Include in body
+      this.logger.debug(
+        {
+          event: 'bitbucket_client.extract_body_include',
+          key,
+          valueType: typeof value,
+          valueLength: typeof value === 'string' ? value.length : undefined,
+        },
+        'Including parameter in body',
+      );
       bodyObj[key] = value;
     }
 
+    // DEBUG: Log final body object
+    this.logger.debug(
+      {
+        event: 'bitbucket_client.extract_body_final',
+        bodyKeys: Object.keys(bodyObj),
+        isEmpty: Object.keys(bodyObj).length === 0,
+      },
+      'Final body object before serialization',
+    );
+
     // If body is empty, return undefined
     if (Object.keys(bodyObj).length === 0) {
+      this.logger.warn(
+        {
+          event: 'bitbucket_client.extract_body_empty',
+          path,
+          method,
+          allParams: Object.keys(paramsObj),
+          pathParams: Array.from(pathParamNames),
+        },
+        'Request body is empty after filtering path parameters',
+      );
       return undefined;
     }
 
-    return JSON.stringify(bodyObj);
+    const result = JSON.stringify(bodyObj);
+    this.logger.debug(
+      {
+        event: 'bitbucket_client.extract_body_result',
+        source: 'filtered',
+        bodyLength: result.length,
+        bodyPreview: result.substring(0, 200),
+        bodyKeys: Object.keys(bodyObj),
+      },
+      'Request body extracted after filtering',
+    );
+
+    return result;
   }
 
   /**
