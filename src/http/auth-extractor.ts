@@ -275,4 +275,3 @@ export class AuthExtractor implements IAuthExtractor {
     return Array.isArray(value) ? value[0] : value;
   }
 }
-

@@ -326,4 +326,3 @@ export class HttpMetrics {
     this.httpActiveRequests?.add(-1);
   }
 }
-

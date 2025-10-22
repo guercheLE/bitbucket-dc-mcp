@@ -101,7 +101,11 @@ export class ToolExecutor {
   /**
    * Logs tool execution error
    */
-  private logError(logger: PinoLogger, error: unknown, additionalInfo?: Record<string, unknown>): void {
+  private logError(
+    logger: PinoLogger,
+    error: unknown,
+    additionalInfo?: Record<string, unknown>,
+  ): void {
     const latencyMs = getElapsedTime();
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(
@@ -207,4 +211,3 @@ export class ToolExecutor {
     });
   }
 }
-

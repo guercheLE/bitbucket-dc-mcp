@@ -357,9 +357,7 @@ export async function main(): Promise<void> {
         event: 'app.started',
         version: packageInfo.version,
         capabilities: LOGGING_CAPABILITIES,
-        tools: embeddingsRepository
-          ? ['search_ids', 'get_id', 'call_id']
-          : ['get_id', 'call_id'],
+        tools: embeddingsRepository ? ['search_ids', 'get_id', 'call_id'] : ['get_id', 'call_id'],
         systemHealth: systemHealth.overallStatus,
       },
       'MCP server ready',

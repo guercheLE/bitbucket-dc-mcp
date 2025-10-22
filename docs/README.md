@@ -12,6 +12,7 @@ Welcome to the **Bitbucket Data Center MCP Server** documentation! This director
 ### 📖 User Guides
 
 - **[api-reference.md](api-reference.md)** - MCP tools reference (`search_ids`, `get_id`, `call_id`)
+- **[http-server.md](http-server.md)** - HTTP server mode guide (alternative to stdio)
 - **[api-version-detection.md](api-version-detection.md)** - API version detection and configuration guide
 - **[api-version-faq.md](api-version-faq.md)** - API version configuration FAQ
 - **[cookbook.md](cookbook.md)** - Practical code examples and common workflows
@@ -19,7 +20,9 @@ Welcome to the **Bitbucket Data Center MCP Server** documentation! This director
 
 ### 🔧 Operations & Maintenance
 
-- **[observability.md](observability.md)** - Structured logging, monitoring, and log aggregation (ELK, Datadog, Splunk)
+- **[observability.md](observability.md)** - Structured logging, OpenTelemetry tracing, Prometheus metrics
+- **[opentelemetry-metrics.md](opentelemetry-metrics.md)** - OpenTelemetry metrics and tracing (HTTP mode)
+- **[performance-metrics.md](performance-metrics.md)** - Performance benchmarks and targets
 - **[troubleshooting.md](troubleshooting.md)** - Comprehensive troubleshooting guide and FAQ
 
 ### 🧪 Testing & Beta Program

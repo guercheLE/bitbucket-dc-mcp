@@ -98,27 +98,13 @@ describe('HttpMetrics', () => {
 
     it('should record request metrics', () => {
       expect(() => {
-        metrics.recordRequest(
-          '/test',
-          'GET',
-          200,
-          100,
-          1024,
-          2048,
-        );
+        metrics.recordRequest('/test', 'GET', 200, 100, 1024, 2048);
       }).not.toThrow();
     });
 
     it('should handle metrics with zero duration', () => {
       expect(() => {
-        metrics.recordRequest(
-          '/test',
-          'GET',
-          200,
-          0,
-          0,
-          0,
-        );
+        metrics.recordRequest('/test', 'GET', 200, 0, 0, 0);
       }).not.toThrow();
     });
 
@@ -161,4 +147,3 @@ describe('HttpMetrics', () => {
     });
   });
 });
-

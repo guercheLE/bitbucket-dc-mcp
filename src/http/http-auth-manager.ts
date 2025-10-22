@@ -205,4 +205,3 @@ export class HttpAuthManager implements IHttpAuthManager {
     return credentials;
   }
 }
-

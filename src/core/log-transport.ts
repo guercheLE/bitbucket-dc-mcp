@@ -41,17 +41,20 @@ export interface LogTransportConfig {
  * Generate log filename with date prefix and PID suffix
  * Format: YYYY-MM-DD-bitbucket-dc-mcp-PID.log or YYYY-MM-DD-bitbucket-dc-mcp-errors-PID.log
  */
-function generateLogFilename(baseFilePath: string, isErrorLog = false): { dir: string; filename: string } {
+function generateLogFilename(
+  baseFilePath: string,
+  isErrorLog = false,
+): { dir: string; filename: string } {
   const now = new Date();
   const datePrefix = now.toISOString().split('T')[0]; // YYYY-MM-DD
   const pid = process.pid;
-  
+
   const dir = dirname(baseFilePath);
   const ext = baseFilePath.endsWith('.log') ? '.log' : '';
   const baseName = isErrorLog ? 'bitbucket-dc-mcp-errors' : 'bitbucket-dc-mcp';
-  
+
   const filename = `${datePrefix}-${baseName}-${pid}${ext}`;
-  
+
   return { dir, filename };
 }
 
@@ -107,10 +110,10 @@ export function getLogTransportConfig(): LogTransportConfig {
 export function createLogTransport(
   config: LogTransportConfig,
 ): pino.TransportMultiOptions | pino.TransportSingleOptions | undefined {
-  const { 
-    output, 
-    filePath, 
-    maxSize = 50, 
+  const {
+    output,
+    filePath,
+    maxSize = 50,
     maxFiles = 30,
     errorLogPath,
     errorMaxSize = 100,

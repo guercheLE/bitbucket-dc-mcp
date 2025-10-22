@@ -284,4 +284,3 @@ export interface IHttpRequestHandler {
    */
   handle(context: HttpRequestContext): Promise<unknown>;
 }
-

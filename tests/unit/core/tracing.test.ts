@@ -133,12 +133,9 @@ describe('Tracing', () => {
 
       await tracing.start();
 
-      const result = await tracing.withSpan(
-        'test-operation',
-        async () => {
-          return 'test-result';
-        },
-      );
+      const result = await tracing.withSpan('test-operation', async () => {
+        return 'test-result';
+      });
 
       expect(result).toBe('test-result');
       await tracing.stop();
@@ -172,12 +169,9 @@ describe('Tracing', () => {
         logger,
       );
 
-      const result = await tracing.withSpan(
-        'test-operation',
-        async () => {
-          return 'test-result';
-        },
-      );
+      const result = await tracing.withSpan('test-operation', async () => {
+        return 'test-result';
+      });
 
       expect(result).toBe('test-result');
     });
@@ -205,4 +199,3 @@ describe('Tracing', () => {
     });
   });
 });
-

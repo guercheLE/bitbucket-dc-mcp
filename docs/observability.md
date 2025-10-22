@@ -6,6 +6,9 @@ This guide explains how to use structured logging and observability features in 
 
 - [Log Structure](#log-structure)
 - [Configuration](#configuration)
+- [OpenTelemetry Tracing](#opentelemetry-tracing)
+- [HTTP Metrics with Prometheus](#http-metrics-with-prometheus)
+- [Correlation Context](#correlation-context)
 - [Integration with Log Aggregators](#integration-with-log-aggregators)
 - [Common Queries](#common-queries)
 - [Alert Recommendations](#alert-recommendations)
@@ -108,6 +111,467 @@ LOG_LEVEL=INFO
 LOG_OUTPUT=both
 LOG_FILE_PATH=/var/log/bitbucket-mcp/server.log
 ```
+
+---
+
+## OpenTelemetry Tracing
+
+The Bitbucket DC MCP Server includes comprehensive **distributed tracing** support using OpenTelemetry. This is especially useful when running in **HTTP server mode** to trace requests across components.
+
+### What is Distributed Tracing?
+
+Distributed tracing helps you understand:
+- **Request flow:** How a request travels through different components
+- **Performance bottlenecks:** Which operations are slow
+- **Error propagation:** Where errors originate and how they cascade
+- **Dependencies:** External API calls to Bitbucket DC
+
+### Enabling Tracing
+
+#### Programmatic Configuration
+
+```typescript
+import { startHttpServer } from 'bitbucket-dc-mcp';
+
+await startHttpServer({
+  host: '0.0.0.0',
+  port: 3000,
+  tracing: {
+    enabled: true,
+    serviceName: 'bitbucket-dc-mcp',
+    serviceVersion: '2.0.0',
+    jaegerEndpoint: 'http://localhost:14268/api/traces',
+    consoleExporter: false  // Set to true for debugging
+  }
+});
+```
+
+#### Environment Variables
+
+```bash
+# Tracing configuration
+OTEL_ENABLED=true
+OTEL_SERVICE_NAME=bitbucket-dc-mcp
+OTEL_SERVICE_VERSION=2.0.0
+OTEL_JAEGER_ENDPOINT=http://localhost:14268/api/traces
+OTEL_CONSOLE_EXPORTER=false
+```
+
+### Trace Components
+
+The server creates spans for:
+
+| Component | Span Name | Description |
+|-----------|-----------|-------------|
+| **HTTP Requests** | `http.request` | HTTP request lifecycle |
+| **MCP Tools** | `mcp.tool.search_ids`<br>`mcp.tool.get_id`<br>`mcp.tool.call_id` | MCP tool execution |
+| **Authentication** | `auth.authenticate` | Authentication flow |
+| **Bitbucket API Calls** | `bitbucket.api.<operation>` | External API calls |
+| **Cache Operations** | `cache.get`<br>`cache.set` | Cache access |
+| **Database Queries** | `db.query` | Embeddings database queries |
+
+### Span Attributes
+
+Each span includes contextual attributes:
+
+```typescript
+// HTTP request span
+{
+  'http.method': 'POST',
+  'http.url': '/tools/call',
+  'http.status_code': 200,
+  'http.client_ip': '192.168.1.100',
+  'correlation_id': 'req-abc-123'
+}
+
+// MCP tool span
+{
+  'mcp.tool': 'call_id',
+  'mcp.operation_id': 'createRepository',
+  'mcp.parameters': '{"projectKey":"PROJ"}',
+  'correlation_id': 'req-abc-123'
+}
+
+// Bitbucket API span
+{
+  'bitbucket.operation': 'createRepository',
+  'bitbucket.method': 'POST',
+  'bitbucket.url': 'https://bitbucket.example.com/rest/api/latest/projects/PROJ/repos',
+  'bitbucket.status': 201,
+  'correlation_id': 'req-abc-123'
+}
+```
+
+### Visualization with Jaeger
+
+**Docker Compose Setup:**
+
+```yaml
+version: '3.8'
+
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "14268:14268"  # Collector HTTP
+      - "14250:14250"  # Collector gRPC
+    environment:
+      COLLECTOR_OTLP_ENABLED: true
+      SPAN_STORAGE_TYPE: memory
+```
+
+**Access Jaeger UI:** http://localhost:16686
+
+**Querying Traces:**
+1. Select service: `bitbucket-dc-mcp`
+2. Select operation: `http.request` or `mcp.tool.call_id`
+3. Filter by tags: `correlation_id=req-abc-123`
+4. View trace timeline and flamegraph
+
+### Trace Context Propagation
+
+The server propagates trace context using:
+- **W3C Trace Context** standard headers
+- **Correlation IDs** for request tracking
+- **Baggage** for cross-service metadata
+
+**Example: Incoming HTTP request with trace context:**
+
+```bash
+curl -X POST http://localhost:3000/ \
+  -H "Content-Type: application/json" \
+  -H "traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01" \
+  -H "tracestate: congo=ucfJifl5GOE,rojo=00f067aa0ba902b7" \
+  -d '{...}'
+```
+
+The server will:
+1. Extract parent trace context
+2. Create child span for MCP operation
+3. Propagate context to Bitbucket API calls
+4. Return trace context in response headers
+
+### Integration with APM Tools
+
+#### Jaeger
+
+Already configured - see Docker Compose example above.
+
+#### Datadog APM
+
+```typescript
+await startHttpServer({
+  host: '0.0.0.0',
+  port: 3000,
+  tracing: {
+    enabled: true,
+    serviceName: 'bitbucket-dc-mcp',
+    // Datadog agent receives OTLP
+    jaegerEndpoint: 'http://localhost:4318/v1/traces'  
+  }
+});
+```
+
+**Datadog Agent Config (`datadog.yaml`):**
+
+```yaml
+apm_config:
+  enabled: true
+  otlp_config:
+    receiver:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+```
+
+#### New Relic
+
+```typescript
+// Use OTLP endpoint
+await startHttpServer({
+  tracing: {
+    enabled: true,
+    jaegerEndpoint: 'https://otlp.nr-data.net:4318/v1/traces',
+    // Add API key to headers (see New Relic docs)
+  }
+});
+```
+
+### Troubleshooting Tracing
+
+**No traces appearing in Jaeger:**
+
+1. Check Jaeger is running: `docker ps | grep jaeger`
+2. Verify endpoint: `curl http://localhost:14268/api/traces`
+3. Enable console exporter for debugging:
+   ```typescript
+   tracing: {
+     enabled: true,
+     consoleExporter: true  // Logs spans to console
+   }
+   ```
+
+**High overhead from tracing:**
+
+1. Sample traces instead of capturing all:
+   ```typescript
+   // TODO: Sampling configuration
+   // Currently captures all traces
+   ```
+2. Reduce span attributes
+3. Use batch exporter (default)
+
+**Trace context not propagating:**
+
+1. Verify W3C Trace Context headers are present
+2. Check correlation ID is set in logs
+3. Ensure `traceparent` header format is valid
+
+For more details, see [OpenTelemetry Metrics Guide](./opentelemetry-metrics.md).
+
+---
+
+## HTTP Metrics with Prometheus
+
+When running in **HTTP server mode**, the server exposes Prometheus-compatible metrics on a separate endpoint.
+
+### Enabling Metrics
+
+```typescript
+import { startHttpServer } from 'bitbucket-dc-mcp';
+
+await startHttpServer({
+  host: '0.0.0.0',
+  port: 3000,
+  metrics: {
+    enabled: true,
+    port: 9090,               // Separate port for metrics
+    host: '0.0.0.0',
+    endpoint: '/metrics'
+  }
+});
+```
+
+**Metrics endpoint:** http://localhost:9090/metrics
+
+### Available Metrics
+
+#### HTTP Metrics
+
+| Metric | Type | Description | Labels |
+|--------|------|-------------|--------|
+| `http_requests_total` | Counter | Total HTTP requests | `method`, `path`, `status` |
+| `http_request_duration_seconds` | Histogram | Request duration | `method`, `path`, `status` |
+| `http_request_size_bytes` | Histogram | Request body size | `method`, `path`, `status` |
+| `http_response_size_bytes` | Histogram | Response body size | `method`, `path`, `status` |
+| `http_active_requests` | Gauge | Current active requests | - |
+
+#### MCP Tool Metrics
+
+| Metric | Type | Description | Labels |
+|--------|------|-------------|--------|
+| `mcp_operations_total` | Counter | Total MCP operations | `method`, `status` |
+| `mcp_operation_duration_seconds` | Histogram | Operation duration | `method`, `status` |
+
+#### Authentication Metrics
+
+| Metric | Type | Description | Labels |
+|--------|------|-------------|--------|
+| `auth_attempts_total` | Counter | Auth attempts | `method` |
+| `auth_failures_total` | Counter | Auth failures | `method` |
+
+### Scraping with Prometheus
+
+**Prometheus Configuration (`prometheus.yml`):**
+
+```yaml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'bitbucket-dc-mcp'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 10s
+    scrape_timeout: 5s
+```
+
+**Start Prometheus:**
+
+```bash
+docker run -d -p 9091:9090 \
+  -v $PWD/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+```
+
+**Prometheus UI:** http://localhost:9091
+
+### Example Queries (PromQL)
+
+**Request rate (per second):**
+
+```promql
+rate(http_requests_total[5m])
+```
+
+**Error rate (percentage):**
+
+```promql
+sum(rate(http_requests_total{status=~"5.."}[5m])) / 
+sum(rate(http_requests_total[5m])) * 100
+```
+
+**P95 latency:**
+
+```promql
+histogram_quantile(0.95, 
+  rate(http_request_duration_seconds_bucket[5m]))
+```
+
+**Active requests:**
+
+```promql
+http_active_requests
+```
+
+**MCP operations per minute:**
+
+```promql
+rate(mcp_operations_total[1m]) * 60
+```
+
+**Auth failure rate:**
+
+```promql
+rate(auth_failures_total[5m])
+```
+
+### Grafana Dashboard
+
+**Docker Compose with Prometheus + Grafana:**
+
+```yaml
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  prometheus-data:
+  grafana-data:
+```
+
+**Grafana Setup:**
+
+1. Access Grafana: http://localhost:3001 (admin/admin)
+2. Add Prometheus data source: http://prometheus:9090
+3. Import dashboard or create custom panels
+
+**Sample Dashboard Panels:**
+
+- **Request Rate:** `rate(http_requests_total[5m])`
+- **Error Rate:** Error rate calculation (see above)
+- **Latency Heatmap:** `http_request_duration_seconds_bucket`
+- **Active Requests:** `http_active_requests`
+- **Top Operations:** `topk(10, sum by (method) (rate(mcp_operations_total[5m])))`
+
+For complete metrics documentation, see [OpenTelemetry Metrics Guide](./opentelemetry-metrics.md).
+
+---
+
+## Correlation Context
+
+The server uses a **correlation context system** to track requests across components. This is critical for:
+- Tracing distributed requests
+- Debugging multi-step operations
+- Audit trail and security logging
+
+### Correlation ID
+
+Every request gets a unique **correlation ID** (UUID format):
+
+```
+req-4bf92f35-77b3-4da6-a3ce-929d0e0e4736
+```
+
+This ID appears in:
+- All log entries for that request
+- Trace spans
+- Error responses
+- HTTP response headers (`X-Request-Id`)
+
+### Using Correlation IDs
+
+**In logs:**
+
+```bash
+# Find all logs for a specific request
+cat logs/bitbucket-mcp.log | jq 'select(.correlation_id == "req-abc-123")'
+```
+
+**In traces:**
+
+```bash
+# Jaeger UI: Search by tag
+correlation_id=req-abc-123
+```
+
+**In support tickets:**
+
+```
+Subject: API call failing with 500 error
+
+Correlation ID: req-abc-123
+Timestamp: 2025-10-22T14:30:00Z
+Operation: call_id with createRepository
+```
+
+### Programmatic Access
+
+If building integrations, you can access correlation context:
+
+```typescript
+import { getCorrelationId, getCorrelationContext } from 'bitbucket-dc-mcp';
+
+// Get current correlation ID
+const correlationId = getCorrelationId();
+
+// Get full context
+const context = getCorrelationContext();
+console.log(context);
+// {
+//   correlation_id: 'req-abc-123',
+//   trace_id: '4bf92f3577b34da6a3ce929d0e0e4736',
+//   span_id: '00f067aa0ba902b7',
+//   start_time: 1698000000000
+// }
+```
+
+---
 
 ## Integration with Log Aggregators
 

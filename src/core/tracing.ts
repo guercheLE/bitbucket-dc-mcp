@@ -19,7 +19,10 @@
 
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
 import { resourceFromAttributes } from '@opentelemetry/resources';
-import { SEMRESATTRS_SERVICE_NAME, SEMRESATTRS_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
+import {
+  SEMRESATTRS_SERVICE_NAME,
+  SEMRESATTRS_SERVICE_VERSION,
+} from '@opentelemetry/semantic-conventions';
 import { BatchSpanProcessor, ConsoleSpanExporter } from '@opentelemetry/sdk-trace-base';
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
@@ -172,7 +175,7 @@ export class Tracing {
       registerInstrumentations({
         instrumentations: [
           new HttpInstrumentation({
-            ignoreIncomingRequestHook: (request) => {
+            ignoreIncomingRequestHook: (request): boolean => {
               // Don't trace metrics endpoint
               return request.url?.includes('/metrics') ?? false;
             },
@@ -311,4 +314,3 @@ export class Tracing {
     return this.config.enabled && this.provider !== undefined;
   }
 }
-

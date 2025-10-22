@@ -65,4 +65,3 @@ export class LocalhostDetector implements ILocalhostDetector {
     return this.localhostPatterns.some((pattern) => normalized === pattern.toLowerCase());
   }
 }
-
