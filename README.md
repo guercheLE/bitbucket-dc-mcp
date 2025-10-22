@@ -48,6 +48,7 @@ Perfect for teams building AI assistants, automation workflows, or LLM integrati
   - [Docker (Recommended)](#docker-recommended)
   - [npm Install](#npm-install)
   - [From Source](#from-source)
+- [Database Regeneration](#database-regeneration)
 - [Usage](#usage)
   - [MCP Tools](#mcp-tools)
   - [Common Workflows](#common-workflows)
@@ -313,6 +314,63 @@ Show version information for the MCP server.
 ```bash
 bitbucket-dc-mcp version --check-updates
 ```
+
+---
+
+## Database Regeneration
+
+If you encounter issues with the embeddings database (corrupted data, outdated operations, or compatibility issues), you can regenerate it completely:
+
+### Quick Regeneration
+
+```bash
+# Complete database regeneration (recommended)
+cd bitbucket-dc-mcp
+rm -f data/embeddings.db* && npm run build:all
+```
+
+### Step-by-Step Regeneration
+
+```bash
+# 1. Remove existing database and auxiliary files
+rm data/embeddings.db
+rm data/embeddings.db-wal 2>/dev/null || true
+rm data/embeddings.db-shm 2>/dev/null || true
+
+# 2. Regenerate from scratch
+npm run download-openapi
+npm run generate-schemas  
+npm run generate-embeddings
+npm run populate-db
+
+# 3. Compile the project
+npm run build
+```
+
+### When to Regenerate
+
+- **Outdated data**: Database contains operations from old versions with incompatible IDs
+- **Data contamination**: Database contains operations from other MCP servers
+- **Corruption**: Database is corrupted or inaccessible
+- **API updates**: OpenAPI specification has been updated
+- **Server migration**: Switching between different server types
+
+### Verification
+
+```bash
+# Check database was created successfully
+ls -lh data/embeddings.db
+
+# Validate database integrity
+npm run validate-embeddings
+```
+
+**Estimated time**: 
+- **MacBook Air M1**: ~3 minutes
+- **GitHub Actions**: ~3 hours (not recommended for CI/CD)
+- **Modern hardware**: 3-5 minutes
+
+For detailed troubleshooting, see [docs/EMBEDDINGS_REGENERATION.md](docs/EMBEDDINGS_REGENERATION.md).
 
 ---
 

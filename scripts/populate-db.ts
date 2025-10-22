@@ -111,6 +111,20 @@ export function createDatabase(dbPath: string): Database {
     if (dbPath !== ':memory:' && existsSync(dbPath)) {
         console.warn('[populate-db] Deleting existing database:', dbPath);
         unlinkSync(dbPath);
+        
+        // Also remove any associated WAL and SHM files for complete cleanup
+        const walPath = `${dbPath}-wal`;
+        const shmPath = `${dbPath}-shm`;
+        
+        if (existsSync(walPath)) {
+            console.log('[populate-db] Removing WAL file:', walPath);
+            unlinkSync(walPath);
+        }
+        
+        if (existsSync(shmPath)) {
+            console.log('[populate-db] Removing SHM file:', shmPath);
+            unlinkSync(shmPath);
+        }
     }
 
     const db = new DatabaseConstructor(dbPath);
@@ -137,8 +151,10 @@ export function createDatabase(dbPath: string): Database {
     insertMetadata.run('version', SCHEMA_VERSION);
     insertMetadata.run('built_at', new Date().toISOString());
     insertMetadata.run('openapi_version', OPENAPI_VERSION);
+    insertMetadata.run('server_type', 'bitbucket-dc-mcp'); // Add server type for validation
 
     console.info('[populate-db] sqlite-vec version:', resolveVecVersion(db));
+    console.info('[populate-db] Database created with clean schema for bitbucket-dc-mcp');
 
     return db;
 }
