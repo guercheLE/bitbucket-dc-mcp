@@ -552,9 +552,9 @@ export class BitbucketClientService {
         // Log each param individually to see their values
         params: Object.fromEntries(
           Object.entries(paramsObj).map(([k, v]) => [
-            k, 
-            typeof v === 'string' && v.length > 100 ? `${v.substring(0, 100)}...` : v
-          ])
+            k,
+            typeof v === 'string' && v.length > 100 ? `${v.substring(0, 100)}...` : v,
+          ]),
         ),
       },
       'Extracting request body - START',

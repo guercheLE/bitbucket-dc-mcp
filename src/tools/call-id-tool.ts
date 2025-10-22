@@ -263,9 +263,10 @@ export class CallIdTool {
           event: 'call_id.parameters_received',
           traceId: traceId,
           operation_id,
-          parameterKeys: typeof parameters === 'object' && parameters !== null 
-            ? Object.keys(parameters as Record<string, unknown>)
-            : [],
+          parameterKeys:
+            typeof parameters === 'object' && parameters !== null
+              ? Object.keys(parameters as Record<string, unknown>)
+              : [],
           parametersType: typeof parameters,
           parametersIsNull: parameters === null,
           parametersIsUndefined: parameters === undefined,
@@ -283,7 +284,7 @@ export class CallIdTool {
           traceId: traceId,
           operation_id,
           validationSuccess: validationResult.success,
-          validatedDataKeys: validationResult.success 
+          validatedDataKeys: validationResult.success
             ? Object.keys(validationResult.data as Record<string, unknown>)
             : [],
         },
