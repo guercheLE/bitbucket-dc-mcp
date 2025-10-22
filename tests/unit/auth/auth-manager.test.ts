@@ -195,7 +195,7 @@ describe('AuthManager', () => {
 
       await expect(authManager.getAuthHeaders()).rejects.toThrow(InvalidCredentialsError);
       await expect(authManager.getAuthHeaders()).rejects.toThrow(
-        'No credentials found. Please authenticate first.',
+        'No credentials found. Please authenticate first or set environment variables',
       );
     });
 
