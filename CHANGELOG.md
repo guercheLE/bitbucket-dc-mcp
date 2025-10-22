@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.3.1...v1.4.0) (2025-10-22)
+
+### Features
+
+* **bitbucket-client:** enhance HTTP request handling and body extraction ([2dca5be](https://github.com/guercheLE/bitbucket-dc-mcp/commit/2dca5be7acd3b306fade7d628a61ce39314a963b))
+
 ## [1.3.1](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.3.0...v1.3.1) (2025-10-22)
 
 ### Bug Fixes
