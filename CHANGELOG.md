@@ -1,3 +1,15 @@
+## [1.5.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.4.0...v1.5.0) (2025-10-22)
+
+### Features
+
+* adicionar debug logging detalhado para diagnosticar create_comment_2 ([0339eef](https://github.com/guercheLE/bitbucket-dc-mcp/commit/0339eefa84f342865f8f2d805cccb2ec2bc87964)), closes [#create_comment_2](https://github.com/guercheLE/bitbucket-dc-mcp/issues/create_comment_2)
+* adicionar debug logging extensivo para diagnosticar create_comment_2 ([ee4f532](https://github.com/guercheLE/bitbucket-dc-mcp/commit/ee4f532bb22a956df3c6ebebc4c0325afed53d66)), closes [#create_comment_2](https://github.com/guercheLE/bitbucket-dc-mcp/issues/create_comment_2)
+* adicionar testes HTTP diretos para diagnóstico ([30362f4](https://github.com/guercheLE/bitbucket-dc-mcp/commit/30362f4d3d11dac4694294052bc278ecd68c490f)), closes [#create_comment_2](https://github.com/guercheLE/bitbucket-dc-mcp/issues/create_comment_2)
+
+### Documentation
+
+* adicionar guia rápido de execução ([65db80b](https://github.com/guercheLE/bitbucket-dc-mcp/commit/65db80bb047f221fed49448b4fd81ee5f07287e4))
+
 ## [1.4.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.3.1...v1.4.0) (2025-10-22)
 
 ### Features
