@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.1.0...v1.2.0) (2025-10-22)
+
+### Features
+
+* **http-server:** introduce HTTP mode for Bitbucket DC MCP Server ([87dbf71](https://github.com/guercheLE/bitbucket-dc-mcp/commit/87dbf712707133dace0827ed9cd9caa9029db41e))
+
 ## [1.1.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.0.1...v1.1.0) (2025-10-22)
 
 ### Features
