@@ -58,7 +58,7 @@ describe('McpServer handleError', () => {
     expect(logger.error).toHaveBeenCalledWith(
       expect.objectContaining({
         event: 'mcp.server.error',
-        correlationId: expect.any(String),
+        traceId: expect.any(String),
         context: 'unit-test',
         error: expect.objectContaining({ message: 'boom' }),
       }),
@@ -75,7 +75,7 @@ describe('McpServer handleError', () => {
     expect(logger.error).toHaveBeenCalledWith(
       expect.objectContaining({
         event: 'mcp.server.error',
-        correlationId: expect.any(String),
+        traceId: expect.any(String),
         error: expect.objectContaining({ message: 'string-failure' }),
       }),
       'string-failure',

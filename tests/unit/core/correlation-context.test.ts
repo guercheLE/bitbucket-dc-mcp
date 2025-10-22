@@ -22,8 +22,8 @@ import {
   createCorrelationContext,
   generateCorrelationId,
   getCorrelationContext,
-  getCorrelationId,
   getElapsedTime,
+  getTraceId,
   runSyncWithCorrelationContext,
   runWithCorrelationContext,
 } from '../../../src/core/correlation-context.js';
@@ -50,7 +50,7 @@ describe('CorrelationContext', () => {
     it('should create context with required fields', () => {
       const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0');
 
-      expect(context.correlationId).toBeDefined();
+      expect(context.traceId).toBeDefined();
       expect(context.service).toBe('bitbucket-dc-mcp');
       expect(context.version).toBe('1.0.0');
       expect(context.startTime).toBeGreaterThan(0);
@@ -78,7 +78,7 @@ describe('CorrelationContext', () => {
       const ctx1 = createCorrelationContext('bitbucket-dc-mcp', '1.0.0');
       const ctx2 = createCorrelationContext('bitbucket-dc-mcp', '1.0.0');
 
-      expect(ctx1.correlationId).not.toBe(ctx2.correlationId);
+      expect(ctx1.traceId).not.toBe(ctx2.traceId);
     });
   });
 
@@ -178,18 +178,18 @@ describe('CorrelationContext', () => {
     });
   });
 
-  describe('getCorrelationId', () => {
-    it('should return correlation ID when context is set', async () => {
+  describe('getTraceId', () => {
+    it('should return trace ID when context is set', async () => {
       const context = createCorrelationContext('bitbucket-dc-mcp', '1.0.0');
 
       await runWithCorrelationContext(context, async () => {
-        const id = getCorrelationId();
-        expect(id).toBe(context.correlationId);
+        const id = getTraceId();
+        expect(id).toBe(context.traceId);
       });
     });
 
     it('should return default when no context is set', () => {
-      const id = getCorrelationId();
+      const id = getTraceId();
       expect(id).toBe('no-trace-id');
     });
   });

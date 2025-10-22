@@ -130,7 +130,7 @@ describe('CallIdTool - Audit Logging', () => {
         token_type: 'pat',
         user_id: 'test-user@example.com',
       });
-      expect(auditLog.correlationId).toBeDefined();
+      expect(auditLog.traceId).toBeDefined();
       expect(auditLog.parameters).toBeDefined();
       expect(auditLog.timestamp).toBeDefined();
     });
@@ -263,9 +263,9 @@ describe('CallIdTool - Audit Logging', () => {
       const auditLog = logs.find((log: any) => log.msg?.includes('Mutation audit trail'));
 
       expect(auditLog).toBeDefined();
-      expect(auditLog.correlationId).toBeDefined();
-      expect(typeof auditLog.correlationId).toBe('string');
-      expect(auditLog.correlationId.length).toBeGreaterThan(0);
+      expect(auditLog.traceId).toBeDefined();
+      expect(typeof auditLog.traceId).toBe('string');
+      expect(auditLog.traceId.length).toBeGreaterThan(0);
     });
 
     it('should include Bitbucket URL in audit logs', async () => {
