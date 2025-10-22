@@ -464,16 +464,92 @@ export function extractOperations(spec: OpenAPIDocument): Operation[] {
             ]>;
 
             for (const [status, response] of responseEntries) {
-                if (!response || isReferenceObject(response)) {
+                if (!response) {
                     continue;
                 }
-                responses[status] = response;
+                if (isReferenceObject(response)) {
+                    // Resolve reference for responses
+                    try {
+                        const resolved = resolveReference(response.$ref, spec, 0, new Set<string>());
+                        if (resolved) {
+                            // Convert resolved schema to ResponseObject
+                            responses[status] = {
+                                description: `Resolved from ${response.$ref}`,
+                                content: {
+                                    'application/json': {
+                                        schema: resolved
+                                    }
+                                }
+                            };
+                        }
+                    } catch (error) {
+                        console.warn(`Failed to resolve response reference ${response.$ref}:`, error);
+                    }
+                } else {
+                    // Resolve refs within the response content schemas
+                    const responseObj = response as ResponseObject;
+                    if (responseObj.content) {
+                        for (const [contentType, mediaType] of Object.entries(responseObj.content)) {
+                            if (mediaType.schema) {
+                                try {
+                                    responseObj.content[contentType].schema = resolveSchema(
+                                        mediaType.schema,
+                                        spec,
+                                        0,
+                                        new Set<string>()
+                                    );
+                                } catch (error) {
+                                    // Ignore errors, keep original schema
+                                }
+                            }
+                        }
+                    }
+                    responses[status] = responseObj;
+                }
             }
 
-            const requestBody =
-                operation.requestBody && !isReferenceObject(operation.requestBody)
-                    ? (operation.requestBody as RequestBodyObject)
-                    : undefined;
+            let requestBody: RequestBodyObject | undefined;
+            if (operation.requestBody) {
+                if (isReferenceObject(operation.requestBody)) {
+                    // Resolve reference for request body
+                    try {
+                        const resolved = resolveReference(operation.requestBody.$ref, spec, 0, new Set<string>());
+                        if (resolved) {
+                            // Convert resolved schema to RequestBodyObject
+                            requestBody = {
+                                description: `Resolved from ${operation.requestBody.$ref}`,
+                                content: {
+                                    'application/json': {
+                                        schema: resolved
+                                    }
+                                }
+                            };
+                        }
+                    } catch (error) {
+                        console.warn(`Failed to resolve request body reference ${operation.requestBody.$ref}:`, error);
+                    }
+                } else {
+                    // Resolve refs within the request body content schemas
+                    const requestBodyObj = operation.requestBody as RequestBodyObject;
+                    if (requestBodyObj.content) {
+                        for (const [contentType, mediaType] of Object.entries(requestBodyObj.content)) {
+                            if (mediaType.schema) {
+                                try {
+                                    requestBodyObj.content[contentType].schema = resolveSchema(
+                                        mediaType.schema,
+                                        spec,
+                                        0,
+                                        new Set<string>()
+                                    );
+                                } catch (error) {
+                                    // Ignore errors, keep original schema
+                                }
+                            }
+                        }
+                    }
+                    requestBody = requestBodyObj;
+                }
+            }
 
             // Normalize path: prepend /rest/ if not already present
             // OpenAPI specs have paths like /api/2/issue or /agile/1.0/board
@@ -509,7 +585,9 @@ function resolveReference(
     }
 
     const schemaName = match[1];
-    if (depth > 0 || seen.has(schemaName)) {
+    
+    // Prevent circular references
+    if (seen.has(schemaName)) {
         return spec.components?.schemas?.[schemaName] as SchemaObject;
     }
 
@@ -520,6 +598,22 @@ function resolveReference(
 
     seen.add(schemaName);
     return resolveSchema(target, spec, depth + 1, seen);
+}
+
+function hasCircularRef(schemaOrRef: unknown, seen: Set<string>): boolean {
+    if (!schemaOrRef || typeof schemaOrRef !== 'object') {
+        return false;
+    }
+    
+    if ('$ref' in schemaOrRef) {
+        const ref = (schemaOrRef as ReferenceObject).$ref;
+        const match = ref.match(/^#\/components\/schemas\/(.+)$/);
+        if (match && seen.has(match[1])) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 function resolveSchema(
@@ -544,49 +638,108 @@ function resolveSchema(
     if (schema.properties) {
         const resolvedProperties: Record<string, SchemaObject> = {};
         for (const [key, propertySchema] of Object.entries(schema.properties)) {
-            resolvedProperties[key] = resolveSchema(
-                propertySchema as SchemaObject | ReferenceObject,
-                spec,
-                depth + 1,
-                seen,
-            );
+            // Skip properties with circular references
+            if (hasCircularRef(propertySchema, seen)) {
+                continue;
+            }
+            try {
+                resolvedProperties[key] = resolveSchema(
+                    propertySchema as SchemaObject | ReferenceObject,
+                    spec,
+                    depth + 1,
+                    seen,
+                );
+            } catch (error) {
+                // Skip properties that fail to resolve (likely circular)
+                continue;
+            }
         }
         schema.properties = resolvedProperties;
     }
 
     if (schema.items) {
-        schema.items = resolveSchema(schema.items as SchemaObject | ReferenceObject, spec, depth + 1, seen);
+        // Skip items with circular references
+        if (!hasCircularRef(schema.items, seen)) {
+            try {
+                schema.items = resolveSchema(schema.items as SchemaObject | ReferenceObject, spec, depth + 1, seen);
+            } catch (error) {
+                // Remove items if they can't be resolved (likely circular)
+                delete schema.items;
+            }
+        } else {
+            delete schema.items;
+        }
     }
 
     if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
-        schema.additionalProperties = resolveSchema(
-            schema.additionalProperties as SchemaObject | ReferenceObject,
-            spec,
-            depth + 1,
-            seen,
-        );
+        if (!hasCircularRef(schema.additionalProperties, seen)) {
+            try {
+                schema.additionalProperties = resolveSchema(
+                    schema.additionalProperties as SchemaObject | ReferenceObject,
+                    spec,
+                    depth + 1,
+                    seen,
+                );
+            } catch (error) {
+                delete schema.additionalProperties;
+            }
+        } else {
+            delete schema.additionalProperties;
+        }
     }
 
     if (schema.allOf) {
-        schema.allOf = schema.allOf.map((item: SchemaObject | ReferenceObject) =>
-            resolveSchema(item, spec, depth + 1, seen),
-        );
+        const resolvedAllOf = [];
+        for (const item of schema.allOf) {
+            if (!hasCircularRef(item, seen)) {
+                try {
+                    resolvedAllOf.push(resolveSchema(item as SchemaObject | ReferenceObject, spec, depth + 1, seen));
+                } catch (error) {
+                    // Skip items that fail
+                }
+            }
+        }
+        schema.allOf = resolvedAllOf.length > 0 ? resolvedAllOf : undefined;
     }
 
     if (schema.anyOf) {
-        schema.anyOf = schema.anyOf.map((item: SchemaObject | ReferenceObject) =>
-            resolveSchema(item, spec, depth + 1, seen),
-        );
+        const resolvedAnyOf = [];
+        for (const item of schema.anyOf) {
+            if (!hasCircularRef(item, seen)) {
+                try {
+                    resolvedAnyOf.push(resolveSchema(item as SchemaObject | ReferenceObject, spec, depth + 1, seen));
+                } catch (error) {
+                    // Skip items that fail
+                }
+            }
+        }
+        schema.anyOf = resolvedAnyOf.length > 0 ? resolvedAnyOf : undefined;
     }
 
     if (schema.oneOf) {
-        schema.oneOf = schema.oneOf.map((item: SchemaObject | ReferenceObject) =>
-            resolveSchema(item, spec, depth + 1, seen),
-        );
+        const resolvedOneOf = [];
+        for (const item of schema.oneOf) {
+            if (!hasCircularRef(item, seen)) {
+                try {
+                    resolvedOneOf.push(resolveSchema(item as SchemaObject | ReferenceObject, spec, depth + 1, seen));
+                } catch (error) {
+                    // Skip items that fail
+                }
+            }
+        }
+        schema.oneOf = resolvedOneOf.length > 0 ? resolvedOneOf : undefined;
     }
 
     if (schema.not) {
-        schema.not = resolveSchema(schema.not as SchemaObject | ReferenceObject, spec, depth + 1, seen);
+        if (!hasCircularRef(schema.not, seen)) {
+            try {
+                schema.not = resolveSchema(schema.not as SchemaObject | ReferenceObject, spec, depth + 1, seen);
+            } catch (error) {
+                delete schema.not;
+            }
+        } else {
+            delete schema.not;
+        }
     }
 
     return schema;

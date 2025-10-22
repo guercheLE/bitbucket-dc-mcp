@@ -469,6 +469,11 @@ export class BitbucketClientService {
 
     const paramsObj = params as Record<string, unknown>;
 
+    // For comment operations, handle text parameter specially
+    if (paramsObj.text !== undefined) {
+      return JSON.stringify({ text: paramsObj.text });
+    }
+
     // Use 'fields' or 'body' property if present
     const bodyContent = paramsObj.fields ?? paramsObj.body ?? params;
 
