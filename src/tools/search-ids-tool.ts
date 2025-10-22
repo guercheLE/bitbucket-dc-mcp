@@ -139,7 +139,7 @@ export class SearchIdsTool {
           {
             event: 'search_ids.degraded_mode',
             component: 'EmbeddingsRepository',
-            correlation_id: correlationId,
+            correlationId: correlationId,
           },
           'search_ids called in degraded mode',
         );
@@ -161,7 +161,7 @@ export class SearchIdsTool {
       this.logger.error(
         {
           event: 'search_ids.validation_error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           input,
           error: String(error),
         },
@@ -179,7 +179,7 @@ export class SearchIdsTool {
     this.logger.info(
       {
         event: 'search_ids.start',
-        correlation_id: correlationId,
+        correlationId: correlationId,
         tool_name: 'search_ids',
         query,
         limit,
@@ -212,7 +212,7 @@ export class SearchIdsTool {
       this.logger.info(
         {
           event: 'search_ids.success',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'search_ids',
           query,
           results_count: operations.length,
@@ -232,7 +232,7 @@ export class SearchIdsTool {
       this.logger.error(
         {
           event: 'search_ids.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'search_ids',
           query,
           limit,

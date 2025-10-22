@@ -317,7 +317,7 @@ export class GetIdTool {
       this.logger.error(
         {
           event: 'get_id.validation_error',
-          correlation_id: correlationId,
+          correlationId,
           input,
           error: String(error),
         },
@@ -332,7 +332,7 @@ export class GetIdTool {
     this.logger.info(
       {
         event: 'get_id.start',
-        correlation_id: correlationId,
+        correlationId,
         tool_name: 'get_id',
         operation_id,
       },
@@ -347,7 +347,7 @@ export class GetIdTool {
       this.logger.info(
         {
           event: 'get_id.success',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'get_id',
           operation_id,
           cache_hit: true,
@@ -361,7 +361,7 @@ export class GetIdTool {
     this.logger.debug(
       {
         event: 'get_id.cache_miss',
-        correlation_id: correlationId,
+        correlationId: correlationId,
         operation_id,
       },
       'Cache miss, querying repository',
@@ -383,7 +383,7 @@ export class GetIdTool {
           this.logger.warn(
             {
               event: 'get_id.fallback_used',
-              correlation_id: correlationId,
+              correlationId: correlationId,
               operation_id,
             },
             'Using fallback schema, embeddings DB unavailable',
@@ -397,7 +397,7 @@ export class GetIdTool {
         this.logger.warn(
           {
             event: 'get_id.not_found',
-            correlation_id: correlationId,
+            correlationId: correlationId,
             tool_name: 'get_id',
             operation_id,
             latency_ms: latencyMs,
@@ -425,7 +425,7 @@ export class GetIdTool {
       this.logger.info(
         {
           event: 'get_id.success',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'get_id',
           operation_id,
           cache_hit: false,
@@ -450,7 +450,7 @@ export class GetIdTool {
       this.logger.error(
         {
           event: 'get_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'get_id',
           operation_id,
           error_message: errorMessage,

@@ -25,11 +25,6 @@ import type { AuthManager } from '../auth/auth-manager.js';
 import { QueryCache } from '../core/cache-manager.js';
 import type { ComponentRegistry } from '../core/component-registry.js';
 import type { AppConfig } from '../core/config-manager.js';
-import {
-  createCorrelationContext,
-  getElapsedTime,
-  runWithCorrelationContext,
-} from '../core/correlation-context.js';
 import type { McpServer } from '../core/mcp-server.js';
 import type { BitbucketClientService } from '../services/bitbucket-client.js';
 import type { SemanticSearchService } from '../services/semantic-search.js';
@@ -37,6 +32,7 @@ import { CallIdInputSchema, CallIdTool } from './call-id-tool.js';
 import type { GetIdOutput, OperationsRepository } from './get-id-tool.js';
 import { GetIdInputSchema, GetIdTool } from './get-id-tool.js';
 import { SearchIdsInputSchema, SearchIdsTool } from './search-ids-tool.js';
+import { ToolExecutor } from './tool-executor.js';
 
 const require = createRequire(import.meta.url);
 const packageInfo = require('../../package.json') as { version?: string };
@@ -161,6 +157,13 @@ export async function registerTools(
     return toolsList;
   });
 
+  // Initialize tool executor following Dependency Inversion Principle
+  const toolExecutor = new ToolExecutor({
+    serviceName: 'bitbucket-dc-mcp',
+    serviceVersion: packageInfo.version ?? '1.0.0',
+    logger,
+  });
+
   // Register tools/call handler
   logger.debug(
     { event: 'tools.registering_call_handler' },
@@ -176,173 +179,49 @@ export async function registerTools(
     }> => {
       const { name, arguments: args } = request.params;
 
-      // Create correlation context for this request
-      const serviceVersion = packageInfo.version ?? '1.0.0';
-      const correlationContext = createCorrelationContext('bitbucket-dc-mcp', serviceVersion, name);
-      const requestLogger = logger.child({
-        correlation_id: correlationContext.correlationId,
-        tool_name: name,
-      });
-
-      return runWithCorrelationContext(correlationContext, async () => {
-        requestLogger.info(
-          { event: 'tool.invocation', args_keys: args ? Object.keys(args) : [] },
-          'Tool invoked',
-        );
-
-        if (name === 'search_ids') {
-          if (!searchIdsTool) {
-            requestLogger.warn({ event: 'tool.unavailable' }, 'Semantic search unavailable');
-            return {
-              content: [
-                {
-                  type: 'text' as const,
-                  text: JSON.stringify(
-                    {
-                      error:
-                        'Semantic search unavailable. Embeddings database not initialized. Please use get_id with known operation IDs.',
-                    },
-                    null,
-                    2,
-                  ),
-                },
-              ],
-              isError: true,
-            };
-          }
-
-          try {
-            const result = await searchIdsTool.execute(args);
-            const latencyMs = getElapsedTime();
-            requestLogger.info(
+      // Delegate execution to ToolExecutor (Single Responsibility Principle)
+      if (name === 'search_ids') {
+        if (!searchIdsTool) {
+          return {
+            content: [
               {
-                event: 'tool.success',
-                results_count: result.operations?.length ?? 0,
-                latency_ms: latencyMs,
+                type: 'text' as const,
+                text: JSON.stringify(
+                  {
+                    error:
+                      'Semantic search unavailable. Embeddings database not initialized. Please use get_id with known operation IDs.',
+                  },
+                  null,
+                  2,
+                ),
               },
-              'Tool executed successfully',
-            );
-            return {
-              content: [
-                {
-                  type: 'text' as const,
-                  text: JSON.stringify(result, null, 2),
-                },
-              ],
-            };
-          } catch (error) {
-            const latencyMs = getElapsedTime();
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            requestLogger.error(
-              {
-                event: 'tool.error',
-                error_type: error instanceof Error ? error.name : 'Unknown',
-                error_message: errorMessage,
-                latency_ms: latencyMs,
-              },
-              'Tool execution failed',
-            );
-            return {
-              content: [
-                {
-                  type: 'text' as const,
-                  text: JSON.stringify({ error: errorMessage }, null, 2),
-                },
-              ],
-              isError: true,
-            };
-          }
+            ],
+            isError: true,
+          };
         }
 
-        if (name === 'get_id') {
-          const startTime = Date.now();
-          try {
-            const result = await getIdTool.execute(args);
-            const latencyMs = Date.now() - startTime;
-            const operationId =
-              args && typeof args === 'object' && 'operation_id' in args
-                ? String(args.operation_id)
-                : 'unknown';
-            requestLogger.info(
-              { event: 'tool.success', operation_id: operationId, latency_ms: latencyMs },
-              'Tool executed successfully',
-            );
-            return {
-              content: [
-                {
-                  type: 'text' as const,
-                  text: JSON.stringify(result, null, 2),
-                },
-              ],
-            };
-          } catch (error) {
-            const latencyMs = Date.now() - startTime;
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            requestLogger.error(
-              {
-                event: 'tool.error',
-                error_type: error instanceof Error ? error.name : 'Unknown',
-                error_message: errorMessage,
-                latency_ms: latencyMs,
-              },
-              'Tool execution failed',
-            );
-            return {
-              content: [
-                {
-                  type: 'text' as const,
-                  text: JSON.stringify({ error: errorMessage }, null, 2),
-                },
-              ],
-              isError: true,
-            };
-          }
-        }
+        return toolExecutor.executeWithContext('search_ids', args, searchIdsTool, {
+          results_count:
+            args && typeof args === 'object' && 'query' in args ? undefined : undefined,
+        });
+      }
 
-        if (name === 'call_id') {
-          // call_id tool handles its own error handling and logging internally
-          try {
-            const result = await callIdTool.execute(args);
-            const latencyMs = getElapsedTime();
-            requestLogger.info(
-              { event: 'tool.success', latency_ms: latencyMs },
-              'Tool executed successfully',
-            );
-            return result;
-          } catch (error) {
-            const latencyMs = getElapsedTime();
-            // Unexpected errors that weren't caught by the tool
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            requestLogger.error(
-              {
-                event: 'tool.unexpected_error',
-                error_type: error instanceof Error ? error.name : 'Unknown',
-                error_message: errorMessage,
-                latency_ms: latencyMs,
-              },
-              'Tool unexpected error',
-            );
-            return {
-              content: [
-                {
-                  type: 'text' as const,
-                  text: JSON.stringify(
-                    {
-                      error: 'UnexpectedError',
-                      message: `Unexpected error: ${errorMessage}`,
-                    },
-                    null,
-                    2,
-                  ),
-                },
-              ],
-              isError: true,
-            };
-          }
-        }
+      if (name === 'get_id') {
+        const operationId =
+          args && typeof args === 'object' && 'operation_id' in args
+            ? String(args.operation_id)
+            : 'unknown';
+        return toolExecutor.executeWithContext('get_id', args, getIdTool, {
+          operation_id: operationId,
+        });
+      }
 
-        throw new Error(`Unknown tool: ${name}`);
-      });
+      if (name === 'call_id') {
+        // call_id tool handles its own response formatting
+        return toolExecutor.executeWithCustomResponse('call_id', args, callIdTool);
+      }
+
+      throw new Error(`Unknown tool: ${name}`);
     },
   );
 

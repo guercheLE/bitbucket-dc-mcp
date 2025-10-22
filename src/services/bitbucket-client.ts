@@ -345,7 +345,7 @@ export class BitbucketClientService {
         this.logger.error(
           {
             event: 'bitbucket_client.timeout',
-            correlation_id: correlationId,
+            correlationId: correlationId,
             error_type: 'TimeoutError',
             error_message: `Request timed out after ${timeoutMs}ms`,
             operation_id: operationId,
@@ -365,7 +365,7 @@ export class BitbucketClientService {
         this.logger.error(
           {
             event: 'bitbucket_client.abort',
-            correlation_id: correlationId,
+            correlationId: correlationId,
             error_type: 'TimeoutError',
             error_message: `Request aborted (timeout after ${timeoutMs}ms)`,
             operation_id: operationId,
@@ -387,7 +387,7 @@ export class BitbucketClientService {
       this.logger.error(
         {
           event: 'bitbucket_client.unexpected_error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           error_type: errorType,
           error_message: errorMessage,
           stack_trace: stack,
@@ -506,7 +506,7 @@ export class BitbucketClientService {
     this.logger.error(
       {
         event: 'bitbucket_client.error_response',
-        correlation_id: correlationId,
+        correlationId: correlationId,
         error_type: this.getErrorTypeName(statusCode),
         error_message: errorMessage,
         status_code: statusCode,

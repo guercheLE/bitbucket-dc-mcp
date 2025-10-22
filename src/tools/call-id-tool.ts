@@ -195,7 +195,7 @@ export class CallIdTool {
           this.logger.error(
             {
               event: 'call_id.component_unavailable',
-              correlation_id: correlationId,
+              correlationId: correlationId,
               component: 'BitbucketClientService',
             },
             'Bitbucket API unavailable',
@@ -211,7 +211,7 @@ export class CallIdTool {
           this.logger.error(
             {
               event: 'call_id.component_unavailable',
-              correlation_id: correlationId,
+              correlationId: correlationId,
               component: 'AuthManager',
             },
             'Authentication unavailable',
@@ -232,7 +232,7 @@ export class CallIdTool {
           this.logger.info(
             {
               event: 'call_id.degraded_mode',
-              correlation_id: correlationId,
+              correlationId: correlationId,
               operation_id: 'pending',
               degraded_components: degradedComponents,
             },
@@ -249,7 +249,7 @@ export class CallIdTool {
       this.logger.info(
         {
           event: 'call_id.execution_start',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           operation_id,
           timestamp: new Date().toISOString(),
@@ -265,7 +265,7 @@ export class CallIdTool {
         this.logger.warn(
           {
             event: 'call_id.validation_failed',
-            correlation_id: correlationId,
+            correlationId: correlationId,
             tool_name: 'call_id',
             operation_id,
             latency_ms: latency,
@@ -314,7 +314,7 @@ export class CallIdTool {
       this.logger.info(
         {
           event: 'call_id.execution_success',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           operation_id,
           method: operation?.method,
@@ -401,7 +401,7 @@ export class CallIdTool {
         {
           event: 'call_id.mutation_audit',
           audit_type: 'mutation',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           operation_id: operationId,
           bitbucket_url: bitbucketUrl,
           method,
@@ -506,7 +506,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           error_type: 'ValidationError',
           status_code: error.statusCode,
@@ -527,7 +527,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           error_type: 'AuthError',
           status_code: error.statusCode,
@@ -547,7 +547,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           error_type: 'NotFoundError',
           status_code: error.statusCode,
@@ -567,7 +567,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           error_type: 'RateLimitError',
           status_code: error.statusCode,
@@ -591,7 +591,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           error_type: 'TimeoutError',
           operation_id: error.operationId,
@@ -609,7 +609,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           error_type: 'ServerError',
           status_code: error.statusCode,
@@ -629,7 +629,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           error_type: 'BitbucketClientError',
           status_code: error.statusCode,
@@ -652,7 +652,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlation_id: correlationId,
+          correlationId: correlationId,
           tool_name: 'call_id',
           error_type: errorType,
           latency_ms: latency,
