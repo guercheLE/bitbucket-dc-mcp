@@ -359,8 +359,9 @@ async function getSchema(operationId: string): Promise<z.ZodSchema | null> {
   if (operation.requestBody?.content?.['application/json']?.schema) {
     const bodySchema = operation.requestBody.content['application/json'].schema;
 
-    // If body is an object, merge its properties into the root
-    if (bodySchema.type === 'object' && bodySchema.properties) {
+    // If body has properties, merge them into the root
+    // Note: Some schemas don't have type='object' but still have properties
+    if (bodySchema.properties) {
       for (const [key, propSchema] of Object.entries(bodySchema.properties)) {
         let propZodSchema = convertSchemaToZod(propSchema);
 
