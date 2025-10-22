@@ -18,6 +18,7 @@ Working with Bitbucket's REST API requires knowing exact endpoint names, HTTP me
 - **Zero-Config Setup**: Interactive 5-minute wizard handles authentication, credentials, and database setup
 - **Production-Ready**: Circuit breakers, rate limiting, retry logic, and secure credential storage (OS keychains)
 - **Multi-Auth Support**: OAuth 2.0, Personal Access Tokens, OAuth 1.0a, or Basic Auth
+- **Security-First**: Automatic data sanitization in logs, sensitive information redaction, and structured logging
 
 Perfect for teams building AI assistants, automation workflows, or LLM integrations with Bitbucket Data Center.
 

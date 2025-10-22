@@ -23,6 +23,7 @@ import type { QueryCache } from '../core/cache-manager.js';
 import type { ComponentRegistry } from '../core/component-registry.js';
 import { getTraceId } from '../core/correlation-context.js';
 import { Logger } from '../core/logger.js';
+import { sanitizeParams } from '../core/sanitizer.js';
 import { SchemaResolver, type ISchemaResolver } from '../data/schema-resolver.js';
 
 /**
@@ -318,7 +319,7 @@ export class GetIdTool {
         {
           event: 'get_id.validation_error',
           traceId,
-          input,
+          input: sanitizeParams(input),
           error: String(error),
         },
         'Input validation failed',
@@ -334,7 +335,7 @@ export class GetIdTool {
         event: 'get_id.start',
         traceId,
         tool_name: 'get_id',
-        operation_id,
+        operation_id: sanitizeParams(operation_id),
       },
       'Retrieving operation details',
     );

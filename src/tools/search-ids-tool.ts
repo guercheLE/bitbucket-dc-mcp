@@ -23,6 +23,7 @@ import type { ComponentRegistry } from '../core/component-registry.js';
 import { getTraceId } from '../core/correlation-context.js';
 import { DegradedModeError } from '../core/errors.js';
 import { Logger } from '../core/logger.js';
+import { sanitizeParams } from '../core/sanitizer.js';
 import type { SemanticSearchService } from '../services/semantic-search.js';
 
 const SEARCH_TIMEOUT_MS = 5000;
@@ -162,7 +163,7 @@ export class SearchIdsTool {
         {
           event: 'search_ids.validation_error',
           traceId: traceId,
-          input,
+          input: sanitizeParams(input),
           error: String(error),
         },
         'Input validation failed',
@@ -181,7 +182,7 @@ export class SearchIdsTool {
         event: 'search_ids.start',
         traceId: traceId,
         tool_name: 'search_ids',
-        query,
+        query: sanitizeParams(query),
         limit,
       },
       'Starting semantic search for operations',
@@ -234,7 +235,7 @@ export class SearchIdsTool {
           event: 'search_ids.error',
           traceId: traceId,
           tool_name: 'search_ids',
-          query,
+          query: sanitizeParams(query),
           limit,
           error_message: errorMessage,
           stack: errorStack,

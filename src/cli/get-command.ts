@@ -29,6 +29,8 @@ import Table from 'cli-table3';
 import { existsSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { Logger } from '../core/logger.js';
+import { sanitizeParams } from '../core/sanitizer.js';
 
 interface GetOptions {
   json?: boolean;
@@ -225,6 +227,20 @@ function generateExample(schema: unknown): unknown {
  * Execute get command to retrieve operation details
  */
 export async function getCommand(operationId: string, options: GetOptions): Promise<void> {
+  const logger = Logger.getInstance();
+  const startTime = Date.now();
+
+  // Log command start
+  logger.info(
+    {
+      event: 'cli.get.start',
+      operation_id: sanitizeParams(operationId),
+      verbose: options.verbose,
+      json: options.json,
+    },
+    'Starting CLI get command',
+  );
+
   try {
     // Check if operations.json exists
     const packageRoot = getPackageRoot();
@@ -253,6 +269,17 @@ export async function getCommand(operationId: string, options: GetOptions): Prom
     // Load schemas for reference resolution
     const schemas = loadSchemas();
 
+    // Log successful completion
+    const latency = Date.now() - startTime;
+    logger.info(
+      {
+        event: 'cli.get.success',
+        operation_id: sanitizeParams(operationId),
+        latency_ms: latency,
+      },
+      'CLI get command completed successfully',
+    );
+
     // Output results
     if (options.json) {
       console.log(JSON.stringify(operation, null, 2));
@@ -260,6 +287,18 @@ export async function getCommand(operationId: string, options: GetOptions): Prom
       displayOperationDetails(operation, options.verbose || false, schemas);
     }
   } catch (error) {
+    // Log error
+    const latency = Date.now() - startTime;
+    logger.error(
+      {
+        event: 'cli.get.error',
+        operation_id: sanitizeParams(operationId),
+        error: error instanceof Error ? error.message : String(error),
+        latency_ms: latency,
+      },
+      'CLI get command failed',
+    );
+
     throw new Error(
       `Failed to retrieve operation: ${error instanceof Error ? error.message : 'Unknown error'}`,
     );

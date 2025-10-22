@@ -220,6 +220,29 @@ Os seguintes campos são automaticamente censurados nos logs:
 - `credentials`
 - `apiKey`, `api_key`
 - `secret`
+- `client_secret`
+- `privateKey`, `private_key`
+- `sessionToken`, `session_token`
+
+### Sanitização Automática
+
+O sistema implementa sanitização automática em múltiplas camadas:
+
+#### 1. **MCP Tools (search_ids, get_id, call_id)**
+- Todos os inputs são sanitizados antes do logging
+- Parâmetros de operação são redacted
+- Queries de busca são sanitizadas
+
+#### 2. **CLI Commands (search, get, call)**
+- Logging estruturado com sanitização
+- Parâmetros de comando são redacted
+- Operação IDs são sanitizados
+
+#### 3. **HTTP Client (Bitbucket API)**
+- Headers de autenticação são redacted (`Authorization: Bearer ***`)
+- URLs são sanitizadas
+- Body de requisições não é logado
+- Response body não é logado
 
 **Exemplo:**
 ```json
@@ -227,7 +250,9 @@ Os seguintes campos são automaticamente censurados nos logs:
   "level": "info",
   "msg": "User authenticated",
   "password": "***",  // Censurado
-  "token": "***"      // Censurado
+  "token": "***",     // Censurado
+  "query": "***",     // Censurado
+  "operation_id": "***"  // Censurado
 }
 ```
 

@@ -20,6 +20,13 @@
 - **Password Policy:** N/A (não gerenciamos passwords, apenas armazenamos para Basic auth se configurado). Recommend OAuth2/PAT sobre Basic.
 - **OAuth 2.0 Security:** PKCE (Proof Key for Code Exchange) para prevent authorization code interception. State parameter para CSRF protection.
 
+**Logging Security:**
+- **Input Sanitization:** Todos os inputs de usuário são sanitizados antes do logging usando `sanitizeParams()`
+- **Sensitive Data Redaction:** Campos sensíveis são automaticamente redacted nos logs (tokens, passwords, API keys)
+- **Structured Logging:** Logging estruturado com contexto de correlação para auditoria
+- **HTTP Request Logging:** Headers de autenticação são redacted, body de requisições não é logado
+- **CLI Command Logging:** Parâmetros de comando são sanitizados antes do logging
+
 ### Performance Optimization
 
 **Frontend Performance:**

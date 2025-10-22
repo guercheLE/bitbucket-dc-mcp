@@ -27,6 +27,8 @@
 import chalk from 'chalk';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { Logger } from '../core/logger.js';
+import { sanitizeParams } from '../core/sanitizer.js';
 
 interface CallOptions {
   param?: string[];
@@ -49,8 +51,23 @@ function getPackageRoot(): string {
  * Execute call command
  */
 export async function callCommand(operationId: string, options: CallOptions): Promise<void> {
+  const logger = Logger.getInstance();
+  const startTime = Date.now();
+
   // Parse parameters from --param flags
   const parameters = parseParameters(options.param || []);
+
+  // Log command start
+  logger.info(
+    {
+      event: 'cli.call.start',
+      operation_id: sanitizeParams(operationId),
+      parameters: sanitizeParams(parameters),
+      dry_run: options.dryRun,
+      json: options.json,
+    },
+    'Starting CLI call command',
+  );
 
   if (options.dryRun) {
     console.log(chalk.blue('\n🔍 Dry run mode - validating parameters only\n'));
@@ -102,6 +119,17 @@ export async function callCommand(operationId: string, options: CallOptions): Pr
     console.log(chalk.green('✅ Parameters validated'));
 
     if (options.dryRun) {
+      // Log dry run completion
+      const latency = Date.now() - startTime;
+      logger.info(
+        {
+          event: 'cli.call.dry_run_success',
+          operation_id: sanitizeParams(operationId),
+          latency_ms: latency,
+        },
+        'CLI call dry run completed successfully',
+      );
+
       console.log(chalk.blue('\n✓ Dry run complete - parameters are valid\n'));
       return;
     }
@@ -110,6 +138,17 @@ export async function callCommand(operationId: string, options: CallOptions): Pr
     console.log(chalk.blue('\n🚀 Executing operation...\n'));
 
     const result = await bitbucketClient.executeOperation(operationId, parameters);
+
+    // Log successful completion
+    const latency = Date.now() - startTime;
+    logger.info(
+      {
+        event: 'cli.call.success',
+        operation_id: sanitizeParams(operationId),
+        latency_ms: latency,
+      },
+      'CLI call command completed successfully',
+    );
 
     // Output result
     if (options.json) {
@@ -121,6 +160,18 @@ export async function callCommand(operationId: string, options: CallOptions): Pr
       console.log('');
     }
   } catch (error) {
+    // Log error
+    const latency = Date.now() - startTime;
+    logger.error(
+      {
+        event: 'cli.call.error',
+        operation_id: sanitizeParams(operationId),
+        error: error instanceof Error ? error.message : String(error),
+        latency_ms: latency,
+      },
+      'CLI call command failed',
+    );
+
     if (error instanceof Error && error.message.includes('config')) {
       console.error(chalk.red('\n❌ Configuration not found'));
       console.error(

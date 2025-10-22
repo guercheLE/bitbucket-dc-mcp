@@ -31,6 +31,8 @@ import { existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { load as loadVecExtension } from 'sqlite-vec';
 import { fileURLToPath } from 'url';
+import { Logger } from '../core/logger.js';
+import { sanitizeParams } from '../core/sanitizer.js';
 
 interface SearchOptions {
   limit?: string;
@@ -60,7 +62,21 @@ function getPackageRoot(): string {
  * Execute search command
  */
 export async function searchCommand(query: string, options: SearchOptions): Promise<void> {
+  const logger = Logger.getInstance();
+  const startTime = Date.now();
   const limit = parseInt(options.limit || '5', 10);
+
+  // Log command start
+  logger.info(
+    {
+      event: 'cli.search.start',
+      query: sanitizeParams(query),
+      limit,
+      verbose: options.verbose,
+      json: options.json,
+    },
+    'Starting CLI search command',
+  );
 
   // Check if embeddings database exists - use package root, not cwd
   const packageRoot = getPackageRoot();
@@ -107,6 +123,18 @@ export async function searchCommand(query: string, options: SearchOptions): Prom
     // Execute search
     const results = await searchService.search(query, limit);
 
+    // Log successful completion
+    const latency = Date.now() - startTime;
+    logger.info(
+      {
+        event: 'cli.search.success',
+        query: sanitizeParams(query),
+        results_count: results.length,
+        latency_ms: latency,
+      },
+      'CLI search completed successfully',
+    );
+
     // Output results
     if (options.json) {
       console.log(JSON.stringify(results, null, 2));
@@ -114,6 +142,18 @@ export async function searchCommand(query: string, options: SearchOptions): Prom
       displayResults(results, query, options.verbose || false);
     }
   } catch (error) {
+    // Log error
+    const latency = Date.now() - startTime;
+    logger.error(
+      {
+        event: 'cli.search.error',
+        query: sanitizeParams(query),
+        error: error instanceof Error ? error.message : String(error),
+        latency_ms: latency,
+      },
+      'CLI search failed',
+    );
+
     throw new Error(
       `Search execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
     );
