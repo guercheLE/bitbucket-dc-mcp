@@ -1,3 +1,9 @@
+## [1.5.1](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.5.0...v1.5.1) (2025-10-22)
+
+### Bug Fixes
+
+* validação Zod não incluía requestBody quando schema.type é null ([3b12dc5](https://github.com/guercheLE/bitbucket-dc-mcp/commit/3b12dc5b8ed022bfdd5c6bbaeedf8162f68535b0))
+
 ## [1.5.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.4.0...v1.5.0) (2025-10-22)
 
 ### Features
