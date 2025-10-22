@@ -18,7 +18,7 @@
  */
 
 import { existsSync, mkdirSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import process from 'node:process';
 import pino from 'pino';
 
@@ -31,6 +31,28 @@ export interface LogTransportConfig {
   rotation?: LogRotation;
   maxSize?: number; // In MB
   maxFiles?: number;
+  // Error-level log policies (separate file for errors)
+  errorLogPath?: string;
+  errorMaxSize?: number; // In MB
+  errorMaxFiles?: number;
+}
+
+/**
+ * Generate log filename with date prefix and PID suffix
+ * Format: YYYY-MM-DD-bitbucket-dc-mcp-PID.log or YYYY-MM-DD-bitbucket-dc-mcp-errors-PID.log
+ */
+function generateLogFilename(baseFilePath: string, isErrorLog = false): { dir: string; filename: string } {
+  const now = new Date();
+  const datePrefix = now.toISOString().split('T')[0]; // YYYY-MM-DD
+  const pid = process.pid;
+  
+  const dir = dirname(baseFilePath);
+  const ext = baseFilePath.endsWith('.log') ? '.log' : '';
+  const baseName = isErrorLog ? 'bitbucket-dc-mcp-errors' : 'bitbucket-dc-mcp';
+  
+  const filename = `${datePrefix}-${baseName}-${pid}${ext}`;
+  
+  return { dir, filename };
 }
 
 /**
@@ -40,8 +62,13 @@ export function getLogTransportConfig(): LogTransportConfig {
   const output = (process.env.LOG_OUTPUT ?? 'stdout') as LogOutput;
   const filePath = process.env.LOG_FILE_PATH ?? './logs/bitbucket-dc-mcp.log';
   const rotation = (process.env.LOG_ROTATION ?? 'daily') as LogRotation;
-  const maxSize = parseInt(process.env.LOG_MAX_SIZE ?? '100', 10);
-  const maxFiles = parseInt(process.env.LOG_MAX_FILES ?? '7', 10);
+  const maxSize = parseInt(process.env.LOG_MAX_SIZE ?? '50', 10);
+  const maxFiles = parseInt(process.env.LOG_MAX_FILES ?? '30', 10);
+
+  // Error log configuration (separate file with longer retention)
+  const errorLogPath = process.env.LOG_ERROR_FILE_PATH ?? './logs/bitbucket-dc-mcp-errors.log';
+  const errorMaxSize = parseInt(process.env.LOG_ERROR_MAX_SIZE ?? '100', 10);
+  const errorMaxFiles = parseInt(process.env.LOG_ERROR_MAX_FILES ?? '90', 10);
 
   return {
     output,
@@ -49,6 +76,9 @@ export function getLogTransportConfig(): LogTransportConfig {
     rotation,
     maxSize,
     maxFiles,
+    errorLogPath,
+    errorMaxSize,
+    errorMaxFiles,
   };
 }
 
@@ -58,11 +88,34 @@ export function getLogTransportConfig(): LogTransportConfig {
  * IMPORTANT: When running as an MCP server in stdio mode, logs MUST go to stderr
  * because stdout is reserved for JSON-RPC protocol messages. Writing logs to stdout
  * will break the MCP protocol communication with clients like Cursor or Claude Desktop.
+ *
+ * FILE ROTATION POLICIES:
+ * - ALL LOGS: Daily rotation, 50MB max, 30 files (~1 month)
+ * - ERROR LOGS: Separate file, 100MB max, 90 files (~3 months)
+ * - Filename format: YYYY-MM-DD-bitbucket-dc-mcp-PID.log
+ * - Error filename: YYYY-MM-DD-bitbucket-dc-mcp-errors-PID.log
+ *
+ * MULTI-INSTANCE SUPPORT:
+ * - Each process gets its own log files (PID in filename)
+ * - Even when LOG_OUTPUT=file, stderr remains active for real-time monitoring
+ * - Safe for multiple MCP server instances running simultaneously
+ *
+ * SEPARATE ERROR LOGS:
+ * - Error and fatal level logs go to separate file with longer retention
+ * - Helps with alerting, monitoring, and compliance requirements
  */
 export function createLogTransport(
   config: LogTransportConfig,
 ): pino.TransportMultiOptions | pino.TransportSingleOptions | undefined {
-  const { output, filePath } = config;
+  const { 
+    output, 
+    filePath, 
+    maxSize = 50, 
+    maxFiles = 30,
+    errorLogPath,
+    errorMaxSize = 100,
+    errorMaxFiles = 90,
+  } = config;
 
   if (output === 'stdout') {
     // MCP servers use stdout for JSON-RPC, so logs must go to stderr
@@ -75,48 +128,122 @@ export function createLogTransport(
   }
 
   if (output === 'file' && filePath) {
+    const { dir, filename } = generateLogFilename(filePath);
+    const fullPath = join(dir, filename);
+
     // Ensure log directory exists
-    const logDir = resolve(filePath, '..');
-    if (!existsSync(logDir)) {
-      mkdirSync(logDir, { recursive: true });
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
     }
 
-    // File transport with rotation
-    return {
-      target: 'pino/file',
-      options: {
-        destination: resolve(filePath),
-        mkdir: true,
+    // Build targets array
+    const targets: pino.TransportTargetOptions[] = [
+      {
+        target: 'pino/file',
+        level: 'trace',
+        options: {
+          destination: 2, // stderr (fd 2) - for real-time monitoring
+        },
       },
+      {
+        target: 'pino-roll',
+        level: 'trace',
+        options: {
+          file: resolve(fullPath),
+          frequency: 'daily', // Rotate daily
+          size: `${maxSize}m`, // Rotate at size limit (MB)
+          limit: { count: maxFiles }, // Keep max N files
+          mkdir: true,
+        },
+      },
+    ];
+
+    // Add separate error log transport if configured
+    if (errorLogPath) {
+      const { dir: errorDir, filename: errorFilename } = generateLogFilename(errorLogPath, true);
+      const errorFullPath = join(errorDir, errorFilename);
+
+      if (!existsSync(errorDir)) {
+        mkdirSync(errorDir, { recursive: true });
+      }
+
+      targets.push({
+        target: 'pino-roll',
+        level: 'error', // Only error and fatal
+        options: {
+          file: resolve(errorFullPath),
+          frequency: 'daily',
+          size: `${errorMaxSize}m`,
+          limit: { count: errorMaxFiles },
+          mkdir: true,
+        },
+      });
+    }
+
+    // Multiple transports: stderr + file with rotation + error file
+    // IMPORTANT: We always log to stderr even with LOG_OUTPUT=file
+    // This allows real-time monitoring while keeping persistent logs
+    return {
+      targets,
     };
   }
 
   if (output === 'both' && filePath) {
+    const { dir, filename } = generateLogFilename(filePath);
+    const fullPath = join(dir, filename);
+
     // Ensure log directory exists
-    const logDir = resolve(filePath, '..');
-    if (!existsSync(logDir)) {
-      mkdirSync(logDir, { recursive: true });
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
     }
 
-    // Multiple transports: stderr + file (NOT stdout, to preserve MCP protocol)
+    // Build targets array
+    const targets: pino.TransportTargetOptions[] = [
+      {
+        target: 'pino/file',
+        level: 'trace',
+        options: {
+          destination: 2, // stderr (fd 2) - required for MCP stdio mode
+        },
+      },
+      {
+        target: 'pino-roll',
+        level: 'trace',
+        options: {
+          file: resolve(fullPath),
+          frequency: 'daily', // Rotate daily
+          size: `${maxSize}m`, // Rotate at size limit (MB)
+          limit: { count: maxFiles }, // Keep max N files
+          mkdir: true,
+        },
+      },
+    ];
+
+    // Add separate error log transport if configured
+    if (errorLogPath) {
+      const { dir: errorDir, filename: errorFilename } = generateLogFilename(errorLogPath, true);
+      const errorFullPath = join(errorDir, errorFilename);
+
+      if (!existsSync(errorDir)) {
+        mkdirSync(errorDir, { recursive: true });
+      }
+
+      targets.push({
+        target: 'pino-roll',
+        level: 'error', // Only error and fatal
+        options: {
+          file: resolve(errorFullPath),
+          frequency: 'daily',
+          size: `${errorMaxSize}m`,
+          limit: { count: errorMaxFiles },
+          mkdir: true,
+        },
+      });
+    }
+
+    // Multiple transports: stderr + file with rotation + error file
     return {
-      targets: [
-        {
-          target: 'pino/file',
-          level: 'trace',
-          options: {
-            destination: 2, // stderr (fd 2) - required for MCP stdio mode
-          },
-        },
-        {
-          target: 'pino/file',
-          level: 'trace',
-          options: {
-            destination: resolve(filePath),
-            mkdir: true,
-          },
-        },
-      ],
+      targets,
     };
   }
 

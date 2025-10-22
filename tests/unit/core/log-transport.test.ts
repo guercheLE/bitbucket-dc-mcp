@@ -59,8 +59,11 @@ describe('LogTransport', () => {
       expect(config.output).toBe('stdout');
       expect(config.filePath).toBe('./logs/bitbucket-dc-mcp.log');
       expect(config.rotation).toBe('daily');
-      expect(config.maxSize).toBe(100);
-      expect(config.maxFiles).toBe(7);
+      expect(config.maxSize).toBe(50);
+      expect(config.maxFiles).toBe(30);
+      expect(config.errorLogPath).toBe('./logs/bitbucket-dc-mcp-errors.log');
+      expect(config.errorMaxSize).toBe(100);
+      expect(config.errorMaxFiles).toBe(90);
     });
 
     it('should read LOG_OUTPUT from environment', () => {
@@ -116,7 +119,10 @@ describe('LogTransport', () => {
 
       const transport = createLogTransport(config);
       expect(transport).toBeDefined();
-      expect(transport).toHaveProperty('target', 'pino/file');
+      expect(transport).toHaveProperty('targets');
+      expect((transport as any).targets).toHaveLength(2); // stderr + file (no error log without errorLogPath)
+      // Verify first target uses stderr (fd 2)
+      expect((transport as any).targets[0].options.destination).toBe(2);
     });
 
     it('should create multi-target transport for both output with stderr', () => {
@@ -128,9 +134,24 @@ describe('LogTransport', () => {
       const transport = createLogTransport(config);
       expect(transport).toBeDefined();
       expect(transport).toHaveProperty('targets');
-      expect((transport as any).targets).toHaveLength(2);
+      expect((transport as any).targets).toHaveLength(2); // stderr + file (no error log without errorLogPath)
       // Verify first target uses stderr (fd 2), not stdout (fd 1)
       expect((transport as any).targets[0].options.destination).toBe(2);
+    });
+
+    it('should create separate error log transport when errorLogPath is provided', () => {
+      const config: LogTransportConfig = {
+        output: 'file',
+        filePath: './logs/test.log',
+        errorLogPath: './logs/errors.log',
+      };
+
+      const transport = createLogTransport(config);
+      expect(transport).toBeDefined();
+      expect(transport).toHaveProperty('targets');
+      expect((transport as any).targets).toHaveLength(3); // stderr + file + error file
+      // Verify third target is for errors
+      expect((transport as any).targets[2].level).toBe('error');
     });
 
     it('should fallback to stderr when file output has no path', () => {
