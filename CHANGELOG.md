@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.3.0...v1.3.1) (2025-10-22)
+
+### Bug Fixes
+
+* **database:** update embeddings and operations schema ([e2a66a9](https://github.com/guercheLE/bitbucket-dc-mcp/commit/e2a66a9a520690f1e94e10c5c484eec62ba279c2))
+
 ## [1.3.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.2.0...v1.3.0) (2025-10-22)
 
 ### Features
