@@ -1,3 +1,25 @@
+## [1.1.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.0.1...v1.1.0) (2025-10-22)
+
+### Features
+
+* **auth:** add environment variable fallback for credentials loading ([d47c6e9](https://github.com/guercheLE/bitbucket-dc-mcp/commit/d47c6e9800165d4cc8e901ac3da9219607383c15))
+* **http-server:** enhance HTTP server mode documentation and add OpenTelemetry support ([851b3b3](https://github.com/guercheLE/bitbucket-dc-mcp/commit/851b3b3e7dd37c1988d17422561f4921b60efc39))
+* **logging:** enhance logging configuration with error log support ([dad0fd6](https://github.com/guercheLE/bitbucket-dc-mcp/commit/dad0fd65247179888320d876f43ac87eacb6b8a8))
+* **oauth1:** add comprehensive OAuth 1.0a setup guide and enhance CLI support ([ab4e9fc](https://github.com/guercheLE/bitbucket-dc-mcp/commit/ab4e9fc582bb71c13fbd3855060885772a498da0))
+* **oauth2:** add comprehensive OAuth 2.0 setup guide for Bitbucket Data Center ([cd5e2f5](https://github.com/guercheLE/bitbucket-dc-mcp/commit/cd5e2f56e80cdff5e4ca55e5df26e0024dbdfc20))
+* **observability:** integrate OpenTelemetry for metrics and tracing support ([f3de676](https://github.com/guercheLE/bitbucket-dc-mcp/commit/f3de6768f5afda49e7539b4be04e8ebd93130c12))
+* **schema:** implement SchemaResolver for OpenAPI schema reference resolution ([4373183](https://github.com/guercheLE/bitbucket-dc-mcp/commit/43731838bb54d043a22c33f386997238b4f24c48))
+* **tools:** implement ToolExecutor for improved tool execution management ([75b512a](https://github.com/guercheLE/bitbucket-dc-mcp/commit/75b512a8bde409781c7a28a5f875bd8af8d71bd8))
+
+### Bug Fixes
+
+* **auth:** update error message for missing credentials ([823955b](https://github.com/guercheLE/bitbucket-dc-mcp/commit/823955be322dd71c700b9539a147edb857246193))
+* **tracing:** add explicit return type to ignoreIncomingRequestHook function ([935820c](https://github.com/guercheLE/bitbucket-dc-mcp/commit/935820cda0e6e06e151c402db2eb50010669b7fb))
+
+### Code Refactoring
+
+* **cli:** improve formatting of RSA key generation instructions ([280ffeb](https://github.com/guercheLE/bitbucket-dc-mcp/commit/280ffeb7a62a9887b5d30fd5a108298293509ac0))
+
 ## [1.0.1](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.0.0...v1.0.1) (2025-10-21)
 
 ### Bug Fixes
