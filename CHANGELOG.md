@@ -1,3 +1,18 @@
+## [1.3.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.2.0...v1.3.0) (2025-10-22)
+
+### Features
+
+* **security:** enhance logging with automatic data sanitization and structured logging ([4028ff4](https://github.com/guercheLE/bitbucket-dc-mcp/commit/4028ff41dfb37ecd3eeae3eac92cb0d51d48e394))
+
+### Documentation
+
+* add Database Regeneration section to README and create detailed guide in EMBEDDINGS_REGENERATION.md ([a1495f5](https://github.com/guercheLE/bitbucket-dc-mcp/commit/a1495f5b6818f2e464309c5686f4c91b1883e9c6))
+
+### Code Refactoring
+
+* **correlation:** replace correlationId with traceId across the codebase ([77bf87c](https://github.com/guercheLE/bitbucket-dc-mcp/commit/77bf87c0aaab26c7eafdc82e3425f046e3c8e70d))
+* **correlation:** update tests to replace correlationId with traceId ([ff9eaff](https://github.com/guercheLE/bitbucket-dc-mcp/commit/ff9eaff783a0c77a060228856660a5e650c38eef))
+
 ## [1.2.0](https://github.com/guercheLE/bitbucket-dc-mcp/compare/v1.1.0...v1.2.0) (2025-10-22)
 
 ### Features
