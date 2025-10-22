@@ -260,6 +260,49 @@ describe('BitbucketClientService', () => {
         project: { key: 'PROJ' },
       });
     });
+
+    it('should exclude path parameters from request body', async () => {
+      const commentOperation = {
+        ...mockOperation,
+        method: 'POST',
+        path: '/rest/api/latest/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/comments',
+      };
+
+      (mockOperationsRepo.getOperation as Mock).mockReturnValue(commentOperation);
+
+      fetchMock.mockResolvedValue({
+        ok: true,
+        status: 201,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: vi.fn().mockResolvedValue({ id: '123' }),
+      });
+
+      await service.executeOperation('test_operation', {
+        projectKey: 'PROJ',
+        repositorySlug: 'repo',
+        pullRequestId: '173',
+        text: 'This is a comment',
+        severity: 'NORMAL',
+      });
+
+      const callArgs = fetchMock.mock.calls[0];
+      const requestInit = callArgs[1] as RequestInit;
+
+      // Verify URL has path parameters substituted
+      expect(callArgs[0]).toContain('/projects/PROJ/repos/repo/pull-requests/173/comments');
+
+      // Verify body ONLY contains non-path parameters
+      const body = JSON.parse(requestInit.body as string);
+      expect(body).toEqual({
+        text: 'This is a comment',
+        severity: 'NORMAL',
+      });
+
+      // Verify path parameters are NOT in the body
+      expect(body.projectKey).toBeUndefined();
+      expect(body.repositorySlug).toBeUndefined();
+      expect(body.pullRequestId).toBeUndefined();
+    });
   });
 
   describe('Retry Logic', () => {

@@ -252,7 +252,12 @@ export class BitbucketClientService {
    * @private
    */
   private async executeHttpRequest(
-    operation: { path: string; method: string; operationId: string },
+    operation: {
+      path: string;
+      method: string;
+      operationId: string;
+      responses?: Record<string, unknown>;
+    },
     params: unknown,
     operationId: string,
   ): Promise<Response> {
@@ -265,10 +270,13 @@ export class BitbucketClientService {
     // Build headers
     const headers = new Headers(authHeaders);
     headers.set('Content-Type', 'application/json');
-    headers.set('Accept', 'application/json');
 
-    // Extract request body
-    const body = this.extractRequestBody(operation.method, params);
+    // Determine Accept header from operation response schema
+    const acceptHeader = this.determineAcceptHeader(operation);
+    headers.set('Accept', acceptHeader);
+
+    // Extract request body (excluding path parameters)
+    const body = this.extractRequestBody(operation.method, operation.path, params);
 
     // Task 11: Log DEBUG level API request details
     this.logger.debug(
@@ -450,15 +458,66 @@ export class BitbucketClientService {
   }
 
   /**
+   * Determine the Accept header based on operation response schema
+   *
+   * Checks the operation's responses for the expected content type.
+   * Defaults to 'application/json' if not specified or if multiple types exist.
+   *
+   * @param operation - Operation metadata with optional responses
+   * @returns Accept header value (e.g., 'text/plain', 'application/json')
+   *
+   * @private
+   */
+  private determineAcceptHeader(operation: { responses?: Record<string, unknown> }): string {
+    if (!operation.responses) {
+      return 'application/json';
+    }
+
+    // Check 200 response first (most common success status)
+    const response200 = operation.responses['200'] as Record<string, unknown> | undefined;
+    if (response200?.content && typeof response200.content === 'object') {
+      const contentTypes = Object.keys(response200.content);
+      if (contentTypes.length > 0) {
+        // If text/plain is available, use it (for raw diffs, patches, etc.)
+        if (contentTypes.includes('text/plain')) {
+          return 'text/plain';
+        }
+        // Otherwise use the first available content type
+        return contentTypes[0];
+      }
+    }
+
+    // Fallback: check any other 2xx response
+    for (const statusCode of Object.keys(operation.responses)) {
+      if (statusCode.startsWith('2')) {
+        const response = operation.responses[statusCode] as Record<string, unknown> | undefined;
+        if (response?.content && typeof response.content === 'object') {
+          const contentTypes = Object.keys(response.content);
+          if (contentTypes.length > 0) {
+            if (contentTypes.includes('text/plain')) {
+              return 'text/plain';
+            }
+            return contentTypes[0];
+          }
+        }
+      }
+    }
+
+    // Default to JSON if nothing found
+    return 'application/json';
+  }
+
+  /**
    * Extract request body for POST/PUT/PATCH requests
    *
    * @param method - HTTP method
+   * @param path - API path template (e.g., '/rest/api/latest/projects/{projectKey}')
    * @param params - Parameters object
    * @returns JSON string body or undefined
    *
    * @private
    */
-  private extractRequestBody(method: string, params: unknown): string | undefined {
+  private extractRequestBody(method: string, path: string, params: unknown): string | undefined {
     if (!['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())) {
       return undefined;
     }
@@ -469,15 +528,40 @@ export class BitbucketClientService {
 
     const paramsObj = params as Record<string, unknown>;
 
-    // For comment operations, handle text parameter specially
-    if (paramsObj.text !== undefined) {
-      return JSON.stringify({ text: paramsObj.text });
+    // Extract path parameter names from the path template
+    const pathParamNames = new Set<string>();
+    const pathParamMatches = path.matchAll(/\{([^}]+)\}/g);
+    for (const match of pathParamMatches) {
+      pathParamNames.add(match[1]);
     }
 
-    // Use 'fields' or 'body' property if present
-    const bodyContent = paramsObj.fields ?? paramsObj.body ?? params;
+    // If 'fields' or 'body' property is present, use it directly (it should already be filtered)
+    if (paramsObj.fields !== undefined) {
+      return JSON.stringify(paramsObj.fields);
+    }
 
-    return JSON.stringify(bodyContent);
+    if (paramsObj.body !== undefined) {
+      return JSON.stringify(paramsObj.body);
+    }
+
+    // Otherwise, filter out path parameters and query parameters to create the body
+    const bodyObj: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(paramsObj)) {
+      // Skip path parameters
+      if (pathParamNames.has(key)) {
+        continue;
+      }
+
+      // Include in body
+      bodyObj[key] = value;
+    }
+
+    // If body is empty, return undefined
+    if (Object.keys(bodyObj).length === 0) {
+      return undefined;
+    }
+
+    return JSON.stringify(bodyObj);
   }
 
   /**
