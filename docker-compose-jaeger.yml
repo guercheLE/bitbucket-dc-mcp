@@ -1,0 +1,88 @@
+# Docker Compose for Jaeger
+#
+# This file provides a quick way to run Jaeger locally for testing
+# distributed tracing with the HTTP MCP server.
+#
+# Usage:
+#   docker-compose -f docker-compose-jaeger.yml up -d
+#
+# Then access Jaeger UI at: http://localhost:16686
+#
+# To stop:
+#   docker-compose -f docker-compose-jaeger.yml down
+
+version: '3.8'
+
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger-bitbucket-mcp
+    ports:
+      # Jaeger UI
+      - "16686:16686"
+      # Jaeger collector HTTP
+      - "14268:14268"
+      # Jaeger collector gRPC
+      - "14250:14250"
+      # Jaeger agent (deprecated but still useful for some clients)
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      # Jaeger health check
+      - "14269:14269"
+    environment:
+      # Storage backend (memory for development)
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+      - COLLECTOR_OTLP_ENABLED=true
+      # Log level
+      - LOG_LEVEL=info
+    restart: unless-stopped
+    networks:
+      - mcp-observability
+
+  # Optional: Prometheus for metrics scraping
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-bitbucket-mcp
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./examples/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    restart: unless-stopped
+    networks:
+      - mcp-observability
+    # Comment out if not using Prometheus
+    profiles:
+      - with-prometheus
+
+  # Optional: Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-bitbucket-mcp
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - mcp-observability
+    # Comment out if not using Grafana
+    profiles:
+      - with-grafana
+
+networks:
+  mcp-observability:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:
+

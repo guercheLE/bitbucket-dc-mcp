@@ -1,0 +1,104 @@
+# Prometheus configuration example for Bitbucket DC MCP Server
+#
+# This is a minimal Prometheus configuration to scrape metrics
+# from the HTTP MCP server.
+#
+# Usage:
+#   1. Install Prometheus: https://prometheus.io/download/
+#   2. Copy this file or update your prometheus.yml
+#   3. Start Prometheus: ./prometheus --config.file=prometheus.yml
+#   4. Access Prometheus UI: http://localhost:9091
+
+global:
+  scrape_interval: 15s      # How often to scrape targets
+  evaluation_interval: 15s  # How often to evaluate rules
+  external_labels:
+    monitor: 'bitbucket-dc-mcp'
+
+# Alertmanager configuration (optional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+# rule_files:
+#   - "alerts.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Bitbucket DC MCP Server metrics
+  - job_name: 'bitbucket-dc-mcp'
+    
+    # Override global scrape_interval if needed
+    scrape_interval: 10s
+    
+    # Timeout for scraping (must be less than scrape_interval)
+    scrape_timeout: 5s
+    
+    # Metrics path (default is /metrics)
+    metrics_path: '/metrics'
+    
+    # Scheme: http or https
+    scheme: http
+    
+    # Static targets
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          environment: 'development'
+          service: 'bitbucket-mcp'
+    
+    # Optional: Add basic authentication if metrics endpoint is protected
+    # basic_auth:
+    #   username: 'prometheus'
+    #   password: 'secret'
+    
+    # Optional: TLS configuration for HTTPS
+    # tls_config:
+    #   ca_file: /path/to/ca.pem
+    #   cert_file: /path/to/cert.pem
+    #   key_file: /path/to/key.pem
+    #   insecure_skip_verify: false
+
+  # Self-monitoring: Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9091']
+
+# Multiple instances example (for production)
+# scrape_configs:
+#   - job_name: 'bitbucket-dc-mcp-prod'
+#     static_configs:
+#       - targets:
+#         - 'mcp-server-1.example.com:9090'
+#         - 'mcp-server-2.example.com:9090'
+#         - 'mcp-server-3.example.com:9090'
+#         labels:
+#           environment: 'production'
+#           datacenter: 'us-east-1'
+#
+#   - job_name: 'bitbucket-dc-mcp-staging'
+#     static_configs:
+#       - targets:
+#         - 'mcp-staging.example.com:9090'
+#         labels:
+#           environment: 'staging'
+
+# Service discovery example (Kubernetes)
+# scrape_configs:
+#   - job_name: 'bitbucket-dc-mcp-k8s'
+#     kubernetes_sd_configs:
+#       - role: pod
+#         namespaces:
+#           names:
+#             - mcp
+#     relabel_configs:
+#       - source_labels: [__meta_kubernetes_pod_label_app]
+#         action: keep
+#         regex: bitbucket-dc-mcp
+#       - source_labels: [__meta_kubernetes_pod_container_port_name]
+#         action: keep
+#         regex: metrics
+

@@ -132,6 +132,27 @@ program
     }
   });
 
+// HTTP Server command - launches the MCP server in HTTP mode
+program
+  .command('http')
+  .description('Start the MCP server in HTTP mode')
+  .option('--host <host>', 'Host to bind to', '127.0.0.1')
+  .option('--port <port>', 'Port to listen on', '3000')
+  .option('--cors', 'Enable CORS', false)
+  .action(async (options) => {
+    try {
+      const { startHttpServer } = await import('./http/index.js');
+      await startHttpServer({
+        host: options.host,
+        port: Number.parseInt(options.port, 10),
+        cors: options.cors,
+      });
+    } catch (error) {
+      console.error('HTTP server failed to start:', error instanceof Error ? error.message : error);
+      process.exit(1);
+    }
+  });
+
 // Test Connection command
 program
   .command('test-connection')
@@ -184,6 +205,8 @@ program.addHelpText(
 Examples:
   $ bitbucket-dc-mcp setup                          Run interactive setup wizard
   $ bitbucket-dc-mcp start                          Start the MCP server (stdio mode)
+  $ bitbucket-dc-mcp http                           Start HTTP server on localhost:3000
+  $ bitbucket-dc-mcp http --host 0.0.0.0 --port 8080  Start HTTP server on all interfaces
   $ bitbucket-dc-mcp test-connection                Test Bitbucket connectivity and authentication
   $ bitbucket-dc-mcp search "create repository"          Search for operations
   $ bitbucket-dc-mcp get createRepository                Get detailed info about an operation

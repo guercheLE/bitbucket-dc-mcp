@@ -190,7 +190,7 @@ describe('CorrelationContext', () => {
 
     it('should return default when no context is set', () => {
       const id = getCorrelationId();
-      expect(id).toBe('no-correlation-id');
+      expect(id).toBe('no-trace-id');
     });
   });
 

@@ -19,12 +19,33 @@
 
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { randomUUID } from 'node:crypto';
+import { trace } from '@opentelemetry/api';
 
 /**
  * Correlation context for request tracing
+ *
+ * @remarks
+ * Now integrated with OpenTelemetry tracing.
+ * The correlationId is the OpenTelemetry trace ID when available,
+ * falling back to a UUID when tracing is disabled.
  */
 export interface CorrelationContext {
+  /**
+   * Correlation ID (OpenTelemetry trace ID or UUID)
+   * @deprecated Use traceId instead
+   */
   correlationId: string;
+
+  /**
+   * Trace ID (same as correlationId for backward compatibility)
+   */
+  traceId: string;
+
+  /**
+   * Span ID from OpenTelemetry (when available)
+   */
+  spanId?: string;
+
   service: string;
   version: string;
   toolName?: string;
@@ -38,14 +59,39 @@ export interface CorrelationContext {
 const correlationContextStorage = new AsyncLocalStorage<CorrelationContext>();
 
 /**
- * Generate a unique correlation ID using crypto.randomUUID()
+ * Generate a unique correlation ID
+ *
+ * @remarks
+ * Uses OpenTelemetry trace ID if available, otherwise generates a UUID.
+ * This ensures correlation between traces and logs.
  */
 export function generateCorrelationId(): string {
+  // Try to get trace ID from OpenTelemetry
+  const span = trace.getActiveSpan();
+  if (span) {
+    return span.spanContext().traceId;
+  }
+
+  // Fallback to UUID if no active span
   return randomUUID();
 }
 
 /**
+ * Get current span ID from OpenTelemetry
+ */
+function getSpanId(): string | undefined {
+  const span = trace.getActiveSpan();
+  if (span) {
+    return span.spanContext().spanId;
+  }
+  return undefined;
+}
+
+/**
  * Create a correlation context with optional tool and operation info
+ *
+ * @remarks
+ * Automatically captures OpenTelemetry trace ID and span ID when available.
  */
 export function createCorrelationContext(
   service: string,
@@ -53,8 +99,15 @@ export function createCorrelationContext(
   toolName?: string,
   operationId?: string,
 ): CorrelationContext {
+  const traceId = generateCorrelationId();
+  const spanId = getSpanId();
+
   return {
-    correlationId: generateCorrelationId(),
+    // Backward compatibility
+    correlationId: traceId,
+    // New field names
+    traceId,
+    spanId,
     service,
     version,
     toolName,
@@ -89,10 +142,45 @@ export function getCorrelationContext(): CorrelationContext | undefined {
 
 /**
  * Get the current correlation ID or return a default
+ *
+ * @deprecated Use getTraceId() instead
  */
 export function getCorrelationId(): string {
+  return getTraceId();
+}
+
+/**
+ * Get the current trace ID
+ *
+ * @remarks
+ * Returns the OpenTelemetry trace ID when available,
+ * or the correlation ID from context, or a default value.
+ */
+export function getTraceId(): string {
+  // Try to get from OpenTelemetry first
+  const span = trace.getActiveSpan();
+  if (span) {
+    return span.spanContext().traceId;
+  }
+
+  // Fallback to context
   const context = getCorrelationContext();
-  return context?.correlationId ?? 'no-correlation-id';
+  return context?.traceId ?? context?.correlationId ?? 'no-trace-id';
+}
+
+/**
+ * Get the current span ID
+ */
+export function getSpanIdFromContext(): string | undefined {
+  // Try to get from OpenTelemetry first
+  const span = trace.getActiveSpan();
+  if (span) {
+    return span.spanContext().spanId;
+  }
+
+  // Fallback to context
+  const context = getCorrelationContext();
+  return context?.spanId;
 }
 
 /**

@@ -23,6 +23,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import pino, { type LoggerOptions, type Logger as PinoLogger } from 'pino';
 import { createLogTransport, getLogTransportConfig } from './log-transport.js';
+import { getTraceId, getSpanIdFromContext } from './correlation-context.js';
 
 // Get package version for logging
 const __filename = fileURLToPath(import.meta.url);
@@ -98,6 +99,24 @@ export class Logger {
         serializers: {
           err: pino.stdSerializers.err,
           error: pino.stdSerializers.err,
+        },
+        // Mixin to automatically add traceId and spanId to all logs
+        mixin(): Record<string, string> {
+          const traceId = getTraceId();
+          const spanId = getSpanIdFromContext();
+
+          const context: Record<string, string> = {};
+
+          // Only add if not the default 'no-trace-id'
+          if (traceId && traceId !== 'no-trace-id') {
+            context.traceId = traceId;
+          }
+
+          if (spanId) {
+            context.spanId = spanId;
+          }
+
+          return context;
         },
       };
 
