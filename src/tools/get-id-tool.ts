@@ -23,6 +23,7 @@ import type { QueryCache } from '../core/cache-manager.js';
 import type { ComponentRegistry } from '../core/component-registry.js';
 import { getCorrelationId } from '../core/correlation-context.js';
 import { Logger } from '../core/logger.js';
+import { SchemaResolver, type ISchemaResolver } from '../data/schema-resolver.js';
 
 /**
  * Input schema for the get_id MCP tool.
@@ -258,6 +259,7 @@ const FALLBACK_OPERATIONS = new Map<string, Operation>([
 export class GetIdTool {
   private readonly logger: PinoLogger;
   private readonly registry?: ComponentRegistry;
+  private readonly schemaResolver: ISchemaResolver;
 
   /**
    * Creates a new GetIdTool instance.
@@ -266,15 +268,18 @@ export class GetIdTool {
    * @param cache - LRU cache for operation details (500 entries max)
    * @param logger - Optional logger instance (defaults to singleton Logger)
    * @param registry - Optional component registry for health checks
+   * @param schemaResolver - Optional schema resolver for resolving $ref references (defaults to SchemaResolver)
    */
   constructor(
     private readonly repository: OperationsRepository,
     private readonly cache: QueryCache<GetIdOutput>,
     logger?: PinoLogger,
     registry?: ComponentRegistry,
+    schemaResolver?: ISchemaResolver,
   ) {
     this.logger = logger ?? Logger.getInstance();
     this.registry = registry;
+    this.schemaResolver = schemaResolver ?? SchemaResolver.create();
   }
 
   /**
@@ -461,11 +466,20 @@ export class GetIdTool {
 
   /**
    * Transforms repository Operation model to GetIdOutput format.
+   * Resolves all $ref references in schemas to their actual definitions.
    *
    * @param operation - Operation from repository
    * @returns Complete GetIdOutput with examples and documentation
    */
   private transformToOutput(operation: Operation): GetIdOutput {
+    // Resolve $ref references in requestBody schema
+    const resolvedRequestBody = operation.requestBody
+      ? this.resolveRequestBodySchemas(operation.requestBody)
+      : undefined;
+
+    // Resolve $ref references in response schemas
+    const resolvedResponses = this.resolveResponseSchemas(operation.responses);
+
     return {
       operation_id: operation.operationId,
       path: operation.path,
@@ -473,12 +487,66 @@ export class GetIdTool {
       summary: operation.summary,
       description: operation.description,
       parameters: operation.parameters,
-      requestBody: operation.requestBody ?? undefined,
-      responses: operation.responses,
+      requestBody: resolvedRequestBody,
+      responses: resolvedResponses,
       examples: this.generateExamples(operation),
       documentation_url: this.getDocumentationUrl(operation),
       deprecated: operation.deprecated,
     };
+  }
+
+  /**
+   * Resolves $ref references in request body schemas.
+   *
+   * @param requestBody - Request body definition
+   * @returns Request body with resolved schemas
+   */
+  private resolveRequestBodySchemas(requestBody: RequestBody): RequestBody {
+    const resolvedContent: Record<string, MediaType> = {};
+
+    for (const [contentType, mediaType] of Object.entries(requestBody.content)) {
+      resolvedContent[contentType] = {
+        ...mediaType,
+        schema: this.schemaResolver.resolveSchema(mediaType.schema) as Record<string, unknown>,
+      };
+    }
+
+    return {
+      ...requestBody,
+      content: resolvedContent,
+    };
+  }
+
+  /**
+   * Resolves $ref references in response schemas.
+   *
+   * @param responses - Response definitions
+   * @returns Responses with resolved schemas
+   */
+  private resolveResponseSchemas(responses: Record<string, Response>): Record<string, Response> {
+    const resolvedResponses: Record<string, Response> = {};
+
+    for (const [statusCode, response] of Object.entries(responses)) {
+      if (!response.content) {
+        resolvedResponses[statusCode] = response;
+        continue;
+      }
+
+      const resolvedContent: Record<string, MediaType> = {};
+      for (const [contentType, mediaType] of Object.entries(response.content)) {
+        resolvedContent[contentType] = {
+          ...mediaType,
+          schema: this.schemaResolver.resolveSchema(mediaType.schema) as Record<string, unknown>,
+        };
+      }
+
+      resolvedResponses[statusCode] = {
+        ...response,
+        content: resolvedContent,
+      };
+    }
+
+    return resolvedResponses;
   }
 
   /**
