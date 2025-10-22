@@ -257,8 +257,38 @@ export class CallIdTool {
         'Executing Bitbucket operation',
       );
 
+      // DEBUG: Log parameters BEFORE validation
+      this.logger.debug(
+        {
+          event: 'call_id.parameters_received',
+          traceId: traceId,
+          operation_id,
+          parameterKeys: typeof parameters === 'object' && parameters !== null 
+            ? Object.keys(parameters as Record<string, unknown>)
+            : [],
+          parametersType: typeof parameters,
+          parametersIsNull: parameters === null,
+          parametersIsUndefined: parameters === undefined,
+        },
+        'Parameters received before validation',
+      );
+
       // Validate operation parameters using Zod schemas
       const validationResult = await validateOperationInput(operation_id, parameters);
+
+      // DEBUG: Log validation result
+      this.logger.debug(
+        {
+          event: 'call_id.validation_result',
+          traceId: traceId,
+          operation_id,
+          validationSuccess: validationResult.success,
+          validatedDataKeys: validationResult.success 
+            ? Object.keys(validationResult.data as Record<string, unknown>)
+            : [],
+        },
+        'Validation completed',
+      );
 
       if (!validationResult.success) {
         const latency = Date.now() - startTime;
@@ -300,6 +330,18 @@ export class CallIdTool {
       if (isMutation) {
         await this.logAuditTrail(operation_id, operation.method, validationResult.data);
       }
+
+      // DEBUG: Log parameters BEFORE sending to BitbucketClient
+      this.logger.debug(
+        {
+          event: 'call_id.sending_to_client',
+          traceId: traceId,
+          operation_id,
+          dataKeys: Object.keys(validationResult.data as Record<string, unknown>),
+          dataCount: Object.keys(validationResult.data as Record<string, unknown>).length,
+        },
+        'Sending validated data to Bitbucket client',
+      );
 
       // Execute operation with timeout protection
       const timeoutMs = this.config.timeout ?? DEFAULT_TIMEOUT_MS;

@@ -278,15 +278,19 @@ export class BitbucketClientService {
     // Extract request body (excluding path parameters)
     const body = this.extractRequestBody(operation.method, operation.path, params);
 
-    // Task 11: Log DEBUG level API request details
+    // Task 11: Log DEBUG level API request details WITH BODY
     this.logger.debug(
       {
         event: 'bitbucket_client.api_request',
+        operationId,
         method: operation.method,
         path: operation.path,
         bitbucket_url: this.config.bitbucketUrl,
+        hasBody: body !== undefined,
+        bodyLength: body?.length,
+        bodyPreview: body ? body.substring(0, 300) : null,
       },
-      'Bitbucket API request',
+      'Bitbucket API request with body details',
     );
 
     // Log request start with sanitized headers
@@ -297,6 +301,7 @@ export class BitbucketClientService {
         method: operation.method,
         url: this.sanitizeUrl(url),
         headers: this.sanitizeHeaders(headers),
+        hasBody: body !== undefined,
       },
       'Bitbucket API request starting',
     );
@@ -535,15 +540,24 @@ export class BitbucketClientService {
       pathParamNames.add(match[1]);
     }
 
-    // DEBUG: Log path parameters found
+    // DEBUG: Log EVERYTHING about the incoming params
     this.logger.debug(
       {
-        event: 'bitbucket_client.extract_body_debug',
+        event: 'bitbucket_client.extract_body_start',
+        method,
         path,
         pathParamNames: Array.from(pathParamNames),
         allParamKeys: Object.keys(paramsObj),
+        paramsCount: Object.keys(paramsObj).length,
+        // Log each param individually to see their values
+        params: Object.fromEntries(
+          Object.entries(paramsObj).map(([k, v]) => [
+            k, 
+            typeof v === 'string' && v.length > 100 ? `${v.substring(0, 100)}...` : v
+          ])
+        ),
       },
-      'Extracting request body - path parameters',
+      'Extracting request body - START',
     );
 
     // If 'fields' or 'body' property is present, use it directly (it should already be filtered)
