@@ -124,6 +124,30 @@ export async function testConnectionCommand(options: TestConnectionOptions): Pro
         if (!credentials.access_token) {
           throw new Error(`${config.auth_method.toUpperCase()} token not found in credentials`);
         }
+
+        // Check if OAuth2 flow has not been completed
+        if (config.auth_method === 'oauth2' && credentials.access_token === 'pending_oauth2_flow') {
+          console.log(chalk.yellow('\n⚠️  OAuth 2.0 authentication not completed'));
+          console.log(
+            chalk.gray(
+              '   The OAuth 2.0 flow was not completed during setup. The access token is pending.',
+            ),
+          );
+          console.log(chalk.yellow('\n💡 Next steps:'));
+          console.log(
+            chalk.gray(
+              '   1. Run "bitbucket-dc-mcp setup --force" and complete the OAuth flow when prompted',
+            ),
+          );
+          console.log(
+            chalk.gray(
+              '   2. Or start the MCP server and it will initiate OAuth on first API request',
+            ),
+          );
+          console.log(chalk.gray('   3. See docs/authentication.md#oauth-20-setup for details\n'));
+          process.exit(1);
+        }
+
         // All auth methods use access_token field (PAT token, Basic Auth base64, OAuth2 access token)
         headers['Authorization'] =
           config.auth_method === 'basic'

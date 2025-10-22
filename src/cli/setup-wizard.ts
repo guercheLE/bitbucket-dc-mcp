@@ -57,6 +57,9 @@ interface WizardState {
     clientId?: string;
     clientSecret?: string;
     callbackPort?: number;
+    access_token?: string;
+    refresh_token?: string;
+    expires_at?: Date;
     // PAT
     token?: string;
     // Basic Auth
@@ -398,8 +401,57 @@ async function collectPATCredentials(): Promise<WizardState['credentials']> {
  * Collect OAuth2 credentials
  */
 async function collectOAuth2Credentials(): Promise<WizardState['credentials']> {
-  console.log(chalk.cyan('ℹ️  OAuth 2.0 Setup'));
+  console.log(chalk.cyan.bold('ℹ️  OAuth 2.0 Setup'));
   console.log(chalk.gray('   You will be redirected to Bitbucket to authorize the application\n'));
+
+  // Display helpful instructions
+  console.log(chalk.white.bold('📋 How to obtain Client ID and Client Secret:\n'));
+  console.log(chalk.white('   1. Log in to Bitbucket as administrator'));
+  console.log(chalk.white('   2. Go to: ⚙️  → Administration → Application Links'));
+  console.log(chalk.white('   3. Click "Create link" → External application → Incoming'));
+  console.log(chalk.white('   4. Configure:'));
+  console.log(chalk.gray('      • Name: Bitbucket MCP Server'));
+  console.log(chalk.gray('      • Redirect URL: http://localhost:8080/callback'));
+  console.log(chalk.gray('      • Permissions: REPOSITORY_READ, REPOSITORY_WRITE, PROJECT_READ'));
+  console.log(chalk.white('   5. Save and copy Client ID and Client Secret\n'));
+
+  console.log(chalk.cyan('📖 Detailed guide by Bitbucket version:'));
+  console.log(chalk.gray('   https://github.com/your-repo/docs/oauth2-datacenter-setup.md'));
+  console.log(chalk.gray('   Or see: docs/oauth2-datacenter-setup.md\n'));
+
+  // Show version-specific quick tips
+  console.log(chalk.yellow('💡 Quick tips by version:'));
+  console.log(chalk.gray('   • Bitbucket 7.0+  → Native OAuth 2.0 (follow steps above)'));
+  console.log(chalk.gray('   • Bitbucket 7.0+  → Consider PAT instead (simpler setup)\n'));
+
+  const { needHelp } = await inquirer.prompt<{ needHelp: boolean }>([
+    {
+      type: 'confirm',
+      name: 'needHelp',
+      message: 'Need detailed setup instructions?',
+      default: false,
+    },
+  ]);
+
+  if (needHelp) {
+    console.log(chalk.cyan('\n📖 Opening detailed setup guide...\n'));
+    console.log(chalk.white('Visit this guide for step-by-step instructions:'));
+    console.log(
+      chalk.blue.underline(
+        'https://github.com/your-repo/blob/main/docs/oauth2-datacenter-setup.md',
+      ),
+    );
+    console.log(chalk.gray('\nOr locally: docs/oauth2-datacenter-setup.md\n'));
+    console.log(chalk.white('Press Enter when you have obtained your credentials...'));
+
+    await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'continue',
+        message: 'Press Enter to continue',
+      },
+    ]);
+  }
 
   const answers = await inquirer.prompt<{
     clientId: string;
@@ -531,15 +583,90 @@ async function testAuthentication(state: WizardState, logger: PinoLogger): Promi
         credentials.username = state.credentials.username;
         credentials.password = state.credentials.password;
         break;
-      case 'oauth2':
-        // For OAuth2, we would initiate the flow here
-        // For now, we'll skip actual testing and just validate inputs
+      case 'oauth2': {
+        // For OAuth2, we need to complete the full OAuth flow
+        console.log(chalk.cyan('🔐 Starting OAuth 2.0 authentication flow...\n'));
         console.log(
-          chalk.yellow(
-            '⚠️  OAuth 2.0 requires browser authentication. Skipping connection test.\n',
+          chalk.gray(
+            '   Your browser will open for Bitbucket authorization. Please log in and approve the application.',
           ),
         );
-        return;
+        console.log(chalk.gray('   After authorization, you will be redirected back.\n'));
+
+        const { continueOAuth } = await inquirer.prompt<{ continueOAuth: boolean }>([
+          {
+            type: 'confirm',
+            name: 'continueOAuth',
+            message: 'Ready to start OAuth 2.0 authentication?',
+            default: true,
+          },
+        ]);
+
+        if (!continueOAuth) {
+          console.log(
+            chalk.yellow(
+              '⚠️  OAuth 2.0 flow skipped. You will need to authenticate on first use.\n',
+            ),
+          );
+          return;
+        }
+
+        try {
+          // Import OAuth2Strategy to perform the actual OAuth flow
+          const { OAuth2Strategy } = await import('../auth/strategies/oauth2-strategy.js');
+
+          // Create auth config for OAuth2
+          const oauth2Config = {
+            bitbucket_url: state.bitbucketUrl,
+            auth_method: 'oauth2' as const,
+            api_version: state.apiVersion,
+            oauth2: {
+              client_id: state.credentials.clientId!,
+              client_secret: state.credentials.clientSecret!,
+              callback_port: state.credentials.callbackPort || 8080,
+            },
+          };
+
+          // Initialize OAuth2 strategy
+          const oauth2Strategy = new OAuth2Strategy(oauth2Config, logger);
+
+          // Perform OAuth2 authentication (this will open browser, wait for callback, exchange code for token)
+          const oauthCredentials = await oauth2Strategy.authenticate(oauth2Config);
+
+          // Update state with actual OAuth tokens
+          state.credentials.access_token = oauthCredentials.access_token;
+          state.credentials.refresh_token = oauthCredentials.refresh_token;
+          state.credentials.expires_at = oauthCredentials.expires_at;
+
+          console.log(chalk.green('✓ OAuth 2.0 authentication successful!\n'));
+          logger.info({ auth_method: 'oauth2' }, 'OAuth2 authentication completed successfully');
+          return;
+        } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : String(error);
+          console.log(chalk.red(`✗ OAuth 2.0 authentication failed: ${errorMsg}\n`));
+          logger.error({ error, auth_method: 'oauth2' }, 'OAuth2 authentication failed');
+
+          const { retry } = await inquirer.prompt<{ retry: boolean }>([
+            {
+              type: 'confirm',
+              name: 'retry',
+              message: 'Would you like to try OAuth 2.0 authentication again?',
+              default: true,
+            },
+          ]);
+
+          if (retry) {
+            return await testAuthentication(state, logger);
+          } else {
+            console.log(
+              chalk.yellow(
+                '⚠️  Setup will continue without OAuth token. You will need to authenticate on first use.\n',
+              ),
+            );
+            return;
+          }
+        }
+      }
       case 'oauth1':
         // For OAuth1, similar to OAuth2
         console.log(
@@ -759,8 +886,14 @@ async function saveConfiguration(state: WizardState, logger: PinoLogger): Promis
         credentials.client_id = state.credentials.clientId;
         credentials.client_secret = state.credentials.clientSecret;
         credentials.callback_port = state.credentials.callbackPort;
-        // Note: Actual OAuth2 tokens will be obtained during first use
-        credentials.access_token = 'pending_oauth2_flow';
+        // Use actual OAuth2 tokens if obtained during setup, otherwise mark as pending
+        credentials.access_token = state.credentials.access_token || 'pending_oauth2_flow';
+        if (state.credentials.refresh_token) {
+          credentials.refresh_token = state.credentials.refresh_token;
+        }
+        if (state.credentials.expires_at) {
+          credentials.expires_at = state.credentials.expires_at;
+        }
         break;
       case 'oauth1':
         credentials.consumer_key = state.credentials.consumerKey;
