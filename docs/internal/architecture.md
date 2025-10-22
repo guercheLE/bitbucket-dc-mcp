@@ -34,7 +34,7 @@ Este é um projeto novo desenvolvido do zero, sem base em templates existentes. 
 
 ### Technical Summary
 
-O Bitbucket DataCenter MCP Server é um **monolito em camadas stateless** construído com Node.js/TypeScript que expõe 3 ferramentas MCP via stdio transport para LLMs. A arquitetura implementa busca semântica inteligente usando sqlite-vec para embeddings vetoriais locais (768 dimensões via Transformers.js), permitindo queries em linguagem natural com >85% de relevância e suporte completo a air-gapped deployments. O backend integra-se com Bitbucket Data Center REST API v3 através de um client HTTP robusto com rate limiting (100 req/s), retries exponenciais, e circuit breaker pattern. A solução é self-hosted, deployável via Docker (multi-arch: amd64/arm64) ou npm global, com autenticação multi-estratégia (OAuth 2.0 PKCE, PAT, OAuth 1.0a, Basic) e credentials storage seguro via OS keychain. Performance targets: p95 <500ms para search, <2s para call_id, <512MB RAM baseline, startup <5s.
+O Bitbucket DataCenter MCP Server é um **monolito em camadas stateless** construído com Node.js/TypeScript que expõe 3 ferramentas MCP via **dois modos de operação**: (1) **stdio transport** (padrão) para clientes MCP nativos como Claude Desktop e Cursor, e (2) **HTTP server** para integrações web e APIs REST. A arquitetura implementa busca semântica inteligente usando sqlite-vec para embeddings vetoriais locais (768 dimensões via Transformers.js), permitindo queries em linguagem natural com >85% de relevância e suporte completo a air-gapped deployments. O backend integra-se com Bitbucket Data Center REST API v3 através de um client HTTP robusto com rate limiting (100 req/s), retries exponenciais, e circuit breaker pattern. O modo HTTP oferece autenticação adaptativa (LOCALHOST relaxed vs NETWORK strict), CORS configurável, métricas Prometheus, e distributed tracing OpenTelemetry. A solução é self-hosted, deployável via Docker (multi-arch: amd64/arm64) ou npm global, com autenticação multi-estratégia (OAuth 2.0 PKCE, PAT, OAuth 1.0a, Basic) e credentials storage seguro via OS keychain. Performance targets: p95 <500ms para search, <2s para call_id, <512MB RAM baseline, startup <5s.
 
 ### Platform and Infrastructure Choice
 
@@ -104,14 +104,18 @@ bitbucket-dc-mcp-server/              # Root monorepo
 
 ```mermaid
 graph TB
-    subgraph "LLM Clients"
-        CLAUDE[Claude Desktop]
-        CURSOR[Cursor IDE]
-        OTHER[Other MCP Clients]
+    subgraph "Clients"
+        CLAUDE[Claude Desktop<br/>MCP Client]
+        CURSOR[Cursor IDE<br/>MCP Client]
+        WEB[Web Apps<br/>HTTP Client]
+        CUSTOM[Custom Apps<br/>HTTP Client]
     end
 
     subgraph "MCP Server Process"
-        MCP_PROTOCOL[MCP Protocol Layer<br/>stdio transport]
+        subgraph "Transport Layer"
+            STDIO[stdio Transport<br/>JSON-RPC]
+            HTTP[HTTP Server<br/>Node.js HTTP]
+        end
         
         subgraph "Tools Layer"
             SEARCH[search_ids tool]
@@ -130,6 +134,7 @@ graph TB
             LOGGER[Logger pino]
             CACHE[CacheManager LRU]
             CB[CircuitBreaker]
+            TRACING[Tracing<br/>OpenTelemetry]
         end
         
         subgraph "Data Layer"
@@ -137,19 +142,30 @@ graph TB
             KEYCHAIN[OS Keychain<br/>credentials]
             FS[Config Files<br/>YAML]
         end
+        
+        subgraph "Observability"
+            METRICS[HTTP Metrics<br/>Prometheus]
+            CORRELATION[Correlation Context<br/>UUIDs]
+        end
     end
 
     subgraph "External Services"
         BITBUCKET[Bitbucket DC REST API<br/>v3 OpenAPI 11.0.1]
+        JAEGER[Jaeger<br/>Traces]
+        PROMETHEUS[Prometheus<br/>Metrics Scraper]
     end
 
-    CLAUDE -->|stdin/stdout| MCP_PROTOCOL
-    CURSOR -->|stdin/stdout| MCP_PROTOCOL
-    OTHER -->|stdin/stdout| MCP_PROTOCOL
+    CLAUDE -->|stdin/stdout<br/>JSON-RPC| STDIO
+    CURSOR -->|stdin/stdout<br/>JSON-RPC| STDIO
+    WEB -->|HTTP POST<br/>JSON-RPC| HTTP
+    CUSTOM -->|HTTP POST<br/>JSON-RPC| HTTP
     
-    MCP_PROTOCOL --> SEARCH
-    MCP_PROTOCOL --> GET
-    MCP_PROTOCOL --> CALL
+    STDIO --> SEARCH
+    STDIO --> GET
+    STDIO --> CALL
+    HTTP --> SEARCH
+    HTTP --> GET
+    HTTP --> CALL
     
     SEARCH --> SS
     GET --> SS
@@ -166,11 +182,28 @@ graph TB
     CONFIG --> FS
     LOGGER --> FS
     CACHE --> SS
+    
+    HTTP --> METRICS
+    HTTP --> TRACING
+    HTTP --> CORRELATION
+    STDIO --> CORRELATION
+    
+    METRICS -->|expose :9090/metrics| PROMETHEUS
+    TRACING -->|OTLP HTTP| JAEGER
+    
+    style HTTP fill:#e1f5ff
+    style METRICS fill:#fff3e0
+    style TRACING fill:#fff3e0
+    style CORRELATION fill:#fff3e0
 ```
 
 ### Architectural Patterns
 
-- **Layered Monolith:** Separação clara de responsabilidades (MCP Protocol → Tools → Services → Core → Data). Cada camada depende apenas da inferior, facilitando testing e future refactoring. Rationale: Simplicidade para MVP, performance (no inter-service calls), facilita debugging.
+- **Layered Monolith:** Separação clara de responsabilidades (Transport → Tools → Services → Core → Data). Cada camada depende apenas da inferior, facilitando testing e future refactoring. Rationale: Simplicidade para MVP, performance (no inter-service calls), facilita debugging.
+
+- **Dual Transport (stdio + HTTP):** Servidor suporta dois modos de operação: (1) stdio para MCP clients nativos, (2) HTTP para web integrations. Mesma lógica de negócio, transports diferentes. Rationale: Flexibilidade para diferentes use cases sem duplicar código.
+
+- **Adaptive Authentication (HTTP):** HTTP server detecta bind address e ajusta auth mode: LOCALHOST (relaxed) vs NETWORK (strict). Rationale: Developer experience em dev, security em production.
 
 - **Strategy Pattern (Authentication):** Interface `AuthStrategy` com implementações concrete (OAuth2, PAT, OAuth1, Basic). Permite adicionar novos métodos sem modificar core. Rationale: Bitbucket DC suporta 4 auth methods, precisa flexibilidade.
 
@@ -185,6 +218,10 @@ graph TB
 - **Factory Pattern (Auth):** `AuthStrategyFactory` cria strategy baseado em config. Rationale: Centraliza lógica de seleção, simplifica client code.
 
 - **Singleton (Managed):** `Logger`, `ConfigManager`, `CacheManager` são singletons gerenciados (criados uma vez no startup). Rationale: Recursos compartilhados, evita múltiplas instâncias.
+
+- **Correlation Context (Request Tracing):** UUID gerado para cada request (stdio ou HTTP) propagado por todos os componentes. Presente em logs, traces, e responses. Rationale: End-to-end request tracking, debugging facilitado.
+
+- **Observer Pattern (Metrics & Tracing):** HTTP server emite eventos para métricas (Prometheus) e tracing (OpenTelemetry) sem acoplamento. Rationale: Observability como cross-cutting concern, não interfere em business logic.
 
 ## Tech Stack
 

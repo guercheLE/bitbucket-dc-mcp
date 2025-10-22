@@ -42,9 +42,12 @@ docs/
 ├── README.md                    # This file - documentation index
 ├── authentication.md            # Authentication setup guide
 ├── api-reference.md             # MCP tools API reference
+├── http-server.md               # HTTP server mode guide
 ├── cookbook.md                  # Practical code examples
 ├── docker.md                    # Docker deployment guide
-├── observability.md             # Logging and monitoring
+├── observability.md             # Logging, tracing, and monitoring
+├── opentelemetry-metrics.md     # OpenTelemetry metrics (HTTP mode)
+├── performance-metrics.md       # Performance benchmarks
 ├── troubleshooting.md           # Troubleshooting and FAQ
 ├── beta-testing-guide.md        # Beta testing program
 ├── beta-testing/                # Beta testing resources

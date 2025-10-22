@@ -123,7 +123,8 @@ The Bitbucket DC MCP Server provides a comprehensive CLI for setup, testing, and
 
 ```bash
 bitbucket-dc-mcp setup              # Interactive setup wizard
-bitbucket-dc-mcp start              # Start MCP server (stdio mode)
+bitbucket-dc-mcp start              # Start MCP server (stdio mode - default)
+bitbucket-dc-mcp http               # Start MCP server (HTTP mode)
 bitbucket-dc-mcp test-connection    # Test Bitbucket connectivity
 bitbucket-dc-mcp search <query>     # Search for operations
 bitbucket-dc-mcp get <operationId>  # Get operation details
@@ -133,6 +134,34 @@ bitbucket-dc-mcp version            # Show version info
 ```
 
 **For detailed CLI examples and usage, see the [Cookbook - CLI Command Examples](./cookbook.md#cli-command-examples).**
+
+### HTTP Server Mode
+
+The server supports two operational modes:
+
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| **stdio** (default) | JSON-RPC over stdin/stdout | MCP clients (Claude Desktop, Cursor) |
+| **HTTP** | REST-like HTTP API | Web integrations, custom applications |
+
+**HTTP Mode Command:**
+
+```bash
+# Start HTTP server on localhost (development)
+bitbucket-dc-mcp http --host 127.0.0.1 --port 3000
+
+# Start HTTP server on network (production)
+bitbucket-dc-mcp http --host 0.0.0.0 --port 3000 --cors
+```
+
+**HTTP Mode Options:**
+- `--host <host>` - Host to bind (default: `127.0.0.1`)
+  - `127.0.0.1` or `localhost` → Relaxed auth (optional headers)
+  - `0.0.0.0` or specific IP → Strict auth (Basic/PAT only)
+- `--port <port>` - Port to listen on (default: `3000`)
+- `--cors` - Enable CORS for cross-origin requests
+
+**For complete HTTP server documentation, see [HTTP Server Guide](./http-server.md).**
 
 ---
 

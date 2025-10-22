@@ -65,19 +65,33 @@ O Bitbucket DataCenter MCP Server aproveita o momento único de adoção massiva
   - ✅ **Encrypted Fallback** - AES-256-GCM encryption when keychain unavailable
   - ✅ **Machine-specific Keys** - Secure key derivation using hardware identifiers
 
+- **HTTP Server Mode** (Complete - v2.0+)
+  - ✅ **HTTP MCP Server** - Full HTTP server implementation with adaptive authentication
+  - ✅ **LOCALHOST Mode** - Relaxed auth for development (optional headers, fallback to config)
+  - ✅ **NETWORK Mode** - Strict auth for production (Basic/PAT only, mandatory headers)
+  - ✅ **CORS Support** - Configurable cross-origin resource sharing
+  - ✅ **Graceful Shutdown** - Clean shutdown with connection draining
+
+- **Observability & Monitoring** (Complete - v2.0+)
+  - ✅ **OpenTelemetry Tracing** - Distributed tracing with Jaeger/Datadog/New Relic support
+  - ✅ **Prometheus Metrics** - HTTP metrics endpoint with request/response tracking
+  - ✅ **Correlation Context** - Request tracking across components with UUIDs
+  - ✅ **Structured Logging** - JSON logs with automatic credential redaction
+  - ✅ **W3C Trace Context** - Standard trace propagation headers
+
 ### 🚧 Future/Planned Features
 
-- **Story 4.1: Advanced Caching** - Planned for v1.3+
+- **Story 4.1: Advanced Caching** - Planned for v2.1+
   - Response caching with TTL
   - Cache invalidation strategies
   - Memory-efficient cache management
 
-- **Story 4.2: Enhanced Monitoring** - Planned for v1.3+
-  - Prometheus metrics endpoint
-  - OpenTelemetry distributed tracing
-  - Advanced health check endpoints
+- **Story 4.2: Trace Sampling** - Planned for v2.1+
+  - Configurable trace sampling rates
+  - Adaptive sampling based on load
+  - Cost optimization for high-volume deployments
 
-### ⚠️ Known Limitations (v1.2.0)
+### ⚠️ Known Limitations (v2.0.0)
 
 1. **OAuth 2.0 Testing:** OAuth 2.0 flow requires manual browser interaction
    - **Workaround:** Use PAT for automated testing and CI/CD pipelines
