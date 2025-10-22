@@ -48,7 +48,7 @@ import { z } from 'zod';
 import type { AuthManager } from '../auth/auth-manager.js';
 import type { ComponentRegistry } from '../core/component-registry.js';
 import type { AppConfig } from '../core/config-manager.js';
-import { getCorrelationId } from '../core/correlation-context.js';
+import { getTraceId } from '../core/correlation-context.js';
 import { ComponentUnavailableError } from '../core/errors.js';
 import { sanitizeParams } from '../core/sanitizer.js';
 import type { BitbucketClientService } from '../services/bitbucket-client.js';
@@ -186,7 +186,7 @@ export class CallIdTool {
    */
   async execute(input: unknown): Promise<CallIdOutput> {
     const startTime = Date.now();
-    const correlationId = getCorrelationId();
+    const traceId = getTraceId();
 
     try {
       // Check critical components health before execution
@@ -195,7 +195,7 @@ export class CallIdTool {
           this.logger.error(
             {
               event: 'call_id.component_unavailable',
-              correlationId: correlationId,
+              traceId: traceId,
               component: 'BitbucketClientService',
             },
             'Bitbucket API unavailable',
@@ -211,7 +211,7 @@ export class CallIdTool {
           this.logger.error(
             {
               event: 'call_id.component_unavailable',
-              correlationId: correlationId,
+              traceId: traceId,
               component: 'AuthManager',
             },
             'Authentication unavailable',
@@ -232,7 +232,7 @@ export class CallIdTool {
           this.logger.info(
             {
               event: 'call_id.degraded_mode',
-              correlationId: correlationId,
+              traceId: traceId,
               operation_id: 'pending',
               degraded_components: degradedComponents,
             },
@@ -249,7 +249,7 @@ export class CallIdTool {
       this.logger.info(
         {
           event: 'call_id.execution_start',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           operation_id,
           timestamp: new Date().toISOString(),
@@ -265,7 +265,7 @@ export class CallIdTool {
         this.logger.warn(
           {
             event: 'call_id.validation_failed',
-            correlationId: correlationId,
+            traceId: traceId,
             tool_name: 'call_id',
             operation_id,
             latency_ms: latency,
@@ -314,7 +314,7 @@ export class CallIdTool {
       this.logger.info(
         {
           event: 'call_id.execution_success',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           operation_id,
           method: operation?.method,
@@ -390,7 +390,7 @@ export class CallIdTool {
     try {
       // Get current auth context for user identification
       const authContext = await this.getCurrentAuthContext();
-      const correlationId = getCorrelationId();
+      const traceId = getTraceId();
 
       // Get operation details for audit trail
       const operation = this.operationsRepository.getOperation(operationId);
@@ -401,7 +401,7 @@ export class CallIdTool {
         {
           event: 'call_id.mutation_audit',
           audit_type: 'mutation',
-          correlationId: correlationId,
+          traceId: traceId,
           operation_id: operationId,
           bitbucket_url: bitbucketUrl,
           method,
@@ -494,7 +494,7 @@ export class CallIdTool {
    * @private
    */
   private handleError(error: unknown, latency: number): CallIdOutput {
-    const correlationId = getCorrelationId();
+    const traceId = getTraceId();
     let errorResponse: {
       error: string;
       message: string;
@@ -506,7 +506,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           error_type: 'ValidationError',
           status_code: error.statusCode,
@@ -527,7 +527,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           error_type: 'AuthError',
           status_code: error.statusCode,
@@ -547,7 +547,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           error_type: 'NotFoundError',
           status_code: error.statusCode,
@@ -567,7 +567,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           error_type: 'RateLimitError',
           status_code: error.statusCode,
@@ -591,7 +591,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           error_type: 'TimeoutError',
           operation_id: error.operationId,
@@ -609,7 +609,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           error_type: 'ServerError',
           status_code: error.statusCode,
@@ -629,7 +629,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           error_type: 'BitbucketClientError',
           status_code: error.statusCode,
@@ -652,7 +652,7 @@ export class CallIdTool {
       this.logger.error(
         {
           event: 'call_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'call_id',
           error_type: errorType,
           latency_ms: latency,

@@ -20,7 +20,7 @@
 import type { Logger as PinoLogger } from 'pino';
 import { z } from 'zod';
 import type { ComponentRegistry } from '../core/component-registry.js';
-import { getCorrelationId } from '../core/correlation-context.js';
+import { getTraceId } from '../core/correlation-context.js';
 import { DegradedModeError } from '../core/errors.js';
 import { Logger } from '../core/logger.js';
 import type { SemanticSearchService } from '../services/semantic-search.js';
@@ -130,7 +130,7 @@ export class SearchIdsTool {
    */
   public async execute(input: unknown): Promise<SearchIdsOutput> {
     const startTime = Date.now();
-    const correlationId = getCorrelationId();
+    const traceId = getTraceId();
 
     // Check component health before proceeding
     if (this.registry) {
@@ -139,7 +139,7 @@ export class SearchIdsTool {
           {
             event: 'search_ids.degraded_mode',
             component: 'EmbeddingsRepository',
-            correlationId: correlationId,
+            traceId: traceId,
           },
           'search_ids called in degraded mode',
         );
@@ -161,7 +161,7 @@ export class SearchIdsTool {
       this.logger.error(
         {
           event: 'search_ids.validation_error',
-          correlationId: correlationId,
+          traceId: traceId,
           input,
           error: String(error),
         },
@@ -179,7 +179,7 @@ export class SearchIdsTool {
     this.logger.info(
       {
         event: 'search_ids.start',
-        correlationId: correlationId,
+        traceId: traceId,
         tool_name: 'search_ids',
         query,
         limit,
@@ -212,7 +212,7 @@ export class SearchIdsTool {
       this.logger.info(
         {
           event: 'search_ids.success',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'search_ids',
           query,
           results_count: operations.length,
@@ -232,7 +232,7 @@ export class SearchIdsTool {
       this.logger.error(
         {
           event: 'search_ids.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'search_ids',
           query,
           limit,

@@ -168,9 +168,9 @@ export class McpServer {
   public async initialize(): Promise<void> {
     if (this.initialized) return;
 
-    const correlationId = McpServer.createCorrelationId();
+    const traceId = McpServer.createCorrelationId();
     this.logger.debug(
-      { event: 'mcp.server.initialize', correlationId, serverInfo: this.serverInfo },
+      { event: 'mcp.server.initialize', traceId, serverInfo: this.serverInfo },
       'Preparing MCP server instance',
     );
 
@@ -189,8 +189,8 @@ export class McpServer {
     if (!this.initialized) await this.initialize();
     if (this.startPromise) return this.startPromise;
 
-    const correlationId = McpServer.createCorrelationId();
-    this.logger.info({ event: 'mcp.server.start', correlationId }, 'Starting MCP server');
+    const traceId = McpServer.createCorrelationId();
+    this.logger.info({ event: 'mcp.server.start', traceId }, 'Starting MCP server');
 
     const server = this.ensureServer();
     const transport = this.ensureTransport();
@@ -201,7 +201,7 @@ export class McpServer {
         this.logger.info(
           {
             event: 'mcp.server.transport_connected',
-            correlationId,
+            traceId,
             transport: 'stdio',
             instructions: this.instructions,
           },
@@ -209,7 +209,7 @@ export class McpServer {
         );
       })
       .catch((error: unknown) => {
-        this.handleError(error, { event: 'mcp.server.connect_error', correlationId });
+        this.handleError(error, { event: 'mcp.server.connect_error', traceId });
         throw error;
       });
 
@@ -225,11 +225,8 @@ export class McpServer {
   public async shutdown(reason?: string): Promise<void> {
     if (this.shutdownPromise) return this.shutdownPromise;
 
-    const correlationId = McpServer.createCorrelationId();
-    this.logger.info(
-      { event: 'mcp.server.shutdown', correlationId, reason },
-      'Shutting down MCP server',
-    );
+    const traceId = McpServer.createCorrelationId();
+    this.logger.info({ event: 'mcp.server.shutdown', traceId, reason }, 'Shutting down MCP server');
 
     const server = this.server;
     const transport = this.transport;
@@ -237,7 +234,7 @@ export class McpServer {
     this.shutdownPromise = new Promise<void>((resolve) => {
       const timeoutId = setTimeout(() => {
         const timeoutError = new Error('Graceful shutdown timed out');
-        this.handleError(timeoutError, { event: 'mcp.server.shutdown_timeout', correlationId });
+        this.handleError(timeoutError, { event: 'mcp.server.shutdown_timeout', traceId });
         this.exit(1);
         resolve();
       }, this.shutdownTimeoutMs);
@@ -247,7 +244,7 @@ export class McpServer {
         this.ready = false;
         this.initialized = false;
         this.logger.info(
-          { event: 'mcp.server.shutdown_complete', correlationId },
+          { event: 'mcp.server.shutdown_complete', traceId },
           'MCP server shutdown complete',
         );
         this.exit(0);
@@ -263,12 +260,12 @@ export class McpServer {
             await transport.close();
           }
         } catch (error) {
-          this.handleError(error, { event: 'mcp.server.shutdown_error', correlationId });
+          this.handleError(error, { event: 'mcp.server.shutdown_error', traceId });
         } finally {
           complete();
         }
       })().catch((error: unknown) => {
-        this.handleError(error, { event: 'mcp.server.shutdown_unhandled', correlationId });
+        this.handleError(error, { event: 'mcp.server.shutdown_unhandled', traceId });
         complete();
       });
     });
@@ -293,19 +290,19 @@ export class McpServer {
         {
           event: 'mcp.server.send_log_skipped',
           reason: 'not_initialized',
-          correlationId: McpServer.createCorrelationId(),
+          traceId: McpServer.createCorrelationId(),
         },
         'Attempted to send log before server initialization',
       );
       return;
     }
 
-    const correlationId = McpServer.createCorrelationId();
+    const traceId = McpServer.createCorrelationId();
 
     try {
       await server.sendLoggingMessage(params, sessionId);
     } catch (error) {
-      this.handleError(error, { event: 'mcp.server.send_log_error', correlationId });
+      this.handleError(error, { event: 'mcp.server.send_log_error', traceId });
     }
   }
 
@@ -318,12 +315,11 @@ export class McpServer {
    */
   public handleError(error: unknown, context: Record<string, unknown> = {}): void {
     const normalized = error instanceof Error ? error : new Error(String(error));
-    const correlationId =
-      (context.correlationId as string | undefined) ?? McpServer.createCorrelationId();
+    const traceId = (context.traceId as string | undefined) ?? McpServer.createCorrelationId();
     this.logger.error(
       {
         event: 'mcp.server.error',
-        correlationId,
+        traceId,
         ...context,
         error: { message: normalized.message, name: normalized.name, stack: normalized.stack },
       },
@@ -344,13 +340,13 @@ export class McpServer {
 
     server.oninitialized = (): void => {
       this.ready = true;
-      const correlationId = McpServer.createCorrelationId();
+      const traceId = McpServer.createCorrelationId();
       this.logger.info(
         {
           event: 'mcp.server.initialized',
           server: this.serverInfo,
           capabilities: this.capabilities,
-          correlationId,
+          traceId,
         },
         'Client completed MCP initialization handshake',
       );
@@ -359,7 +355,7 @@ export class McpServer {
     server.onclose = (): void => {
       this.ready = false;
       this.logger.warn(
-        { event: 'mcp.server.closed', correlationId: McpServer.createCorrelationId() },
+        { event: 'mcp.server.closed', traceId: McpServer.createCorrelationId() },
         'MCP server connection closed',
       );
     };
@@ -367,7 +363,7 @@ export class McpServer {
     server.onerror = (err: Error): void => {
       this.handleError(err, {
         event: 'mcp.server.protocol_error',
-        correlationId: McpServer.createCorrelationId(),
+        traceId: McpServer.createCorrelationId(),
       });
     };
 

@@ -65,7 +65,7 @@ export class ToolExecutor {
     toolName: string,
   ): PinoLogger {
     return this.config.logger.child({
-      correlationId: correlationContext.correlationId,
+      traceId: correlationContext.traceId,
       tool_name: toolName,
     });
   }

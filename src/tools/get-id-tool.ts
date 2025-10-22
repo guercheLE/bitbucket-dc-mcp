@@ -21,7 +21,7 @@ import type { Logger as PinoLogger } from 'pino';
 import { z } from 'zod';
 import type { QueryCache } from '../core/cache-manager.js';
 import type { ComponentRegistry } from '../core/component-registry.js';
-import { getCorrelationId } from '../core/correlation-context.js';
+import { getTraceId } from '../core/correlation-context.js';
 import { Logger } from '../core/logger.js';
 import { SchemaResolver, type ISchemaResolver } from '../data/schema-resolver.js';
 
@@ -307,7 +307,7 @@ export class GetIdTool {
    */
   public async execute(input: unknown): Promise<GetIdOutput> {
     const startTime = Date.now();
-    const correlationId = getCorrelationId();
+    const traceId = getTraceId();
 
     // Input validation
     let validatedInput: GetIdInput;
@@ -317,7 +317,7 @@ export class GetIdTool {
       this.logger.error(
         {
           event: 'get_id.validation_error',
-          correlationId,
+          traceId,
           input,
           error: String(error),
         },
@@ -332,7 +332,7 @@ export class GetIdTool {
     this.logger.info(
       {
         event: 'get_id.start',
-        correlationId,
+        traceId,
         tool_name: 'get_id',
         operation_id,
       },
@@ -347,7 +347,7 @@ export class GetIdTool {
       this.logger.info(
         {
           event: 'get_id.success',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'get_id',
           operation_id,
           cache_hit: true,
@@ -361,7 +361,7 @@ export class GetIdTool {
     this.logger.debug(
       {
         event: 'get_id.cache_miss',
-        correlationId: correlationId,
+        traceId: traceId,
         operation_id,
       },
       'Cache miss, querying repository',
@@ -383,7 +383,7 @@ export class GetIdTool {
           this.logger.warn(
             {
               event: 'get_id.fallback_used',
-              correlationId: correlationId,
+              traceId: traceId,
               operation_id,
             },
             'Using fallback schema, embeddings DB unavailable',
@@ -397,7 +397,7 @@ export class GetIdTool {
         this.logger.warn(
           {
             event: 'get_id.not_found',
-            correlationId: correlationId,
+            traceId: traceId,
             tool_name: 'get_id',
             operation_id,
             latency_ms: latencyMs,
@@ -425,7 +425,7 @@ export class GetIdTool {
       this.logger.info(
         {
           event: 'get_id.success',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'get_id',
           operation_id,
           cache_hit: false,
@@ -450,7 +450,7 @@ export class GetIdTool {
       this.logger.error(
         {
           event: 'get_id.error',
-          correlationId: correlationId,
+          traceId: traceId,
           tool_name: 'get_id',
           operation_id,
           error_message: errorMessage,

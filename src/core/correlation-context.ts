@@ -26,18 +26,12 @@ import { trace } from '@opentelemetry/api';
  *
  * @remarks
  * Now integrated with OpenTelemetry tracing.
- * The correlationId is the OpenTelemetry trace ID when available,
+ * The traceId is the OpenTelemetry trace ID when available,
  * falling back to a UUID when tracing is disabled.
  */
 export interface CorrelationContext {
   /**
-   * Correlation ID (OpenTelemetry trace ID or UUID)
-   * @deprecated Use traceId instead
-   */
-  correlationId: string;
-
-  /**
-   * Trace ID (same as correlationId for backward compatibility)
+   * Trace ID (OpenTelemetry trace ID or UUID)
    */
   traceId: string;
 
@@ -103,9 +97,6 @@ export function createCorrelationContext(
   const spanId = getSpanId();
 
   return {
-    // Backward compatibility
-    correlationId: traceId,
-    // New field names
     traceId,
     spanId,
     service,
@@ -141,15 +132,6 @@ export function getCorrelationContext(): CorrelationContext | undefined {
 }
 
 /**
- * Get the current correlation ID or return a default
- *
- * @deprecated Use getTraceId() instead
- */
-export function getCorrelationId(): string {
-  return getTraceId();
-}
-
-/**
  * Get the current trace ID
  *
  * @remarks
@@ -165,7 +147,7 @@ export function getTraceId(): string {
 
   // Fallback to context
   const context = getCorrelationContext();
-  return context?.traceId ?? context?.correlationId ?? 'no-trace-id';
+  return context?.traceId ?? 'no-trace-id';
 }
 
 /**

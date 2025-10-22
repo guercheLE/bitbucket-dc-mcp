@@ -46,7 +46,7 @@ import type { Logger as PinoLogger } from 'pino';
 import type { AuthManager } from '../auth/auth-manager.js';
 import { CircuitBreaker } from '../core/circuit-breaker.js';
 import type { AppConfig } from '../core/config-manager.js';
-import { getCorrelationId } from '../core/correlation-context.js';
+import { getTraceId } from '../core/correlation-context.js';
 import type { RateLimiter } from '../core/rate-limiter.js';
 import type { OperationsRepository } from '../tools/get-id-tool.js';
 import {
@@ -337,7 +337,7 @@ export class BitbucketClientService {
 
       return response;
     } catch (error) {
-      const correlationId = getCorrelationId();
+      const traceId = getTraceId();
 
       // Handle timeout errors
       if (error instanceof Error && error.name === 'TimeoutError') {
@@ -345,7 +345,7 @@ export class BitbucketClientService {
         this.logger.error(
           {
             event: 'bitbucket_client.timeout',
-            correlationId: correlationId,
+            traceId: traceId,
             error_type: 'TimeoutError',
             error_message: `Request timed out after ${timeoutMs}ms`,
             operation_id: operationId,
@@ -365,7 +365,7 @@ export class BitbucketClientService {
         this.logger.error(
           {
             event: 'bitbucket_client.abort',
-            correlationId: correlationId,
+            traceId: traceId,
             error_type: 'TimeoutError',
             error_message: `Request aborted (timeout after ${timeoutMs}ms)`,
             operation_id: operationId,
@@ -387,7 +387,7 @@ export class BitbucketClientService {
       this.logger.error(
         {
           event: 'bitbucket_client.unexpected_error',
-          correlationId: correlationId,
+          traceId: traceId,
           error_type: errorType,
           error_message: errorMessage,
           stack_trace: stack,
@@ -485,7 +485,7 @@ export class BitbucketClientService {
    * @private
    */
   private async handleErrorResponse(response: Response, operationId: string): Promise<never> {
-    const correlationId = getCorrelationId();
+    const traceId = getTraceId();
     let errorBody: unknown;
 
     try {
@@ -506,7 +506,7 @@ export class BitbucketClientService {
     this.logger.error(
       {
         event: 'bitbucket_client.error_response',
-        correlationId: correlationId,
+        traceId: traceId,
         error_type: this.getErrorTypeName(statusCode),
         error_message: errorMessage,
         status_code: statusCode,
