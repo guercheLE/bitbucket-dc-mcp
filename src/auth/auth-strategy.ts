@@ -45,6 +45,12 @@ export interface Credentials {
   /** Token expiration timestamp */
   expires_at?: Date;
 
+  /** OAuth2 client ID (optional, for token refresh) */
+  client_id?: string;
+
+  /** OAuth2 client secret (optional, for token refresh) */
+  client_secret?: string;
+
   // Basic Auth fields
   /** Username for Basic authentication */
   username?: string;

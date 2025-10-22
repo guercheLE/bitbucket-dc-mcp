@@ -334,11 +334,28 @@ export class AuthManager {
     // Load from storage
     const stored = await this.storage.load(this.storageKey);
     if (!stored) {
+      // Try to load from environment variables as fallback
+      const envCredentials = this.loadFromEnvironment();
+      if (envCredentials) {
+        this.logger.info(
+          {
+            event: 'auth_manager.credentials_from_env',
+            auth_method: envCredentials.auth_method,
+          },
+          'Using credentials from environment variables',
+        );
+        // Cache env credentials but don't persist to storage
+        this.credentialsCache = envCredentials;
+        return envCredentials;
+      }
+
       this.logger.error(
         { event: 'auth_manager.credentials_not_found', storage_key: this.storageKey },
-        'No credentials found in storage',
+        'No credentials found in storage or environment variables',
       );
-      throw new InvalidCredentialsError('No credentials found. Please authenticate first.');
+      throw new InvalidCredentialsError(
+        'No credentials found. Please authenticate first or set environment variables (e.g., BITBUCKET_TOKEN for PAT, BITBUCKET_USERNAME and BITBUCKET_PASSWORD for basic auth).',
+      );
     }
 
     this.logger.debug(
@@ -384,6 +401,116 @@ export class AuthManager {
     // Cache and return
     this.credentialsCache = stored;
     return stored;
+  }
+
+  /**
+   * Load credentials from environment variables as fallback
+   *
+   * Supports the following environment variables based on auth method:
+   * - PAT: BITBUCKET_TOKEN or BITBUCKET_PAT
+   * - Basic Auth: BITBUCKET_USERNAME and BITBUCKET_PASSWORD
+   * - OAuth2: BITBUCKET_ACCESS_TOKEN (required), BITBUCKET_REFRESH_TOKEN (optional)
+   * - OAuth1: BITBUCKET_CONSUMER_KEY, BITBUCKET_CONSUMER_SECRET, BITBUCKET_OAUTH_TOKEN, BITBUCKET_OAUTH_TOKEN_SECRET
+   *
+   * @returns Credentials object if environment variables are set, null otherwise
+   *
+   * @private
+   */
+  private loadFromEnvironment(): Credentials | null {
+    const authMethod = this.config.authMethod;
+    const bitbucketUrl = this.config.bitbucketUrl;
+
+    switch (authMethod) {
+      case 'pat': {
+        const token = process.env.BITBUCKET_TOKEN || process.env.BITBUCKET_PAT;
+        if (token) {
+          this.logger.debug(
+            { event: 'auth_manager.env_credentials_detected', auth_method: 'pat' },
+            'PAT credentials detected in environment',
+          );
+          return {
+            bitbucket_url: bitbucketUrl,
+            auth_method: 'pat',
+            access_token: token,
+          };
+        }
+        break;
+      }
+
+      case 'basic': {
+        const username = process.env.BITBUCKET_USERNAME;
+        const password = process.env.BITBUCKET_PASSWORD;
+        if (username && password) {
+          this.logger.debug(
+            { event: 'auth_manager.env_credentials_detected', auth_method: 'basic' },
+            'Basic auth credentials detected in environment',
+          );
+          return {
+            bitbucket_url: bitbucketUrl,
+            auth_method: 'basic',
+            username,
+            password,
+          };
+        }
+        break;
+      }
+
+      case 'oauth2': {
+        const accessToken = process.env.BITBUCKET_ACCESS_TOKEN;
+        if (accessToken) {
+          this.logger.debug(
+            { event: 'auth_manager.env_credentials_detected', auth_method: 'oauth2' },
+            'OAuth2 credentials detected in environment',
+          );
+          const credentials: Credentials = {
+            bitbucket_url: bitbucketUrl,
+            auth_method: 'oauth2',
+            access_token: accessToken,
+          };
+
+          // Optional refresh token
+          if (process.env.BITBUCKET_REFRESH_TOKEN) {
+            credentials.refresh_token = process.env.BITBUCKET_REFRESH_TOKEN;
+          }
+
+          // Optional client credentials for token refresh
+          if (process.env.BITBUCKET_CLIENT_ID) {
+            credentials.client_id = process.env.BITBUCKET_CLIENT_ID;
+          }
+          if (process.env.BITBUCKET_CLIENT_SECRET) {
+            credentials.client_secret = process.env.BITBUCKET_CLIENT_SECRET;
+          }
+
+          return credentials;
+        }
+        break;
+      }
+
+      case 'oauth1': {
+        const consumerKey = process.env.BITBUCKET_CONSUMER_KEY;
+        const consumerSecret = process.env.BITBUCKET_CONSUMER_SECRET;
+        const oauthToken = process.env.BITBUCKET_OAUTH_TOKEN;
+        const oauthTokenSecret = process.env.BITBUCKET_OAUTH_TOKEN_SECRET;
+
+        if (consumerKey && consumerSecret && oauthToken && oauthTokenSecret) {
+          this.logger.debug(
+            { event: 'auth_manager.env_credentials_detected', auth_method: 'oauth1' },
+            'OAuth1 credentials detected in environment',
+          );
+          return {
+            bitbucket_url: bitbucketUrl,
+            auth_method: 'oauth1',
+            consumer_key: consumerKey,
+            consumer_secret: consumerSecret,
+            oauth_token: oauthToken,
+            oauth_token_secret: oauthTokenSecret,
+          };
+        }
+        break;
+      }
+    }
+
+    return null;
   }
 
   /**
