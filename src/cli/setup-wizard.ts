@@ -535,7 +535,9 @@ async function collectOAuth1Credentials(): Promise<WizardState['credentials']> {
   console.log(chalk.white('OAuth 1.0a requer configuração no Bitbucket Data Center:\n'));
 
   console.log(chalk.cyan('Passo 1: Gerar chaves RSA'));
-  console.log(chalk.gray('   openssl genrsa -out ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem 2048'));
+  console.log(
+    chalk.gray('   openssl genrsa -out ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem 2048'),
+  );
   console.log(
     chalk.gray(
       '   openssl rsa -in ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem -pubout -out ~/.bitbucket-dc-mcp/bitbucket_publickey.pem\n',
@@ -554,9 +556,7 @@ async function collectOAuth1Credentials(): Promise<WizardState['credentials']> {
   console.log(chalk.cyan('📖 Guia detalhado com screenshots:'));
   console.log(chalk.blue.underline('   docs/oauth1-datacenter-setup.md'));
   console.log(
-    chalk.gray(
-      '   https://github.com/your-repo/blob/main/docs/oauth1-datacenter-setup.md\n',
-    ),
+    chalk.gray('   https://github.com/your-repo/blob/main/docs/oauth1-datacenter-setup.md\n'),
   );
 
   console.log(chalk.yellow('💡 Dica importante:'));

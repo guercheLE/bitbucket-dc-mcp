@@ -43,12 +43,12 @@ export interface ISchemaResolver {
 
 /**
  * Schema resolver implementation that loads and resolves OpenAPI schema references.
- * 
+ *
  * This service is responsible for:
  * - Loading schema definitions from schemas.json
  * - Resolving $ref references to actual schema definitions
  * - Preventing infinite recursion in circular references
- * 
+ *
  * Follows SOLID principles:
  * - Single Responsibility: Only handles schema resolution
  * - Open/Closed: Can be extended without modification
@@ -60,7 +60,7 @@ export class SchemaResolver implements ISchemaResolver {
 
   /**
    * Creates a new SchemaResolver instance.
-   * 
+   *
    * @param maxDepth - Maximum recursion depth to prevent infinite loops (default: 5)
    */
   constructor(maxDepth = 5) {
@@ -71,7 +71,7 @@ export class SchemaResolver implements ISchemaResolver {
   /**
    * Factory method to create a SchemaResolver instance.
    * Useful for dependency injection and testing.
-   * 
+   *
    * @param maxDepth - Maximum recursion depth
    * @returns New SchemaResolver instance
    */
@@ -81,14 +81,14 @@ export class SchemaResolver implements ISchemaResolver {
 
   /**
    * Loads schema definitions from schemas.json file.
-   * 
+   *
    * @returns Record of schema definitions indexed by schema name
    */
   private loadSchemas(): Record<string, unknown> {
     try {
       const packageRoot = this.getPackageRoot();
       const schemasPath = join(packageRoot, 'data', 'schemas.json');
-      
+
       if (!existsSync(schemasPath)) {
         return {};
       }
@@ -107,7 +107,7 @@ export class SchemaResolver implements ISchemaResolver {
   /**
    * Gets the package root directory.
    * Works in both ESM and CommonJS environments.
-   * 
+   *
    * @returns Absolute path to package root
    */
   private getPackageRoot(): string {
@@ -119,7 +119,7 @@ export class SchemaResolver implements ISchemaResolver {
 
   /**
    * Resolves a $ref reference to its schema definition.
-   * 
+   *
    * @param ref - Reference string in format "#/components/schemas/SchemaName"
    * @returns Resolved schema definition or undefined if not found
    */
@@ -135,7 +135,7 @@ export class SchemaResolver implements ISchemaResolver {
   /**
    * Resolves all $ref references in a schema object recursively.
    * Handles nested objects, arrays, and prevents infinite recursion.
-   * 
+   *
    * @param schema - Schema object that may contain $ref references
    * @param depth - Current recursion depth (used internally)
    * @returns Resolved schema with all references expanded
@@ -177,7 +177,7 @@ export class SchemaResolver implements ISchemaResolver {
 
   /**
    * Checks if schemas are loaded and available.
-   * 
+   *
    * @returns True if schemas are loaded, false otherwise
    */
   public hasSchemasLoaded(): boolean {
@@ -186,11 +186,10 @@ export class SchemaResolver implements ISchemaResolver {
 
   /**
    * Gets the count of loaded schemas.
-   * 
+   *
    * @returns Number of schemas available
    */
   public getSchemasCount(): number {
     return Object.keys(this.schemas).length;
   }
 }
-

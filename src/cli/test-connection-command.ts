@@ -192,7 +192,9 @@ export async function testConnectionCommand(options: TestConnectionOptions): Pro
           console.log(chalk.white.bold('Como obter credenciais corretas:\n'));
 
           console.log(chalk.cyan('1. Gerar chaves RSA:'));
-          console.log(chalk.gray('   openssl genrsa -out ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem 2048'));
+          console.log(
+            chalk.gray('   openssl genrsa -out ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem 2048'),
+          );
           console.log(
             chalk.gray(
               '   openssl rsa -in ~/.bitbucket-dc-mcp/bitbucket_privatekey.pem -pubout -out ~/.bitbucket-dc-mcp/bitbucket_publickey.pem\n',
@@ -204,7 +206,9 @@ export async function testConnectionCommand(options: TestConnectionOptions): Pro
           console.log(chalk.gray('   • Create link → URL: http://localhost:8080'));
           console.log(chalk.gray('   • Application Name: Bitbucket MCP Server'));
           console.log(chalk.gray('   • ✅ Marque "Create incoming link"'));
-          console.log(chalk.gray('   • Consumer Key: escolha um ID único (ex: bitbucket-mcp-server)'));
+          console.log(
+            chalk.gray('   • Consumer Key: escolha um ID único (ex: bitbucket-mcp-server)'),
+          );
           console.log(chalk.gray('   • Public Key: cole conteúdo de bitbucket_publickey.pem'));
           console.log(chalk.gray('   • Consumer Secret: deixe vazio para RSA-SHA1'));
           console.log(chalk.gray('   • Save\n'));
