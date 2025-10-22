@@ -9,9 +9,27 @@ Transform natural language queries into precise Bitbucket API operations. Built 
 
 ## 🚀 Quick Start
 
-### Run with Docker
+### Mode Selection
+
+The Bitbucket DC MCP Server supports **two operation modes**:
+
+| Mode | Use Case | Transport | Ports | Docker Compatibility |
+|------|----------|-----------|-------|---------------------|
+| **stdio** (default) | Local MCP clients | stdin/stdout | None | ❌ Not for external clients |
+| **HTTP** | Web apps, APIs, integrations | HTTP POST | 3000+ | ✅ Required for Docker |
+
+## ⚠️ Important: Docker Communication
+
+**For external clients (VS Code, Cursor, Claude Desktop) connecting to Docker containers, you MUST use HTTP mode.**
+
+- **stdio mode**: Only works for internal container processes, not external clients
+- **HTTP mode**: Required for any external client communication with Docker containers
+
+### Run with Docker (stdio mode - internal use only)
 
 ```bash
+# ⚠️ stdio mode only works for internal container processes
+# NOT for external clients (VS Code, Cursor, Claude Desktop)
 docker run -it \
   -e BITBUCKET_URL=https://bitbucket.example.com \
   -e BITBUCKET_AUTH_METHOD=pat \
@@ -19,7 +37,20 @@ docker run -it \
   ghcr.io/guerchele/bitbucket-dc-mcp:latest
 ```
 
-### Run with Docker Compose
+### Run with Docker (HTTP mode)
+
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_AUTH_METHOD=pat \
+  -e BITBUCKET_TOKEN=your-personal-access-token \
+  ghcr.io/guerchele/bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000
+```
+
+### Run with Docker Compose (stdio mode)
 
 Create `docker-compose.yml`:
 
@@ -33,6 +64,26 @@ services:
       BITBUCKET_AUTH_METHOD: pat
       BITBUCKET_TOKEN: your-personal-access-token
       LOG_LEVEL: info
+    restart: unless-stopped
+```
+
+### Run with Docker Compose (HTTP mode)
+
+Create `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+services:
+  bitbucket-mcp-http:
+    image: guerchele/bitbucket-dc-mcp:latest
+    ports:
+      - "3000:3000"
+    environment:
+      BITBUCKET_URL: https://bitbucket.example.com
+      BITBUCKET_AUTH_METHOD: pat
+      BITBUCKET_TOKEN: your-personal-access-token
+      LOG_LEVEL: info
+    command: ["node", "/app/dist/cli.js", "http", "--host", "0.0.0.0", "--port", "3000"]
     restart: unless-stopped
 ```
 
@@ -67,11 +118,95 @@ docker-compose up -d
 | `RATE_LIMIT_MAX_REQUESTS` | `100` | Max API requests per minute |
 | `REQUEST_TIMEOUT_MS` | `30000` | Request timeout in milliseconds |
 
+## 🌐 HTTP Mode Configuration
+
+### Basic HTTP Server
+
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  ghcr.io/guerchele/bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000
+```
+
+### HTTP Server with CORS
+
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  ghcr.io/guerchele/bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000 --cors
+```
+
+### HTTP Server with Metrics
+
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -p 9090:9090 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  ghcr.io/guerchele/bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000 --cors
+```
+
+### HTTP Server with Custom Port
+
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 8080:8080 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  ghcr.io/guerchele/bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 8080
+```
+
 **Note:** The `BITBUCKET_API_VERSION` is automatically detected based on your Bitbucket instance during setup. You typically don't need to set this manually unless you want to override the auto-detection. See [API Version Detection Guide](https://github.com/guercheLE/bitbucket-dc-mcp/blob/main/docs/api-version-detection.md) for more details.
+
+## 📊 stdio vs HTTP Mode Comparison
+
+| Feature | stdio Mode | HTTP Mode |
+|---------|------------|-----------|
+| **Transport** | stdin/stdout | HTTP POST |
+| **Use Case** | Local MCP clients | Web apps, APIs, Docker clients |
+| **Docker Compatibility** | ❌ Internal only | ✅ External clients |
+| **Ports** | None | 3000+ (configurable) |
+| **Authentication** | Config file | Headers + Config |
+| **CORS** | N/A | Configurable |
+| **Metrics** | N/A | Prometheus endpoint |
+| **Tracing** | N/A | OpenTelemetry |
+| **Network** | Local only | Network accessible |
+| **Security** | File-based | Header-based |
+
+### When to Use Each Mode
+
+**Use stdio mode when:**
+- Running locally (not in Docker)
+- Integrating with Claude Desktop or Cursor locally
+- Local development with MCP clients
+- Simple automation scripts
+- No network access needed
+
+**Use HTTP mode when:**
+- Running in Docker containers
+- Building web applications
+- Creating REST APIs
+- Need network access
+- Want metrics and monitoring
+- Cross-origin requests (CORS)
+- External clients (VS Code, Cursor, Claude Desktop) connecting to Docker
 
 ## 💡 Usage Examples
 
-### Example 1: Basic Container
+### Example 1: Basic Container (stdio mode)
 
 ```bash
 docker run -it --rm \
@@ -79,6 +214,19 @@ docker run -it --rm \
   -e BITBUCKET_AUTH_METHOD=pat \
   -e BITBUCKET_TOKEN=abc123xyz \
   guerchele/bitbucket-dc-mcp:latest
+```
+
+### Example 2: HTTP Mode Container
+
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_AUTH_METHOD=pat \
+  -e BITBUCKET_TOKEN=abc123xyz \
+  guerchele/bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000
 ```
 
 ### Example 2: With Persistent Configuration

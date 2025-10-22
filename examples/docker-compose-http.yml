@@ -1,0 +1,108 @@
+# Docker Compose example for Bitbucket DC MCP Server - HTTP Mode
+# This example shows how to run the MCP server in HTTP mode with Docker Compose
+
+version: "3.8"
+
+services:
+  # HTTP mode - for web apps, APIs, integrations
+  bitbucket-dc-mcp-http:
+    # Use locally built image (build first with: docker build -t bitbucket-dc-mcp:latest .)
+    image: bitbucket-dc-mcp:latest
+
+    # Build configuration (alternative to pre-built image)
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Container name for easy reference
+    container_name: bitbucket-dc-mcp-http-server
+
+    # Expose HTTP port
+    ports:
+      - "3000:3000"
+      - "9090:9090"  # Metrics port
+
+    # Environment variables for MCP server configuration
+    environment:
+      # Required: Your Bitbucket Data Center URL
+      BITBUCKET_URL: ${BITBUCKET_URL:-https://bitbucket.example.com}
+
+      # Authentication method: pat, basic, oauth1, or oauth2
+      BITBUCKET_AUTH_METHOD: ${BITBUCKET_AUTH_METHOD:-pat}
+
+      # Personal Access Token (required if using PAT auth)
+      BITBUCKET_TOKEN: ${BITBUCKET_TOKEN}
+
+      # Basic auth credentials (required if using Basic auth)
+      # BITBUCKET_USERNAME: ${BITBUCKET_USERNAME}
+      # BITBUCKET_PASSWORD: ${BITBUCKET_PASSWORD}
+
+      # Optional: Logging level (debug, info, warn, error)
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+
+      # Optional: Rate limit (requests per minute)
+      BITBUCKET_RATE_LIMIT: ${BITBUCKET_RATE_LIMIT:-100}
+
+      # Optional: Request timeout in milliseconds
+      BITBUCKET_TIMEOUT_MS: ${BITBUCKET_TIMEOUT_MS:-30000}
+
+      # Optional: Pretty print logs (true/false)
+      LOG_PRETTY: ${LOG_PRETTY:-false}
+
+    # Volume mount for persistent configuration
+    # Uncomment to use config file instead of environment variables
+    # volumes:
+    #   - ~/.bitbucket-dc-mcp:/root/.bitbucket-dc-mcp
+
+    # HTTP mode command with CORS enabled
+    command: ["node", "/app/dist/cli.js", "http", "--host", "0.0.0.0", "--port", "3000", "--cors"]
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check configuration for HTTP mode
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+    # Resource limits (optional but recommended)
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 2G
+        reservations:
+          cpus: "0.25"
+          memory: 512M
+
+# Example usage:
+# 1. Create .env file with your configuration:
+#    BITBUCKET_URL=https://bitbucket.example.com
+#    BITBUCKET_TOKEN=your-personal-access-token
+#    LOG_LEVEL=info
+#
+# 2. Build the image:
+#    docker-compose -f examples/docker-compose-http.yml build
+#
+# 3. Start the HTTP server:
+#    docker-compose -f examples/docker-compose-http.yml up -d
+#
+# 4. View logs:
+#    docker-compose -f examples/docker-compose-http.yml logs -f
+#
+# 5. Check health:
+#    docker-compose -f examples/docker-compose-http.yml ps
+#
+# 6. Test HTTP mode:
+#    curl -X POST http://localhost:3000 \
+#      -H "Content-Type: application/json" \
+#      -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}'
+#
+# 7. Check metrics:
+#    curl http://localhost:9090/metrics
+#
+# 8. Stop the server:
+#    docker-compose -f examples/docker-compose-http.yml down

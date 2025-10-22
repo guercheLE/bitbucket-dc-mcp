@@ -5,6 +5,9 @@ This guide explains how to deploy the Bitbucket Data Center MCP Server using Doc
 ## Table of Contents
 
 - [Quick Start](#quick-start)
+- [Operation Modes](#operation-modes)
+  - [stdio Mode (Default)](#stdio-mode-default)
+  - [HTTP Mode](#http-mode)
 - [Building the Image](#building-the-image)
 - [Running the Container](#running-the-container)
 - [Environment Variables](#environment-variables)
@@ -34,6 +37,123 @@ docker run -d \
   -e BITBUCKET_TOKEN=your-personal-access-token \
   -e LOG_LEVEL=info \
   bitbucket-dc-mcp:latest
+```
+
+## Operation Modes
+
+The Bitbucket DC MCP Server supports two operation modes:
+
+| Mode | Use Case | Transport | Ports | Security |
+|------|----------|-----------|-------|----------|
+| **stdio** (default) | Claude Desktop, Cursor, MCP clients | stdin/stdout | None | File-based |
+| **HTTP** | Web apps, APIs, integrations | HTTP POST | 3000+ | Header-based |
+
+### stdio Mode (Default)
+
+**⚠️ Important: stdio mode in Docker only works for internal container processes, NOT for external clients.**
+
+**Use stdio mode when:**
+- Running locally (not in Docker)
+- Internal container processes only
+- Local development with MCP clients
+- Simple automation scripts
+- No network access needed
+
+**Example (internal use only):**
+```bash
+# ⚠️ This will NOT work for external clients (VS Code, Cursor, Claude Desktop)
+docker run -it \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  bitbucket-dc-mcp:latest
+```
+
+### HTTP Mode
+
+**✅ HTTP mode is REQUIRED for external clients connecting to Docker containers.**
+
+**Use HTTP mode when:**
+- Running in Docker containers
+- External clients (VS Code, Cursor, Claude Desktop) connecting to Docker
+- Building web applications
+- Creating REST APIs
+- Need network access
+- Want metrics and monitoring
+- Cross-origin requests (CORS)
+
+**Example:**
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000
+```
+
+#### HTTP Mode Configuration
+
+**Basic HTTP Server:**
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000
+```
+
+**HTTP Server with CORS:**
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000 --cors
+```
+
+**HTTP Server with Custom Port:**
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 8080:8080 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 8080
+```
+
+**HTTP Server with Metrics:**
+```bash
+docker run -d \
+  --name bitbucket-mcp-http \
+  -p 3000:3000 \
+  -p 9090:9090 \
+  -e BITBUCKET_URL=https://bitbucket.example.com \
+  -e BITBUCKET_TOKEN=your-token \
+  bitbucket-dc-mcp:latest \
+  node /app/dist/cli.js http --host 0.0.0.0 --port 3000 --cors
+```
+
+#### Testing HTTP Mode
+
+**Test the HTTP server:**
+```bash
+curl -X POST http://localhost:3000 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}'
+```
+
+**Test with authentication:**
+```bash
+curl -X POST http://localhost:3000 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer your-token" \
+  -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}'
 ```
 
 ### 3. Connect from Claude Desktop

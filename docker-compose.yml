@@ -1,6 +1,8 @@
 version: "3.8"
 
 services:
+  # stdio mode (default) - for internal container processes only
+  # ⚠️ NOT for external clients (VS Code, Cursor, Claude Desktop)
   bitbucket-dc-mcp:
     # Use locally built image (build first with: docker build -t bitbucket-dc-mcp:latest .)
     image: bitbucket-dc-mcp:latest
@@ -72,21 +74,102 @@ services:
         reservations:
           cpus: "0.25"
           memory: 512M
+
+  # HTTP mode - for web apps, APIs, integrations
+  bitbucket-dc-mcp-http:
+    # Use locally built image (build first with: docker build -t bitbucket-dc-mcp:latest .)
+    image: bitbucket-dc-mcp:latest
+
+    # Build configuration (alternative to pre-built image)
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Container name for easy reference
+    container_name: bitbucket-dc-mcp-http-server
+
+    # Expose HTTP port
+    ports:
+      - "3000:3000"
+
+    # Environment variables for MCP server configuration
+    environment:
+      # Required: Your Bitbucket Data Center URL
+      BITBUCKET_URL: ${BITBUCKET_URL:-https://bitbucket.example.com}
+
+      # Authentication method: pat, basic, oauth1, or oauth2
+      BITBUCKET_AUTH_METHOD: ${BITBUCKET_AUTH_METHOD:-pat}
+
+      # Personal Access Token (required if using PAT auth)
+      BITBUCKET_TOKEN: ${BITBUCKET_TOKEN}
+
+      # Basic auth credentials (required if using Basic auth)
+      # BITBUCKET_USERNAME: ${BITBUCKET_USERNAME}
+      # BITBUCKET_PASSWORD: ${BITBUCKET_PASSWORD}
+
+      # Optional: Logging level (debug, info, warn, error)
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+
+      # Optional: Rate limit (requests per minute)
+      BITBUCKET_RATE_LIMIT: ${BITBUCKET_RATE_LIMIT:-100}
+
+      # Optional: Request timeout in milliseconds
+      BITBUCKET_TIMEOUT_MS: ${BITBUCKET_TIMEOUT_MS:-30000}
+
+      # Optional: Pretty print logs (true/false)
+      LOG_PRETTY: ${LOG_PRETTY:-false}
+
+    # Volume mount for persistent configuration
+    # Uncomment to use config file instead of environment variables
+    # volumes:
+    #   - ~/.bitbucket-dc-mcp:/root/.bitbucket-dc-mcp
+
+    # HTTP mode command
+    command: ["node", "/app/dist/cli.js", "http", "--host", "0.0.0.0", "--port", "3000"]
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check configuration for HTTP mode
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+    # Resource limits (optional but recommended)
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 2G
+        reservations:
+          cpus: "0.25"
+          memory: 512M
+
 # Example usage:
 # 1. Build the image:
 #    docker-compose build
 #
-# 2. Start the server:
-#    docker-compose up -d
+# 2. Start stdio mode server:
+#    docker-compose up -d bitbucket-dc-mcp
 #
-# 3. View logs:
+# 3. Start HTTP mode server:
+#    docker-compose up -d bitbucket-dc-mcp-http
+#
+# 4. View logs:
 #    docker-compose logs -f bitbucket-dc-mcp
+#    docker-compose logs -f bitbucket-dc-mcp-http
 #
-# 4. Check health:
+# 5. Check health:
 #    docker-compose ps
 #
-# 5. Stop the server:
+# 6. Stop the server:
 #    docker-compose down
 #
-# 6. Test MCP protocol:
+# 7. Test stdio MCP protocol:
 #    echo '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}' | docker-compose exec -T bitbucket-dc-mcp cat
+#
+# 8. Test HTTP mode:
+#    curl -X POST http://localhost:3000 -H "Content-Type: application/json" -d '{"method":"test"}'
