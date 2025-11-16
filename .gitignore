@@ -1,7 +1,7 @@
 # BMAD (local only)
 # BMAD/IDE/agent folders
 .augment/
-.bmad-core/
+.bmad/
 .claude/
 .clinerules/
 .crush/
